@@ -5,6 +5,12 @@ using System.Collections;
 public class BrickInteractor : MonoBehaviour
 {
     private Camera mainCamera;
+    
+    [Header("Animation Settings")]
+    [Tooltip("Multiplier for the slide out animation speed.")]
+    public float animationSpeed = 1.0f;
+
+    private System.Collections.Generic.HashSet<GameObject> removedBricks = new System.Collections.Generic.HashSet<GameObject>();
 
     void Start()
     {
@@ -21,9 +27,10 @@ public class BrickInteractor : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider.GetComponent<Rigidbody>() != null)
+                GameObject hitObj = hit.collider.gameObject;
+                if (hitObj.GetComponent<Rigidbody>() != null && !removedBricks.Contains(hitObj))
                 {
-                    TryRemoveBrick(hit.collider.gameObject);
+                    TryRemoveBrick(hitObj);
                 }
             }
         }
@@ -31,23 +38,37 @@ public class BrickInteractor : MonoBehaviour
 
     private void TryRemoveBrick(GameObject brick)
     {
-        Collider col = brick.GetComponent<Collider>();
-        if (col == null) return;
+        BoxCollider box = brick.GetComponent<BoxCollider>();
+        if (box == null) return;
 
-        float length = brick.transform.localScale.z;
-        Vector3 halfExtents = new Vector3(0.4f, 0.4f, 0.1f);
+        // Use the actual physics box size instead of transform scale
+        float length = Mathf.Max(box.size.x, box.size.y, box.size.z) * brick.transform.localScale.z;
+        Vector3 halfExtents = box.size * 0.45f;
         
         // Temporarily disable collider so we don't hit ourselves
-        col.enabled = false;
+        box.enabled = false;
         bool forwardBlocked = Physics.BoxCast(brick.transform.position, halfExtents, brick.transform.forward, brick.transform.rotation, length * 0.6f);
         bool backwardBlocked = Physics.BoxCast(brick.transform.position, halfExtents, -brick.transform.forward, brick.transform.rotation, length * 0.6f);
-        col.enabled = true;
+        box.enabled = true;
 
         if (forwardBlocked && backwardBlocked)
         {
             // Blocked on both sides, play a slight shake to indicate it can't move
             StartCoroutine(ShakeRoutine(brick));
             return;
+        }
+
+        // Play click/slide sound!
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayClickSound();
+        }
+
+        // Update UI
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.AddMove();
+            UIManager.Instance.AddObjectiveProgress();
         }
 
         Vector3 slideDir;
@@ -77,7 +98,7 @@ public class BrickInteractor : MonoBehaviour
 
     private IEnumerator RemoveBrickRoutine(GameObject brick, Vector3 slideDir, float length)
     {
-        brick.tag = "Untagged"; // Prevent clicking again
+        removedBricks.Add(brick); // Prevent clicking again
         
         Collider col = brick.GetComponent<Collider>();
         if (col != null) col.enabled = false;
@@ -88,7 +109,8 @@ public class BrickInteractor : MonoBehaviour
         Vector3 startPos = brick.transform.position;
         Vector3 endPos = startPos + slideDir * (length * 1.5f);
 
-        float duration = 0.4f;
+        // Adjust base duration by animationSpeed
+        float duration = 0.4f / Mathf.Max(0.1f, animationSpeed);
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -108,10 +130,15 @@ public class BrickInteractor : MonoBehaviour
             rb.WakeUp();
         }
 
-        // Wait for it to hit the ground and settle
-        yield return new WaitForSeconds(2.5f);
+        // Wait a tiny bit for it to start falling
+        yield return new WaitForSeconds(0.5f);
 
-        // Turn off rigidbody to save mobile CPU (becomes static debris)
-        if (rb != null) rb.isKinematic = true;
+        // Wait until it actually stops moving (hits the ground or rests)
+        if (rb != null)
+        {
+            yield return new WaitUntil(() => rb.linearVelocity.sqrMagnitude < 0.01f);
+            // Now turn off rigidbody to save mobile CPU!
+            rb.isKinematic = true;
+        }
     }
 }
