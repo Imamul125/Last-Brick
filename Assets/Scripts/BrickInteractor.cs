@@ -61,7 +61,7 @@ public class BrickInteractor : MonoBehaviour
         // Play click/slide sound!
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlayClickSound();
+            SoundManager.Instance.PlayMoveSound();
         }
 
         // Update UI
@@ -106,10 +106,15 @@ public class BrickInteractor : MonoBehaviour
         Rigidbody rb = brick.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
 
+        GameObject trailPrefab = Resources.Load<GameObject>("AncientDustTrailVFX");
+        GameObject trail = null;
+        if (trailPrefab != null) {
+            trail = Instantiate(trailPrefab, brick.transform.position, Quaternion.identity, brick.transform);
+        }
+
         Vector3 startPos = brick.transform.position;
         Vector3 endPos = startPos + slideDir * (length * 1.5f);
 
-        // Adjust base duration by animationSpeed
         float duration = 0.4f / Mathf.Max(0.1f, animationSpeed);
         float elapsed = 0f;
 
@@ -122,7 +127,18 @@ public class BrickInteractor : MonoBehaviour
             yield return null;
         }
 
-        // Re-enable physics to let it fall
+        // Stop trail emission immediately after the slide finishes!
+        if (trail != null) {
+            trail.transform.SetParent(null);
+            ParticleSystem ps = trail.GetComponent<ParticleSystem>();
+            if (ps != null) {
+                var em = ps.emission; em.enabled = false;
+                Destroy(trail, 2.0f);
+            } else {
+                Destroy(trail);
+            }
+        }
+
         if (col != null) col.enabled = true;
         if (rb != null) 
         {
@@ -130,15 +146,9 @@ public class BrickInteractor : MonoBehaviour
             rb.WakeUp();
         }
 
-        // Wait a tiny bit for it to start falling
         yield return new WaitForSeconds(0.5f);
 
-        // Wait until it actually stops moving (hits the ground or rests)
-        if (rb != null)
-        {
-            yield return new WaitUntil(() => rb.linearVelocity.sqrMagnitude < 0.01f);
-            // Now turn off rigidbody to save mobile CPU!
-            rb.isKinematic = true;
-        }
+        // Note: Dissolve is now handled systemically by BrickCollisionSound.cs
+        // when the brick hits the ground!
     }
 }

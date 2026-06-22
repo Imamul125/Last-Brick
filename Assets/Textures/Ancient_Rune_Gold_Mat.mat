@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Ancient_Rune_Gold_Mat
+  m_Shader: {fileID: 4800000, guid: e8ab21a8ed5869d44ab145ea4769a057, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 922768f455aed1a45aa0acc701ce7392, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 2800000, guid: 922768f455aed1a45aa0acc701ce7392, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _DissolveAmount: 0
+    - _EdgeThickness: 2.48
+    - _Smoothness: 0.332
+    m_Colors:
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
+    - _BurnColor: {r: 2.388027, g: 0.4010096, b: 0.08560818, a: 1}
+    - _EdgeColor: {r: 3.8540943, g: 3.8540943, b: 3.8540943, a: 1}
+    - _EmissionColor: {r: 1.7783539, g: 1.3119553, b: 1.3119553, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

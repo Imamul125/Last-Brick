@@ -10,6 +10,8 @@ public class SoundManager : MonoBehaviour
     [Header("Audio Clips")]
     public AudioClip brickClickSound;
     public AudioClip brickHitGroundSound;
+    public AudioClip brickMoveSound;
+    public AudioClip brickDissolveSound;
 
     private void Awake()
     {
@@ -29,6 +31,22 @@ public class SoundManager : MonoBehaviour
         if (sfxSource != null && brickClickSound != null)
         {
             sfxSource.PlayOneShot(brickClickSound);
+        }
+    }
+
+    public void PlayMoveSound()
+    {
+        if (sfxSource != null && brickMoveSound != null)
+        {
+            sfxSource.PlayOneShot(brickMoveSound);
+        }
+    }
+
+    public void PlayDissolveSound()
+    {
+        if (sfxSource != null && brickDissolveSound != null)
+        {
+            sfxSource.PlayOneShot(brickDissolveSound);
         }
     }
 
