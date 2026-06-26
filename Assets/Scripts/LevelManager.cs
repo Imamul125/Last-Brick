@@ -1,6 +1,17 @@
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
+
+[System.Serializable]
+public class LevelCameraConfig
+{
+    public int startLevel;
+    public int endLevel;
+    public Transform cameraTarget;
+    public float orbitalRadius;
+}
 
 [System.Serializable]
 public class LevelData
@@ -22,9 +33,18 @@ public class LevelManager : MonoBehaviour
     public GameObject congratsUi;
     public GameObject retryUi;
 
+    [Header("Camera Settings")]
+    public List<LevelCameraConfig> cameraConfigs = new List<LevelCameraConfig>();
+    public CinemachineCamera orbitCamera; // The cinematic Vcamera
+    public CinemachineCamera freeLookCamera; // The gameplay Vcamera
+    public float cinematicRotationAmount = 360f;
+    public float cinematicRotationDuration = 2f;
+    private Coroutine cinematicCoroutine;
+
     [Header("State")]
     public int currentLevelIndex = 0;
     private bool levelEnded = false;
+    private GameObject currentLevelInstance;
 
     private void Awake()
     {
@@ -34,10 +54,16 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        // Automatically start the first level if the list is populated
+        // Comment out the next line if you don't want the level to start automatically on load!
+        // if (levels.Count > 0) StartLevel(0);
+    }
+
+    // Connect your UI 'Play' Button to this method!
+    public void PlayCurrentLevel()
+    {
         if (levels.Count > 0)
         {
-            StartLevel(0);
+            StartLevel(currentLevelIndex);
         }
     }
 
@@ -56,8 +82,46 @@ public class LevelManager : MonoBehaviour
         if (congratsUi != null) congratsUi.SetActive(false);
         if (retryUi != null) retryUi.SetActive(false);
         
+        LoadLevelPrefab(currentLevel.levelNumber);
+
         Debug.Log("Level " + currentLevel.levelNumber + " Started!");
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayLevelStartSound();
+        }
+
+        SetupCameraForLevel(currentLevel.levelNumber);
+
         currentLevel.onLevelStart?.Invoke();
+    }
+
+    private void LoadLevelPrefab(int levelNum)
+    {
+        if (currentLevelInstance != null)
+        {
+            Destroy(currentLevelInstance);
+        }
+
+        string levelName = "Tower_" + levelNum;
+
+        // Clean up any existing editor level with this name just in case
+        GameObject existingEditorLevel = GameObject.Find(levelName);
+        if (existingEditorLevel != null)
+        {
+            Destroy(existingEditorLevel);
+        }
+
+        GameObject levelPrefab = Resources.Load<GameObject>("Levels/" + levelName);
+
+        if (levelPrefab != null)
+        {
+            currentLevelInstance = Instantiate(levelPrefab, Vector3.zero, Quaternion.identity);
+            Debug.Log("[LevelManager] Loaded " + levelName);
+        }
+        else
+        {
+            Debug.LogError("[LevelManager] Could not find level prefab: " + levelName + " in Resources/Levels");
+        }
     }
 
     public void TriggerWin()
@@ -99,6 +163,78 @@ public class LevelManager : MonoBehaviour
         else
         {
             Debug.Log("All levels completed!");
+        }
+    }
+
+    private void SetupCameraForLevel(int levelNum)
+    {
+        LevelCameraConfig config = cameraConfigs.Find(c => levelNum >= c.startLevel && levelNum <= c.endLevel);
+        if (config != null)
+        {
+            Debug.Log($"[LevelManager] Found camera config for Level {levelNum}. Starting cinematic transition.");
+            // Prepare cameras for the cinematic phase
+            if (orbitCamera != null) orbitCamera.gameObject.SetActive(true);
+            if (freeLookCamera != null) freeLookCamera.gameObject.SetActive(false);
+
+            if (orbitCamera != null)
+            {
+                orbitCamera.Follow = config.cameraTarget;
+                orbitCamera.LookAt = config.cameraTarget; // Re-enabled so it looks at target while rotating
+                
+                var orbitalFollow = orbitCamera.GetComponent<CinemachineOrbitalFollow>();
+                if (orbitalFollow != null)
+                {
+                    orbitalFollow.Radius = config.orbitalRadius;
+
+                    if (cinematicCoroutine != null) StopCoroutine(cinematicCoroutine);
+                    cinematicCoroutine = StartCoroutine(DoCinematicRotation(orbitalFollow, config));
+                }
+                else
+                {
+                    Debug.LogWarning("[LevelManager] orbitCamera is missing the CinemachineOrbitalFollow component!");
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[LevelManager] No Camera Config found for Level {levelNum}! The cinematic rotation will not play. Please add a config in the inspector.");
+        }
+    }
+
+    private IEnumerator DoCinematicRotation(CinemachineOrbitalFollow orbitalFollow, LevelCameraConfig config)
+    {
+        float elapsedTime = 0f;
+        float startRotation = orbitalFollow.HorizontalAxis.Value;
+        float endRotation = startRotation + cinematicRotationAmount;
+
+        while (elapsedTime < cinematicRotationDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / cinematicRotationDuration;
+            
+            // Smooth step for nicer cinematic ease-in/ease-out
+            t = t * t * (3f - 2f * t);
+
+            orbitalFollow.HorizontalAxis.Value = Mathf.Lerp(startRotation, endRotation, t);
+            yield return null;
+        }
+
+        orbitalFollow.HorizontalAxis.Value = endRotation;
+
+        // Intro is done, switch to the gameplay camera
+        if (orbitCamera != null) orbitCamera.gameObject.SetActive(false);
+        if (freeLookCamera != null)
+        {
+            freeLookCamera.gameObject.SetActive(true);
+            freeLookCamera.Follow = config.cameraTarget;
+
+            var freeLookOrbital = freeLookCamera.GetComponent<CinemachineOrbitalFollow>();
+            if (freeLookOrbital != null)
+            {
+                freeLookOrbital.Radius = config.orbitalRadius;
+                // Sync the rotation so there is no snap when switching cameras
+                freeLookOrbital.HorizontalAxis.Value = endRotation;
+            }
         }
     }
 }

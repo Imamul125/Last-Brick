@@ -12,6 +12,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip brickHitGroundSound;
     public AudioClip brickMoveSound;
     public AudioClip brickDissolveSound;
+    public AudioClip levelStartSound;
 
     private void Awake()
     {
@@ -57,6 +58,14 @@ public class SoundManager : MonoBehaviour
         if (sfxSource != null && brickHitGroundSound != null)
         {
             sfxSource.PlayOneShot(brickHitGroundSound);
+        }
+    }
+
+    public void PlayLevelStartSound()
+    {
+        if (sfxSource != null && levelStartSound != null)
+        {
+            sfxSource.PlayOneShot(levelStartSound);
         }
     }
 }
