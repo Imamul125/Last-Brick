@@ -4,15 +4,12 @@ using UnityEngine;
 public class BrickCollisionSound : MonoBehaviour
 {
     private static GameObject impactPrefab;
-    private static GameObject flakesPrefab;
     private bool isDissolving = false;
 
     private void Start()
     {
         if (impactPrefab == null)
             impactPrefab = Resources.Load<GameObject>("ImpactBurstVFX");
-        if (flakesPrefab == null)
-            flakesPrefab = Resources.Load<GameObject>("Flakes_brick");
     }
 
     private void Update()
@@ -23,7 +20,7 @@ public class BrickCollisionSound : MonoBehaviour
             if (GetComponentInChildren<ProtectBrick>() == null)
             {
                 isDissolving = true;
-                StartCoroutine(DissolveWhenRested());
+                DestroyBrickImmediate();
             }
         }
     }
@@ -51,65 +48,21 @@ public class BrickCollisionSound : MonoBehaviour
             if (GetComponentInChildren<ProtectBrick>() == null)
             {
                 isDissolving = true;
-                StartCoroutine(DissolveWhenRested());
+                DestroyBrickImmediate();
             }
         }
     }
 
-    private IEnumerator DissolveWhenRested()
+    private void DestroyBrickImmediate()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        
-        // Wait for it to mostly stop rolling, but no longer than 1.5 seconds!
-        if (rb != null)
-        {
-            float maxWait = 1.5f;
-            float elapsedWait = 0f;
-            while (elapsedWait < maxWait && rb.linearVelocity.sqrMagnitude > 0.5f) {
-                elapsedWait += Time.deltaTime;
-                yield return null;
-            }
-            rb.isKinematic = true; // Turn off physics to save CPU
+        // Spawn Ground Hit Particle via Manager
+        if (ParticleManager.Instance != null) {
+            ParticleManager.Instance.PlayBrickGroundHitParticle(transform.position);
         }
 
-        // Spawn Flakes_brick
-        if (flakesPrefab != null) {
-            GameObject flakesObj = Instantiate(flakesPrefab, transform.position, Quaternion.identity);
-            ParticleSystem fps = flakesObj.GetComponent<ParticleSystem>();
-            if (fps != null) {
-                var main = fps.main;
-                main.stopAction = ParticleSystemStopAction.Destroy;
-                fps.Play();
-            } else {
-                Destroy(flakesObj, 3.0f);
-            }
-        }
-
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-        if (renderers.Length > 0)
-        {
-            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
-            float dissolveTime = 1.5f;
-            float elapsed = 0f;
-
-            // Play magical burn sound
-            if (SoundManager.Instance != null) {
-                SoundManager.Instance.PlayDissolveSound(); 
-            }
-
-            while (elapsed < dissolveTime)
-            {
-                elapsed += Time.deltaTime;
-                float t = elapsed / dissolveTime;
-                
-                foreach (Renderer r in renderers) {
-                    r.GetPropertyBlock(mpb);
-                    mpb.SetFloat("_DissolveAmount", t);
-                    r.SetPropertyBlock(mpb);
-                }
-                
-                yield return null;
-            }
+        if (SoundManager.Instance != null) {
+            SoundManager.Instance.PlayHitGroundSound(transform.position);
+            SoundManager.Instance.PlayDissolveSound(); 
         }
 
         ParticleSystem[] pss = GetComponentsInChildren<ParticleSystem>();
