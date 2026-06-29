@@ -28,10 +28,13 @@ public class LevelManager : MonoBehaviour
 
     [Header("Levels Setup")]
     public List<LevelData> levels = new List<LevelData>();
+    [Tooltip("Delay before loading the level prefab, allowing particles to play first.")]
+    public float levelLoadDelay = 1.5f;
 
     [Header("UI References")]
     public GameObject congratsUi;
     public GameObject retryUi;
+    public GameObject congratsFbx;
 
     [Header("Camera Settings")]
     public List<LevelCameraConfig> cameraConfigs = new List<LevelCameraConfig>();
@@ -45,6 +48,7 @@ public class LevelManager : MonoBehaviour
     public int currentLevelIndex = 0;
     private bool levelEnded = false;
     private GameObject currentLevelInstance;
+    private Coroutine _loadLevelCoroutine;
 
     private void Awake()
     {
@@ -80,15 +84,42 @@ public class LevelManager : MonoBehaviour
         levelEnded = false;
 
         if (congratsUi != null) congratsUi.SetActive(false);
+        if (congratsFbx != null) congratsFbx.SetActive(false);
         if (retryUi != null) retryUi.SetActive(false);
         
-        LoadLevelPrefab(currentLevel.levelNumber);
+        // Destroy the previous level immediately so the screen is clear for the particle
+        if (currentLevelInstance != null)
+        {
+            Destroy(currentLevelInstance);
+            currentLevelInstance = null;
+        }
 
         Debug.Log("Level " + currentLevel.levelNumber + " Started!");
         if (SoundManager.Instance != null)
         {
             SoundManager.Instance.PlayLevelStartSound();
         }
+
+        if (ParticleManager.Instance != null)
+        {
+            ParticleManager.Instance.PlayLevelStartParticle();
+        }
+
+        if (_loadLevelCoroutine != null)
+        {
+            StopCoroutine(_loadLevelCoroutine);
+        }
+        _loadLevelCoroutine = StartCoroutine(LoadLevelRoutine(currentLevel));
+    }
+
+    private IEnumerator LoadLevelRoutine(LevelData currentLevel)
+    {
+        if (levelLoadDelay > 0)
+        {
+            yield return new WaitForSeconds(levelLoadDelay);
+        }
+
+        LoadLevelPrefab(currentLevel.levelNumber);
 
         SetupCameraForLevel(currentLevel.levelNumber);
 
@@ -130,7 +161,18 @@ public class LevelManager : MonoBehaviour
         levelEnded = true;
         Debug.Log("Protect Brick reached the pedestal! YOU WIN!");
         
+        if (ParticleManager.Instance != null)
+        {
+            ParticleManager.Instance.PlayPlayerWinParticle();
+        }
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayPlayerWinSound();
+        }
+        
         if (congratsUi != null) congratsUi.SetActive(true);
+        if (congratsFbx != null) congratsFbx.SetActive(true);
         
         CompleteCurrentLevel();
         Invoke(nameof(LoadNextLevel), 3f); // Wait 3 seconds then start next level

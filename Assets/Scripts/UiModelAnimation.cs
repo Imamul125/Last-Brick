@@ -7,7 +7,10 @@ public class UiModelAnimation : MonoBehaviour
     public Camera targetCamera;
 
     [Header("Final Position & Rotation")]
-    [Tooltip("The final position offset relative to the camera. (e.g., Z=5 puts it 5 units in front of the camera)")]
+    [Tooltip("If true, the object will fly to its initial position in the scene. If false, it uses the positionOffset relative to the camera.")]
+    public bool flyToInitialPosition = true;
+
+    [Tooltip("The final position offset relative to the camera. (e.g., Z=5 puts it 5 units in front of the camera). Used if flyToInitialPosition is false.")]
     public Vector3 positionOffset = new Vector3(0, 0, 5f);
     
     [Tooltip("Base rotation offset relative to the camera.")]
@@ -23,14 +26,22 @@ public class UiModelAnimation : MonoBehaviour
     [Tooltip("Curve controlling the fly-in movement. Default is Ease In/Out.")]
     public AnimationCurve flyInCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    [Header("Continuous Rotation Settings")]
-    [Tooltip("Speed of the continuous rotation in degrees per second. (e.g., Y=180 rotates half a circle per second)")]
-    public Vector3 continuousRotationSpeed = new Vector3(0, 180f, 0);
+    [Header("Pendulum Animation Settings")]
+    [Tooltip("Speed of the pendulum swing.")]
+    public float pendulumSpeed = 2f;
+    
+    [Tooltip("Maximum angle of the pendulum swing on each axis.")]
+    public Vector3 pendulumAngle = new Vector3(0, 10f, 0);
 
     // Internal state
     private float _flyInTimer;
     private bool _isFlyingIn;
-    private Vector3 _currentContinuousRotation;
+    private Vector3 _initialWorldPosition;
+
+    void Awake()
+    {
+        _initialWorldPosition = transform.position;
+    }
 
     void OnEnable()
     {
@@ -42,15 +53,22 @@ public class UiModelAnimation : MonoBehaviour
         // Reset state every time the object is enabled
         _flyInTimer = 0f;
         _isFlyingIn = true;
-        _currentContinuousRotation = Vector3.zero;
     }
 
     void Update()
     {
         if (targetCamera == null) return;
 
-        // Calculate Target Position relative to Camera
-        Vector3 targetPos = targetCamera.transform.position + targetCamera.transform.rotation * positionOffset;
+        // Calculate Target Position
+        Vector3 targetPos;
+        if (flyToInitialPosition)
+        {
+            targetPos = _initialWorldPosition;
+        }
+        else
+        {
+            targetPos = targetCamera.transform.position + targetCamera.transform.rotation * positionOffset;
+        }
 
         // 1. Handle Fly-in Position
         if (_isFlyingIn)
@@ -75,17 +93,21 @@ public class UiModelAnimation : MonoBehaviour
         }
         else
         {
-            // Once fly-in is done, snap to target position so it follows the camera perfectly
+            // Once fly-in is done, snap to target position so it stays there
             transform.position = targetPos;
         }
 
-        // 2. Handle Rotation (Base Offset + Continuous Spin)
-        _currentContinuousRotation += continuousRotationSpeed * Time.deltaTime;
+        // 2. Handle Rotation (Base Offset + Pendulum Spin)
+        Vector3 currentPendulumRotation = new Vector3(
+            Mathf.Sin(Time.time * pendulumSpeed) * pendulumAngle.x,
+            Mathf.Sin(Time.time * pendulumSpeed) * pendulumAngle.y,
+            Mathf.Sin(Time.time * pendulumSpeed) * pendulumAngle.z
+        );
         
         // Base rotation facing the camera + user offset
         Quaternion baseRotation = targetCamera.transform.rotation * Quaternion.Euler(baseRotationOffset);
         
-        // Apply the continuous spin on top of the base rotation
-        transform.rotation = baseRotation * Quaternion.Euler(_currentContinuousRotation);
+        // Apply the pendulum spin on top of the base rotation
+        transform.rotation = baseRotation * Quaternion.Euler(currentPendulumRotation);
     }
 }

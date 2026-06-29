@@ -3663,6 +3663,12 @@ MonoBehaviour:
   brickHitParticle1Offset: {x: 0, y: -1, z: 0}
   brickHitParticle2: {fileID: 8210478666967721066, guid: c4580228ee7b96b41988dafd9d113ff5, type: 3}
   brickHitParticle2Offset: {x: 0, y: -1, z: 0}
+  levelStartParticlePrefab: {fileID: 7022897973086469262, guid: f2644843704fbb8458a2609d0e2dfaeb, type: 3}
+  levelStartParticleOffset: {x: 0, y: -2.01, z: 0}
+  levelStartParticleScale: {x: 1.5, y: 1.5, z: 1.5}
+  playerWinParticlePrefab: {fileID: 3230751492319118466, guid: b2df2d5d744a75743ae6139fe4df972c, type: 3}
+  playerWinParticleOffset: {x: 0, y: 0, z: 0}
+  playerWinParticleScale: {x: 2, y: 2, z: 2}
 --- !u!4 &471052971
 Transform:
   m_ObjectHideFlags: 0
@@ -9745,6 +9751,7 @@ MonoBehaviour:
   brickMoveSound: {fileID: 8300000, guid: b887da4c0ba6d924da8455cd23addf47, type: 3}
   brickDissolveSound: {fileID: 8300000, guid: deea9853d40fc5146874312632f26d00, type: 3}
   levelStartSound: {fileID: 8300000, guid: c0538ba259d61aa4f9a4056087b05386, type: 3}
+  playerWinSound: {fileID: 8300000, guid: 23d5c71c974ad4c4283db06f76cef8d1, type: 3}
 --- !u!4 &1275990101
 Transform:
   m_ObjectHideFlags: 0
@@ -12123,8 +12130,10 @@ MonoBehaviour:
     onLevelComplete:
       m_PersistentCalls:
         m_Calls: []
+  levelLoadDelay: 2
   congratsUi: {fileID: 0}
   retryUi: {fileID: 0}
+  congratsFbx: {fileID: 0}
   cameraConfigs:
   - startLevel: 1
     endLevel: 5
@@ -15060,6 +15069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UiModelAnimation
   targetCamera: {fileID: 0}
+  flyToInitialPosition: 1
   positionOffset: {x: 0, y: 0, z: 20}
   baseRotationOffset: {x: -89.98, y: 0, z: 180}
   flyInDuration: 1
@@ -15088,7 +15098,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  continuousRotationSpeed: {x: 0, y: 0, z: 180}
+  pendulumSpeed: 2
+  pendulumAngle: {x: 0, y: 10, z: 0}
 --- !u!1 &1910840108
 GameObject:
   m_ObjectHideFlags: 0

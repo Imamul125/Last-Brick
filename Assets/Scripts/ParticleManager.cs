@@ -11,6 +11,15 @@ public class ParticleManager : MonoBehaviour
     public GameObject brickHitParticle2;
     public Vector3 brickHitParticle2Offset;
 
+    [Header("Level Particles")]
+    public GameObject levelStartParticlePrefab;
+    public Vector3 levelStartParticleOffset;
+    public Vector3 levelStartParticleScale = Vector3.one;
+
+    public GameObject playerWinParticlePrefab;
+    public Vector3 playerWinParticleOffset;
+    public Vector3 playerWinParticleScale = Vector3.one;
+
     private void Awake()
     {
         if (Instance == null)
@@ -72,6 +81,24 @@ public class ParticleManager : MonoBehaviour
                 // Fallback in case it's not a root particle system or lacks stopAction
                 Destroy(particleObj, 3.0f);
             }
+        }
+    }
+
+    public void PlayLevelStartParticle()
+    {
+        if (levelStartParticlePrefab != null)
+        {
+            GameObject particleObj = Instantiate(levelStartParticlePrefab, Vector3.zero + levelStartParticleOffset, Quaternion.identity);
+            particleObj.transform.localScale = levelStartParticleScale;
+        }
+    }
+
+    public void PlayPlayerWinParticle()
+    {
+        if (playerWinParticlePrefab != null)
+        {
+            GameObject particleObj = Instantiate(playerWinParticlePrefab, Vector3.zero + playerWinParticleOffset, Quaternion.identity);
+            particleObj.transform.localScale = playerWinParticleScale;
         }
     }
 }
