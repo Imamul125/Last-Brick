@@ -14,6 +14,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip brickDissolveSound;
     public AudioClip levelStartSound;
     public AudioClip playerWinSound;
+    public AudioClip retrySound;
 
     private void Awake()
     {
@@ -75,6 +76,14 @@ public class SoundManager : MonoBehaviour
         if (sfxSource != null && playerWinSound != null)
         {
             sfxSource.PlayOneShot(playerWinSound);
+        }
+    }
+
+    public void PlayRetrySound()
+    {
+        if (sfxSource != null && retrySound != null)
+        {
+            sfxSource.PlayOneShot(retrySound);
         }
     }
 }

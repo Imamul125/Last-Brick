@@ -34,7 +34,9 @@ public class LevelManager : MonoBehaviour
     [Header("UI References")]
     public GameObject congratsUi;
     public GameObject retryUi;
-    public GameObject congratsFbx;
+
+    [Tooltip("Delay before showing congrats UI and playing win sound")]
+    public float winCongratsDelay = 1.5f;
 
     [Header("Camera Settings")]
     public List<LevelCameraConfig> cameraConfigs = new List<LevelCameraConfig>();
@@ -84,7 +86,6 @@ public class LevelManager : MonoBehaviour
         levelEnded = false;
 
         if (congratsUi != null) congratsUi.SetActive(false);
-        if (congratsFbx != null) congratsFbx.SetActive(false);
         if (retryUi != null) retryUi.SetActive(false);
         
         // Destroy the previous level immediately so the screen is clear for the particle
@@ -166,13 +167,28 @@ public class LevelManager : MonoBehaviour
             ParticleManager.Instance.PlayPlayerWinParticle();
         }
 
+        if (currentLevelInstance != null)
+        {
+            PedestalAnimator pedestal = currentLevelInstance.GetComponentInChildren<PedestalAnimator>();
+            if (pedestal != null)
+            {
+                pedestal.AnimateDown();
+            }
+        }
+
+        StartCoroutine(WinSequenceRoutine());
+    }
+
+    private IEnumerator WinSequenceRoutine()
+    {
+        yield return new WaitForSeconds(winCongratsDelay);
+
         if (SoundManager.Instance != null)
         {
             SoundManager.Instance.PlayPlayerWinSound();
         }
         
         if (congratsUi != null) congratsUi.SetActive(true);
-        if (congratsFbx != null) congratsFbx.SetActive(true);
         
         CompleteCurrentLevel();
         Invoke(nameof(LoadNextLevel), 3f); // Wait 3 seconds then start next level
@@ -184,6 +200,20 @@ public class LevelManager : MonoBehaviour
         levelEnded = true;
         Debug.Log("Protect Brick hit the ground! YOU LOSE!");
         
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayRetrySound();
+        }
+
+        if (currentLevelInstance != null)
+        {
+            PedestalAnimator pedestal = currentLevelInstance.GetComponentInChildren<PedestalAnimator>();
+            if (pedestal != null)
+            {
+                pedestal.AnimateDown();
+            }
+        }
+
         if (retryUi != null) retryUi.SetActive(true);
     }
 

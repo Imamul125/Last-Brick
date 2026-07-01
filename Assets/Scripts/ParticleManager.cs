@@ -16,6 +16,11 @@ public class ParticleManager : MonoBehaviour
     public Vector3 levelStartParticleOffset;
     public Vector3 levelStartParticleScale = Vector3.one;
 
+    [Header("Stone Appear Particle")]
+    public GameObject stoneAppearParticlePrefab;
+    public Vector3 stoneAppearParticleOffset;
+    public Vector3 stoneAppearParticleScale = Vector3.one;
+
     public GameObject playerWinParticlePrefab;
     public Vector3 playerWinParticleOffset;
     public Vector3 playerWinParticleScale = Vector3.one;
@@ -90,6 +95,17 @@ public class ParticleManager : MonoBehaviour
         {
             GameObject particleObj = Instantiate(levelStartParticlePrefab, Vector3.zero + levelStartParticleOffset, Quaternion.identity);
             particleObj.transform.localScale = levelStartParticleScale;
+        }
+
+        PlayStoneAppearParticle();
+    }
+
+    public void PlayStoneAppearParticle()
+    {
+        if (stoneAppearParticlePrefab != null)
+        {
+            GameObject particleObj = Instantiate(stoneAppearParticlePrefab, Vector3.zero + stoneAppearParticleOffset, Quaternion.identity);
+            particleObj.transform.localScale = stoneAppearParticleScale;
         }
     }
 
