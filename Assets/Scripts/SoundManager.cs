@@ -15,6 +15,8 @@ public class SoundManager : MonoBehaviour
     public AudioClip levelStartSound;
     public AudioClip playerWinSound;
     public AudioClip retrySound;
+    public AudioClip timerTickSound;
+    public AudioClip coinFlowSound;
 
     private void Awake()
     {
@@ -25,7 +27,7 @@ public class SoundManager : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this);
         }
     }
 
@@ -84,6 +86,22 @@ public class SoundManager : MonoBehaviour
         if (sfxSource != null && retrySound != null)
         {
             sfxSource.PlayOneShot(retrySound);
+        }
+    }
+
+    public void PlayTimerTickSound()
+    {
+        if (sfxSource != null && timerTickSound != null)
+        {
+            sfxSource.PlayOneShot(timerTickSound);
+        }
+    }
+
+    public void PlayCoinSound()
+    {
+        if (sfxSource != null && coinFlowSound != null)
+        {
+            sfxSource.PlayOneShot(coinFlowSound);
         }
     }
 }

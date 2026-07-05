@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -6,8 +7,11 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance { get; private set; }
 
     [Header("Top Bar UI")]
+    public List<GameObject> sceneUiElements = new List<GameObject>();
+    public GameObject coinsUiTarget;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI movesText;
+    public TextMeshProUGUI timerText;
     public TextMeshProUGUI coinsText;
 
     [Header("Objective UI")]
@@ -15,9 +19,16 @@ public class UIManager : MonoBehaviour
 
     [Header("State Values")]
     public int currentMoves = 0;
+    public int maxMovesForLevel = 15;
+    public int MovesRemaining => Mathf.Max(0, maxMovesForLevel - currentMoves);
+
     public int currentCoins = 0;
     public int targetObjective = 15;
     public int currentObjectiveProgress = 0;
+
+    private float timeRemaining;
+    private bool timerRunning = false;
+    private int lastTimerSecond = -1;
 
     private void Awake()
     {
@@ -27,12 +38,77 @@ public class UIManager : MonoBehaviour
         }
         else 
         {
-            Destroy(gameObject);
+            Destroy(this);
         }
     }
 
     private void Start()
     {
+        currentCoins = PlayerPrefs.GetInt("SavedCoins", 0);
+        UpdateAllUI();
+    }
+
+    public void ShowSceneUI()
+    {
+        foreach (var ui in sceneUiElements)
+        {
+            if (ui != null) ui.SetActive(true);
+        }
+    }
+
+    public void HideSceneUI()
+    {
+        foreach (var ui in sceneUiElements)
+        {
+            if (ui != null) ui.SetActive(false);
+        }
+    }
+
+    public void ActivateCoinsUI()
+    {
+        if (coinsUiTarget != null) coinsUiTarget.SetActive(true);
+    }
+
+    private void Update()
+    {
+        if (!timerRunning || LevelManager.Instance == null || LevelManager.Instance.IsLevelEnded) return;
+
+        timeRemaining -= Time.deltaTime;
+
+        if (timeRemaining <= 0)
+        {
+            timeRemaining = 0;
+            timerRunning = false;
+            UpdateTimerUI();
+            LevelManager.Instance.TriggerLoss();
+            return;
+        }
+
+        UpdateTimerUI();
+
+        if (timeRemaining <= 10f)
+        {
+            int currentSecond = Mathf.CeilToInt(timeRemaining);
+            if (currentSecond != lastTimerSecond)
+            {
+                lastTimerSecond = currentSecond;
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlayTimerTickSound();
+                }
+            }
+        }
+    }
+
+    public void SetupLevelLimits(int maxMoves, float timeLimit)
+    {
+        maxMovesForLevel = maxMoves;
+        currentMoves = 0;
+        
+        timeRemaining = timeLimit;
+        timerRunning = timeLimit > 0;
+        lastTimerSecond = -1;
+        
         UpdateAllUI();
     }
 
@@ -45,6 +121,8 @@ public class UIManager : MonoBehaviour
     public void AddCoin(int amount)
     {
         currentCoins += amount;
+        PlayerPrefs.SetInt("SavedCoins", currentCoins);
+        PlayerPrefs.Save();
         UpdateAllUI();
     }
 
@@ -57,13 +135,59 @@ public class UIManager : MonoBehaviour
     public void SetLevel(int level)
     {
         if (levelText != null)
-            levelText.text = "LEVEL <color=#FFB700>" + level.ToString() + "</color>";
+            levelText.text = level.ToString();
     }
 
-    private void UpdateAllUI()
+    public void UpdateAllUI()
     {
-        if (movesText != null) movesText.text = "MOVES: <color=#FFB700>" + currentMoves.ToString() + "</color>";
+        if (levelText != null)
+        {
+            // Level is index + 1
+            int currentLevelDisplay = PlayerPrefs.GetInt("SavedLevel", 0) + 1;
+            levelText.text = currentLevelDisplay.ToString();
+        }
+
+        if (movesText != null) 
+        {
+            if (maxMovesForLevel > 0)
+                movesText.text = MovesRemaining.ToString();
+            else
+                movesText.text = "∞";
+        }
+
+        UpdateTimerUI();
+
         if (coinsText != null) coinsText.text = currentCoins.ToString();
-        if (objectiveProgressText != null) objectiveProgressText.text = "<color=#FFB700>" + currentObjectiveProgress + "</color>/" + targetObjective;
+        if (objectiveProgressText != null) objectiveProgressText.text = currentObjectiveProgress + "/" + targetObjective;
+    }
+
+    private void UpdateTimerUI()
+    {
+        if (timerText == null) return;
+
+        if (!timerRunning && maxMovesForLevel > 0 && timeRemaining <= 0) // if timeLimit is 0 it's infinite, if time remaining is 0 it's game over
+        {
+            timerText.text = "<color=#FF0000>00:00</color>";
+            return;
+        }
+
+        if (!timerRunning)
+        {
+            timerText.text = "∞";
+            return;
+        }
+
+        int minutes = Mathf.FloorToInt(timeRemaining / 60F);
+        int seconds = Mathf.FloorToInt(timeRemaining - minutes * 60);
+        string timeString = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+        if (timeRemaining <= 10f)
+        {
+            timerText.text = "<color=#FF0000>" + timeString + "</color>";
+        }
+        else
+        {
+            timerText.text = timeString;
+        }
     }
 }

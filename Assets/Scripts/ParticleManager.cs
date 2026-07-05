@@ -95,6 +95,7 @@ public class ParticleManager : MonoBehaviour
         {
             GameObject particleObj = Instantiate(levelStartParticlePrefab, Vector3.zero + levelStartParticleOffset, Quaternion.identity);
             particleObj.transform.localScale = levelStartParticleScale;
+            Destroy(particleObj, 5.0f);
         }
 
         PlayStoneAppearParticle();
@@ -106,6 +107,7 @@ public class ParticleManager : MonoBehaviour
         {
             GameObject particleObj = Instantiate(stoneAppearParticlePrefab, Vector3.zero + stoneAppearParticleOffset, Quaternion.identity);
             particleObj.transform.localScale = stoneAppearParticleScale;
+            Destroy(particleObj, 5.0f);
         }
     }
 
@@ -115,6 +117,7 @@ public class ParticleManager : MonoBehaviour
         {
             GameObject particleObj = Instantiate(playerWinParticlePrefab, Vector3.zero + playerWinParticleOffset, Quaternion.identity);
             particleObj.transform.localScale = playerWinParticleScale;
+            Destroy(particleObj, 5.0f);
         }
     }
 }

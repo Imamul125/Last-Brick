@@ -19,6 +19,8 @@ public class BrickInteractor : MonoBehaviour
 
     void Update()
     {
+        if (LevelManager.Instance != null && LevelManager.Instance.IsLevelEnded) return;
+
         if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
         {
             Vector2 pos = Pointer.current.position.ReadValue();
@@ -69,6 +71,16 @@ public class BrickInteractor : MonoBehaviour
         {
             UIManager.Instance.AddMove();
             UIManager.Instance.AddObjectiveProgress();
+
+            if (UIManager.Instance.maxMovesForLevel > 0 && UIManager.Instance.MovesRemaining <= 0)
+            {
+                // Give physics 3 seconds to settle. If a win happens during this time, 
+                // LevelManager will ignore TriggerLoss because levelEnded will be true.
+                if (LevelManager.Instance != null)
+                {
+                    LevelManager.Instance.Invoke("TriggerLoss", 3.0f);
+                }
+            }
         }
 
         Vector3 slideDir;

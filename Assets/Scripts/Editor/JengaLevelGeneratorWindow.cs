@@ -213,11 +213,6 @@ public class JengaLevelGeneratorWindow : EditorWindow
                 }
             }
 
-            if (lm != null && lm.levels.Count > 0)
-            {
-                lm.levels[lm.levels.Count - 1].protectBrick = protectBrick;
-                UnityEditor.EditorUtility.SetDirty(lm);
-            }
         }
 
         Debug.Log("Tower generated in scene! You can inspect it and save it as a prefab manually.");
