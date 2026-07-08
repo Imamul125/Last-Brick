@@ -1543,6 +1543,57 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b87f15b429201fa41addbc6e705ad47a, type: 3}
   m_PrefabInstance: {fileID: 174752595}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &186283271
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 186283273}
+  - component: {fileID: 186283272}
+  m_Layer: 0
+  m_Name: GameAdManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &186283272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186283271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5191d2fbed35714b98e6cdce3107b31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameAdManager
+  isTestMode: 1
+  gdprPrivacyButton: {fileID: 886596288}
+  completeFrequency: 3
+  liveCompleteAdIdAndroid: ca-app-pub-1954957296482912/7380476731
+  retryFrequency: 3
+  liveRetryAdIdAndroid: ca-app-pub-1954957296482912/1609275301
+  liveRewardedAdIdAndroid: ca-app-pub-1954957296482912/5516695335
+--- !u!4 &186283273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186283271}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &189982040
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3888,7 +3939,7 @@ MonoBehaviour:
   brickHitParticle1Offset: {x: 0, y: -1, z: 0}
   brickHitParticle2: {fileID: 8210478666967721066, guid: c4580228ee7b96b41988dafd9d113ff5, type: 3}
   brickHitParticle2Offset: {x: 0, y: -1, z: 0}
-  levelStartParticlePrefab: {fileID: 7022897973086469262, guid: f2644843704fbb8458a2609d0e2dfaeb, type: 3}
+  levelStartParticlePrefab: {fileID: 0}
   levelStartParticleOffset: {x: 0, y: -2.01, z: 0}
   levelStartParticleScale: {x: 1.3, y: 1.3, z: 1.3}
   stoneAppearParticlePrefab: {fileID: 1783347488613065932, guid: 24cbacee859a22f419c7fdfbcdd93ed9, type: 3}
@@ -4684,7 +4735,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1602342881}
         m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
-        m_MethodName: PlayCurrentLevel
+        m_MethodName: RetryCurrentLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9752,51 +9803,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1160824673}
   m_Mesh: {fileID: 7027636043351174211, guid: 01679fc2a8ce6364c812a081e74cefd6, type: 3}
---- !u!1 &1179454691
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1179454693}
-  - component: {fileID: 1179454692}
-  m_Layer: 0
-  m_Name: AddManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1179454692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1179454691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 807aa4ba400b8e949ad4adcf3f87949e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AdManager
-  useTestAds: 1
---- !u!4 &1179454693
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1179454691}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1191780097
 GameObject:
   m_ObjectHideFlags: 0
@@ -17712,7 +17718,6 @@ SceneRoots:
   - {fileID: 2009474122}
   - {fileID: 1209914042}
   - {fileID: 1428703879}
-  - {fileID: 1179454693}
   - {fileID: 1400321093}
   - {fileID: 727229960}
   - {fileID: 8203168263135493519}
@@ -17720,3 +17725,4 @@ SceneRoots:
   - {fileID: 1708619240}
   - {fileID: 970264713}
   - {fileID: 712915800}
+  - {fileID: 186283273}

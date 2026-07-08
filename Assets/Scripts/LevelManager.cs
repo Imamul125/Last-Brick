@@ -83,6 +83,21 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    // Connect your UI 'Retry' Button to this method!
+    public void RetryCurrentLevel()
+    {
+        if (GameAdManager.Instance != null)
+        {
+            GameAdManager.Instance.OnLevelRetry(() => {
+                StartLevel(currentLevelIndex);
+            });
+        }
+        else
+        {
+            StartLevel(currentLevelIndex);
+        }
+    }
+
     public void StartLevel(int index)
     {
         if (index < 0 || index >= levels.Count) 
@@ -324,6 +339,20 @@ public class LevelManager : MonoBehaviour
 
     // Helper to easily progress to the next level in the list
     public void LoadNextLevel()
+    {
+        if (GameAdManager.Instance != null)
+        {
+            GameAdManager.Instance.OnLevelCompleted(() => {
+                ProceedToLoadNextLevel();
+            });
+        }
+        else
+        {
+            ProceedToLoadNextLevel();
+        }
+    }
+
+    private void ProceedToLoadNextLevel()
     {
         currentLevelIndex = PlayerPrefs.GetInt("SavedLevel", 0);
         if (currentLevelIndex < levels.Count)
