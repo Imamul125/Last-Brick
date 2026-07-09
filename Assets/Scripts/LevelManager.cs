@@ -110,6 +110,11 @@ public class LevelManager : MonoBehaviour
         LevelData currentLevel = levels[currentLevelIndex];
         levelEnded = false;
 
+        if (FirebaseManager.Instance != null)
+        {
+            FirebaseManager.Instance.LogLevelStarted(currentLevelIndex);
+        }
+
         if (congratsUi != null) congratsUi.SetActive(false);
         if (retryUi != null) retryUi.SetActive(false);
         if (congratsCamera != null) congratsCamera.gameObject.SetActive(false);
@@ -291,6 +296,11 @@ public class LevelManager : MonoBehaviour
         levelEnded = true;
         Debug.Log("Protect Brick hit the ground! YOU LOSE!");
 
+        if (FirebaseManager.Instance != null)
+        {
+            FirebaseManager.Instance.LogLevelFailed(currentLevelIndex);
+        }
+
         if (UIManager.Instance != null)
         {
             UIManager.Instance.HideSceneUI();
@@ -328,6 +338,11 @@ public class LevelManager : MonoBehaviour
 
         LevelData currentLevel = levels[currentLevelIndex];
         currentLevel.onLevelComplete?.Invoke();
+        
+        if (FirebaseManager.Instance != null)
+        {
+            FirebaseManager.Instance.LogLevelCompleted(currentLevelIndex);
+        }
         
         int nextLevel = currentLevelIndex + 1;
         if (nextLevel < levels.Count)

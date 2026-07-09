@@ -1572,7 +1572,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5191d2fbed35714b98e6cdce3107b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameAdManager
-  isTestMode: 1
+  isTestMode: 0
   gdprPrivacyButton: {fileID: 886596288}
   completeFrequency: 3
   liveCompleteAdIdAndroid: ca-app-pub-1954957296482912/7380476731
@@ -16280,6 +16280,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b87f15b429201fa41addbc6e705ad47a, type: 3}
   m_PrefabInstance: {fileID: 1950654670}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1964602097
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1964602099}
+  - component: {fileID: 1964602098}
+  m_Layer: 0
+  m_Name: FireBaseManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1964602098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964602097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59456b0b31d1dde4f9d89e38d867a839, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FirebaseManager
+--- !u!4 &1964602099
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964602097}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1975213621
 GameObject:
   m_ObjectHideFlags: 0
@@ -17726,3 +17770,4 @@ SceneRoots:
   - {fileID: 970264713}
   - {fileID: 712915800}
   - {fileID: 186283273}
+  - {fileID: 1964602099}
