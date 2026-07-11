@@ -35,6 +35,7 @@ public class LevelManager : MonoBehaviour
     [Header("UI References")]
     public GameObject congratsUi;
     public GameObject retryUi;
+    public GameObject homeButton;
 
     [Tooltip("Delay before playing the win particle")]
     public float winParticleDelay = 0.5f;
@@ -117,6 +118,7 @@ public class LevelManager : MonoBehaviour
 
         if (congratsUi != null) congratsUi.SetActive(false);
         if (retryUi != null) retryUi.SetActive(false);
+        if (homeButton != null) homeButton.SetActive(true);
         if (congratsCamera != null) congratsCamera.gameObject.SetActive(false);
         
         // Destroy the previous level immediately so the screen is clear for the particle
@@ -216,6 +218,8 @@ public class LevelManager : MonoBehaviour
         levelEnded = true;
         Debug.Log("Protect Brick reached the pedestal! YOU WIN!");
 
+        if (homeButton != null) homeButton.SetActive(false);
+
         if (UIManager.Instance != null)
         {
             UIManager.Instance.HideSceneUI();
@@ -295,6 +299,8 @@ public class LevelManager : MonoBehaviour
         if (levelEnded) return;
         levelEnded = true;
         Debug.Log("Protect Brick hit the ground! YOU LOSE!");
+
+        if (homeButton != null) homeButton.SetActive(false);
 
         if (FirebaseManager.Instance != null)
         {
@@ -449,6 +455,38 @@ public class LevelManager : MonoBehaviour
                 // Sync the rotation so there is no snap when switching cameras
                 freeLookOrbital.HorizontalAxis.Value = endRotation;
             }
+        }
+    }
+
+    // Connect this to your 'Home' or 'Back to Main' button
+    public void BackToMain()
+    {
+        // Pause logic without timescale
+        levelEnded = true;
+
+        // Destroy the current level prefab
+        if (currentLevelInstance != null)
+        {
+            Destroy(currentLevelInstance);
+            currentLevelInstance = null;
+        }
+
+        // Stop timer and hide UI
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.HideSceneUI();
+        }
+
+        // Stop any running level coroutines to be safe
+        if (_loadLevelCoroutine != null)
+        {
+            StopCoroutine(_loadLevelCoroutine);
+        }
+
+        if (cinematicCoroutine != null)
+        {
+            StopCoroutine(cinematicCoroutine);
+            cinematicCoroutine = null;
         }
     }
 }
