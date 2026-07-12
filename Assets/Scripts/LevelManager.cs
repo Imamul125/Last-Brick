@@ -37,6 +37,10 @@ public class LevelManager : MonoBehaviour
     public GameObject retryUi;
     public GameObject homeButton;
 
+    [Header("Events")]
+    public UnityEvent onCongrats;
+    public UnityEvent onRetry;
+
     [Tooltip("Delay before playing the win particle")]
     public float winParticleDelay = 0.5f;
     [Tooltip("Delay before playing the win sound")]
@@ -284,6 +288,7 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForSeconds(winCongratsDelay);
         
         if (congratsUi != null) congratsUi.SetActive(true);
+        onCongrats?.Invoke();
 
         if (CoinAnimator.Instance != null)
         {
@@ -336,6 +341,7 @@ public class LevelManager : MonoBehaviour
         }
 
         if (retryUi != null) retryUi.SetActive(true);
+        onRetry?.Invoke();
     }
 
     public void CompleteCurrentLevel()
