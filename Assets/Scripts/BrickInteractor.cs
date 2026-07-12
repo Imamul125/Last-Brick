@@ -4,6 +4,8 @@ using System.Collections;
 
 public class BrickInteractor : MonoBehaviour
 {
+    public static event System.Action OnBrickRemoved;
+
     private Camera mainCamera;
     
     [Header("Animation Settings")]
@@ -93,6 +95,7 @@ public class BrickInteractor : MonoBehaviour
             slideDir = dotForward > 0 ? brick.transform.forward : -brick.transform.forward;
         }
 
+        OnBrickRemoved?.Invoke();
         StartCoroutine(RemoveBrickRoutine(brick, slideDir, length));
     }
 

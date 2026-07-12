@@ -40,6 +40,7 @@ public class LevelManager : MonoBehaviour
     [Header("Events")]
     public UnityEvent onCongrats;
     public UnityEvent onRetry;
+    public UnityEvent onWinParticleStart;
 
     [Tooltip("Delay before playing the win particle")]
     public float winParticleDelay = 0.5f;
@@ -267,6 +268,8 @@ public class LevelManager : MonoBehaviour
     {
         yield return new WaitForSeconds(winParticleDelay);
         
+        onWinParticleStart?.Invoke();
+
         if (ParticleManager.Instance != null)
         {
             ParticleManager.Instance.PlayPlayerWinParticle();

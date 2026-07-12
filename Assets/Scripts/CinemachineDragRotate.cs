@@ -5,6 +5,8 @@ using Unity.Cinemachine;
 [RequireComponent(typeof(CinemachineCamera))]
 public class CinemachineDragRotate : MonoBehaviour
 {
+    public static event System.Action OnCameraRotated;
+
     public float xSpeed = 1.2f;
     public float ySpeed = 1.2f;
 
@@ -31,6 +33,11 @@ public class CinemachineDragRotate : MonoBehaviour
             // Adjust the Cinemachine Orbital Follow axes based on input delta
             orbitalFollow.HorizontalAxis.Value += delta.x * xSpeed;
             orbitalFollow.VerticalAxis.Value -= delta.y * ySpeed;
+
+            if (delta.sqrMagnitude > 0)
+            {
+                OnCameraRotated?.Invoke();
+            }
         }
     }
 }
