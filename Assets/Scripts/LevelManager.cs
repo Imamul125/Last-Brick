@@ -295,7 +295,11 @@ public class LevelManager : MonoBehaviour
 
         if (CoinAnimator.Instance != null)
         {
-            CoinAnimator.Instance.AnimateCoins();
+            int bonus = 0;
+            if (ComboManager.Instance != null) {
+                bonus = ComboManager.Instance.TotalBonusCoinsEarned;
+            }
+            CoinAnimator.Instance.AnimateCoins(bonus);
         }
         
         CompleteCurrentLevel();
@@ -343,12 +347,45 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (retryUi != null) retryUi.SetActive(true);
+        if (retryUi != null) 
+        {
+            retryUi.SetActive(true);
+        }
         onRetry?.Invoke();
+    }
+
+    public void ResumeAfterUndo()
+    {
+        levelEnded = false;
+        
+        if (retryUi != null) retryUi.SetActive(false);
+        if (congratsUi != null) congratsUi.SetActive(false);
+        
+        if (UIManager.Instance != null) UIManager.Instance.ShowSceneUI();
+
+        if (homeButton != null) homeButton.SetActive(true);
+
+        if (freeLookCamera != null) freeLookCamera.gameObject.SetActive(true);
+        if (orbitCamera != null) orbitCamera.gameObject.SetActive(false);
+        if (congratsCamera != null) congratsCamera.gameObject.SetActive(false);
     }
 
     public void CompleteCurrentLevel()
     {
+        levelEnded = true;
+
+        if (congratsUi != null) 
+        {
+            congratsUi.SetActive(true);
+        }
+        
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.HideSceneUI();
+        }
+
+        if (homeButton != null) homeButton.SetActive(false);
+
         if (currentLevelIndex < 0 || currentLevelIndex >= levels.Count) return;
 
         LevelData currentLevel = levels[currentLevelIndex];
@@ -496,6 +533,30 @@ public class LevelManager : MonoBehaviour
         {
             StopCoroutine(cinematicCoroutine);
             cinematicCoroutine = null;
+        }
+    }
+
+    /// <summary>
+    /// Call this from a custom UI Button on the Game Over / Congrats screen.
+    /// It plays a Rewarded Ad, then grants coins = (baseReward * multiplier).
+    /// </summary>
+    public void WatchAdForCoinMultiplier(int multiplier = 3)
+    {
+        if (GameAdManager.Instance != null)
+        {
+            GameAdManager.Instance.ShowRewardedAd(() => {
+                // If they win, base reward is 50. If they fail, maybe base reward is 0?
+                // Assuming standard base reward is 50.
+                int baseReward = 50; 
+                int totalBonusCoins = (baseReward * multiplier) - baseReward; // Only give the extra coins
+
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.AddCoin(totalBonusCoins);
+                    // Optionally play a sound or spawn coin particles here
+                    if (SoundManager.Instance != null) SoundManager.Instance.PlayCoinSound();
+                }
+            });
         }
     }
 }

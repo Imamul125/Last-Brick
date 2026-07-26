@@ -36,28 +36,30 @@ public class CoinAnimator : MonoBehaviour
         }
     }
 
-    public void AnimateCoins()
+    public void AnimateCoins(int additionalCoins = 0)
     {
         if (UIManager.Instance != null)
         {
             UIManager.Instance.ActivateCoinsUI();
         }
 
+        int totalToReward = coinsToReward + additionalCoins;
+
         if (coinPrefab == null || spawnPoint == null || targetPanel == null || coinCanvas == null)
         {
             Debug.LogWarning("CoinAnimator is missing references! Cannot animate coins.");
             // Just award directly if missing UI
-            if (UIManager.Instance != null) UIManager.Instance.AddCoin(coinsToReward);
+            if (UIManager.Instance != null) UIManager.Instance.AddCoin(totalToReward);
             return;
         }
 
-        StartCoroutine(CoinFlowRoutine());
+        StartCoroutine(CoinFlowRoutine(totalToReward));
     }
 
-    private IEnumerator CoinFlowRoutine()
+    private IEnumerator CoinFlowRoutine(int totalToReward)
     {
         int coinsToSpawn = Random.Range(minCoinsToSpawn, maxCoinsToSpawn);
-        int rewardPerCoin = Mathf.CeilToInt((float)coinsToReward / coinsToSpawn);
+        int rewardPerCoin = Mathf.CeilToInt((float)totalToReward / coinsToSpawn);
         
         // Ensure total reward matches exactly
         int totalRewardedSoFar = 0;
@@ -67,7 +69,7 @@ public class CoinAnimator : MonoBehaviour
             int currentReward = rewardPerCoin;
             if (i == coinsToSpawn - 1) 
             {
-                currentReward = coinsToReward - totalRewardedSoFar;
+                currentReward = totalToReward - totalRewardedSoFar;
             }
             totalRewardedSoFar += currentReward;
 

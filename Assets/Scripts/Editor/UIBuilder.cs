@@ -234,6 +234,64 @@ public class UIBuilder
         btText.fontStyle = FontStyles.Bold;
         bTextObj.GetComponent<RectTransform>().sizeDelta = new Vector2(700, 100);
 
+        // --- POWER UP PANEL ---
+        GameObject powerUpPanel = new GameObject("PowerUpPanel");
+        powerUpPanel.transform.SetParent(canvasObj.transform, false);
+        RectTransform puRect = powerUpPanel.AddComponent<RectTransform>();
+        puRect.anchorMin = new Vector2(0.5f, 0);
+        puRect.anchorMax = new Vector2(0.5f, 0);
+        puRect.sizeDelta = new Vector2(600, 120);
+        puRect.anchoredPosition = new Vector2(0, 300);
+
+        // Hammer Button
+        GameObject hammerBtnObj = new GameObject("HammerButton");
+        hammerBtnObj.transform.SetParent(powerUpPanel.transform, false);
+        Image hammerBg = hammerBtnObj.AddComponent<Image>();
+        hammerBg.sprite = panelSprite;
+        hammerBg.color = new Color(0.8f, 0.2f, 0.2f, 1f);
+        Button hammerBtn = hammerBtnObj.AddComponent<Button>();
+        // Listener will be added at runtime by PowerUpManager
+        RectTransform hammerRect = hammerBtnObj.GetComponent<RectTransform>();
+        hammerRect.anchorMin = new Vector2(0.25f, 0.5f);
+        hammerRect.anchorMax = new Vector2(0.25f, 0.5f);
+        hammerRect.sizeDelta = new Vector2(250, 100);
+        hammerRect.anchoredPosition = new Vector2(0, 0);
+
+        GameObject hammerTextObj = new GameObject("Text");
+        hammerTextObj.transform.SetParent(hammerBtnObj.transform, false);
+        TextMeshProUGUI hammerText = hammerTextObj.AddComponent<TextMeshProUGUI>();
+        hammerText.font = font;
+        hammerText.text = "HAMMER (50)";
+        hammerText.fontSize = 35;
+        hammerText.alignment = TextAlignmentOptions.Center;
+        hammerText.fontStyle = FontStyles.Bold;
+        hammerTextObj.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 100);
+
+        // Undo Button
+        GameObject undoBtnObj = new GameObject("UndoButton");
+        undoBtnObj.transform.SetParent(powerUpPanel.transform, false);
+        Image undoBg = undoBtnObj.AddComponent<Image>();
+        undoBg.sprite = panelSprite;
+        undoBg.color = new Color(0.2f, 0.4f, 0.8f, 1f);
+        Button undoBtn = undoBtnObj.AddComponent<Button>();
+        // Listener will be added at runtime by PowerUpManager
+        RectTransform undoRect = undoBtnObj.GetComponent<RectTransform>();
+        undoRect.anchorMin = new Vector2(0.75f, 0.5f);
+        undoRect.anchorMax = new Vector2(0.75f, 0.5f);
+        undoRect.sizeDelta = new Vector2(250, 100);
+        undoRect.anchoredPosition = new Vector2(0, 0);
+
+        GameObject undoTextObj = new GameObject("Text");
+        undoTextObj.transform.SetParent(undoBtnObj.transform, false);
+        TextMeshProUGUI undoText = undoTextObj.AddComponent<TextMeshProUGUI>();
+        undoText.font = font;
+        undoText.text = "UNDO (30)";
+        undoText.fontSize = 35;
+        undoText.alignment = TextAlignmentOptions.Center;
+        undoText.fontStyle = FontStyles.Bold;
+        undoTextObj.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 100);
+
+
         // Connect to UIManager
         UIManager uiMgr = Object.FindObjectOfType<UIManager>();
         if (uiMgr != null)
@@ -242,6 +300,12 @@ public class UIBuilder
             uiMgr.movesText = mText;
             uiMgr.coinsText = cText;
             uiMgr.objectiveProgressText = opText;
+            
+            // Note: Since PowerUpPanel is new, we add it to sceneUiElements so it hides on win/loss
+            if (!uiMgr.sceneUiElements.Contains(powerUpPanel)) {
+                uiMgr.sceneUiElements.Add(powerUpPanel);
+            }
+            
             EditorUtility.SetDirty(uiMgr);
         }
 

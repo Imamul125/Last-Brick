@@ -102,4 +102,15 @@ public class ProtectBrick : MonoBehaviour
 
         LevelManager.Instance.TriggerWin();
     }
+
+    public void ResetTriggerState()
+    {
+        hasTriggered = false;
+        isTouchingPedestal = false;
+        CancelInvoke(nameof(TriggerWinDelayed));
+        if (brickMesh != null)
+        {
+            brickMesh.enabled = true;
+        }
+    }
 }

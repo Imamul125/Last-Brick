@@ -34,6 +34,17 @@ public class BrickInteractor : MonoBehaviour
                 GameObject hitObj = hit.collider.gameObject;
                 if (hitObj.GetComponent<Rigidbody>() != null && !removedBricks.Contains(hitObj))
                 {
+                    if (PowerUpManager.Instance != null)
+                    {
+                        PowerUpManager.Instance.SnapshotState();
+                        
+                        if (PowerUpManager.Instance.IsHammerModeActive)
+                        {
+                            PowerUpManager.Instance.UseHammer(hitObj);
+                            return; // Don't process normal sliding
+                        }
+                    }
+
                     TryRemoveBrick(hitObj);
                 }
             }
@@ -58,6 +69,7 @@ public class BrickInteractor : MonoBehaviour
         if (forwardBlocked && backwardBlocked)
         {
             // Blocked on both sides, play a slight shake to indicate it can't move
+            if (HapticManager.Instance != null) HapticManager.Instance.VibrateError();
             StartCoroutine(ShakeRoutine(brick));
             return;
         }
@@ -94,6 +106,8 @@ public class BrickInteractor : MonoBehaviour
             float dotForward = Vector3.Dot(camDir, brick.transform.forward);
             slideDir = dotForward > 0 ? brick.transform.forward : -brick.transform.forward;
         }
+
+        if (HapticManager.Instance != null) HapticManager.Instance.VibrateSuccess();
 
         OnBrickRemoved?.Invoke();
         StartCoroutine(RemoveBrickRoutine(brick, slideDir, length));
