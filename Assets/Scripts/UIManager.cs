@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI movesText;
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI timerText2;
     public TextMeshProUGUI coinsText;
 
     [Header("Objective UI")]
@@ -163,31 +164,33 @@ public class UIManager : MonoBehaviour
 
     private void UpdateTimerUI()
     {
-        if (timerText == null) return;
+        string textToDisplay = "";
 
         if (!timerRunning && maxMovesForLevel > 0 && timeRemaining <= 0) // if timeLimit is 0 it's infinite, if time remaining is 0 it's game over
         {
-            timerText.text = "<color=#FF0000>00:00</color>";
-            return;
+            textToDisplay = "<color=#FF0000>00:00</color>";
         }
-
-        if (!timerRunning)
+        else if (!timerRunning)
         {
-            timerText.text = "∞";
-            return;
-        }
-
-        int minutes = Mathf.FloorToInt(timeRemaining / 60F);
-        int seconds = Mathf.FloorToInt(timeRemaining - minutes * 60);
-        string timeString = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-        if (timeRemaining <= 10f)
-        {
-            timerText.text = "<color=#FF0000>" + timeString + "</color>";
+            textToDisplay = "∞";
         }
         else
         {
-            timerText.text = timeString;
+            int minutes = Mathf.FloorToInt(timeRemaining / 60F);
+            int seconds = Mathf.FloorToInt(timeRemaining - minutes * 60);
+            string timeString = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            if (timeRemaining <= 10f)
+            {
+                textToDisplay = "<color=#FF0000>" + timeString + "</color>";
+            }
+            else
+            {
+                textToDisplay = timeString;
+            }
         }
+
+        if (timerText != null) timerText.text = textToDisplay;
+        if (timerText2 != null) timerText2.text = textToDisplay;
     }
 }
