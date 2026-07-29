@@ -14,6 +14,14 @@ public class BrickInteractor : MonoBehaviour
 
     private System.Collections.Generic.HashSet<GameObject> removedBricks = new System.Collections.Generic.HashSet<GameObject>();
 
+    public void RemoveFromRemovedBricks(GameObject brick)
+    {
+        if (removedBricks.Contains(brick))
+        {
+            removedBricks.Remove(brick);
+        }
+    }
+
     void Start()
     {
         mainCamera = Camera.main;

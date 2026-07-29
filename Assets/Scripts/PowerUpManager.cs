@@ -182,8 +182,8 @@ public class PowerUpManager : MonoBehaviour
             Destroy(ps.gameObject, 2.0f);
         }
 
-        // Destroy the brick
-        Destroy(brick);
+        // Disable the brick instead of destroying so it can be undone
+        brick.SetActive(false);
     }
 
     public void SnapshotState()
@@ -193,19 +193,15 @@ public class PowerUpManager : MonoBehaviour
         
         foreach (Rigidbody rb in allRigidbodies)
         {
-            // Only snapshot bricks or the cat
-            if (rb.gameObject.CompareTag("Brick") || rb.GetComponent<ProtectBrick>() != null || rb.GetComponent<CatController>() != null)
+            snapshot.Add(new RigidbodyState
             {
-                snapshot.Add(new RigidbodyState
-                {
-                    rb = rb,
-                    position = rb.transform.position,
-                    rotation = rb.transform.rotation,
-                    velocity = rb.linearVelocity,
-                    angularVelocity = rb.angularVelocity,
-                    isKinematic = rb.isKinematic
-                });
-            }
+                rb = rb,
+                position = rb.transform.position,
+                rotation = rb.transform.rotation,
+                velocity = rb.linearVelocity,
+                angularVelocity = rb.angularVelocity,
+                isKinematic = rb.isKinematic
+            });
         }
         
         // Limit history to 10 moves to save memory
@@ -236,9 +232,11 @@ public class PowerUpManager : MonoBehaviour
             // Try fallback to Ad
             if (GameAdManager.Instance != null)
             {
-                GameAdManager.Instance.ShowRewardedAd(() => {
-                    ExecuteUndoLogic();
-                });
+                bool earnedReward = false;
+                GameAdManager.Instance.ShowRewardedAd(
+                    () => { earnedReward = true; },
+                    () => { if (earnedReward) ExecuteUndoLogic(); }
+                );
             }
             else
             {
@@ -251,11 +249,17 @@ public class PowerUpManager : MonoBehaviour
     private void ExecuteUndoLogic()
     {
         List<RigidbodyState> lastSnapshot = stateHistory.Pop();
+        BrickInteractor interactor = FindAnyObjectByType<BrickInteractor>();
 
         foreach (var state in lastSnapshot)
         {
             if (state.rb != null) // Ensure it hasn't been destroyed
             {
+                if (!state.rb.gameObject.activeSelf)
+                {
+                    state.rb.gameObject.SetActive(true);
+                }
+
                 state.rb.transform.position = state.position;
                 state.rb.transform.rotation = state.rotation;
                 state.rb.linearVelocity = state.velocity;
@@ -266,6 +270,11 @@ public class PowerUpManager : MonoBehaviour
                 if (pb != null)
                 {
                     pb.ResetTriggerState();
+                }
+
+                if (interactor != null)
+                {
+                    interactor.RemoveFromRemovedBricks(state.rb.gameObject);
                 }
             }
         }

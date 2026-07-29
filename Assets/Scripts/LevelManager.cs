@@ -142,6 +142,7 @@ public class LevelManager : MonoBehaviour
             UIManager.Instance.ShowSceneUI();
         }
 
+
         if (SoundManager.Instance != null)
         {
             SoundManager.Instance.PlayLevelStartSound();
@@ -544,19 +545,38 @@ public class LevelManager : MonoBehaviour
     {
         if (GameAdManager.Instance != null)
         {
-            GameAdManager.Instance.ShowRewardedAd(() => {
-                // If they win, base reward is 50. If they fail, maybe base reward is 0?
-                // Assuming standard base reward is 50.
-                int baseReward = 50; 
-                int totalBonusCoins = (baseReward * multiplier) - baseReward; // Only give the extra coins
+            bool earnedReward = false;
 
-                if (UIManager.Instance != null)
-                {
-                    UIManager.Instance.AddCoin(totalBonusCoins);
-                    // Optionally play a sound or spawn coin particles here
-                    if (SoundManager.Instance != null) SoundManager.Instance.PlayCoinSound();
+            GameAdManager.Instance.ShowRewardedAd(
+                // 1. Reward Earned Callback (Fires when video finishes, before closing)
+                () => {
+                    earnedReward = true;
+                    int baseReward = 50; 
+                    int totalBonusCoins = (baseReward * multiplier) - baseReward; 
+
+                    if (UIManager.Instance != null)
+                    {
+                        UIManager.Instance.AddCoin(totalBonusCoins);
+                        if (SoundManager.Instance != null) SoundManager.Instance.PlayCoinSound();
+                    }
+                },
+                // 2. Ad Closed Callback (Fires when the user clicks the 'X' to close the ad)
+                () => {
+                    if (earnedReward)
+                    {
+                        // Resume or close UI based on which panel is currently open
+                        if (retryUi != null && retryUi.activeInHierarchy)
+                        {
+                            RetryCurrentLevel();
+                        }
+                        else if (congratsUi != null && congratsUi.activeInHierarchy)
+                        {
+                            CancelInvoke(nameof(LoadNextLevel));
+                            LoadNextLevel();
+                        }
+                    }
                 }
-            });
+            );
         }
     }
 }

@@ -72,7 +72,8 @@ public class BrickCollisionSound : MonoBehaviour
             Destroy(ps.gameObject, 2.0f);
         }
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        isDissolving = false; // Reset state so it can dissolve again if restored!
     }
 }
 
