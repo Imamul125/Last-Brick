@@ -155,10 +155,19 @@ public class PowerUpManager : MonoBehaviour
 
     private void BreakBrick(GameObject brick)
     {
-        // Add to objective/moves if needed, usually power-ups don't cost a move, but they give objective progress
+        // Consume a move and add to objective
         if (UIManager.Instance != null)
         {
             UIManager.Instance.AddObjectiveProgress();
+            UIManager.Instance.AddMove();
+
+            if (UIManager.Instance.maxMovesForLevel > 0 && UIManager.Instance.MovesRemaining <= 0)
+            {
+                if (LevelManager.Instance != null)
+                {
+                    LevelManager.Instance.Invoke("TriggerLoss", 3.0f);
+                }
+            }
         }
 
         // Spawn particles and play sound using ParticleManager/SoundManager

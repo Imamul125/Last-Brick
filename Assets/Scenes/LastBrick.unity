@@ -15082,6 +15082,42 @@ MonoBehaviour:
     onLevelComplete:
       m_PersistentCalls:
         m_Calls: []
+  - levelNumber: 9
+    maxMoves: 15
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 10
+    maxMoves: 15
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 11
+    maxMoves: 15
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 12
+    maxMoves: 11
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
   levelLoadDelay: 2
   congratsUi: {fileID: 2023900156}
   retryUi: {fileID: 1631724658}
@@ -15136,7 +15172,11 @@ MonoBehaviour:
   winCongratsDelay: 5
   cameraConfigs:
   - startLevel: 1
-    endLevel: 5
+    endLevel: 8
+    cameraTarget: {fileID: 607077030}
+    orbitalRadius: 19
+  - startLevel: 9
+    endLevel: 50
     cameraTarget: {fileID: 607077030}
     orbitalRadius: 19
   orbitCamera: {fileID: 214644570}
