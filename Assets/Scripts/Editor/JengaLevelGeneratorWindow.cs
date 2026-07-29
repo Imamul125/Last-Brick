@@ -16,6 +16,45 @@ public class JengaLevelGeneratorWindow : EditorWindow
         GetWindow<JengaLevelGeneratorWindow>("Jenga Level Generator");
     }
 
+    private void OnEnable()
+    {
+        numberOfRows = EditorPrefs.GetInt("JengaGen_Rows", 15);
+        numberOfColumns = EditorPrefs.GetInt("JengaGen_Cols", 3);
+        missingBricks = EditorPrefs.GetInt("JengaGen_Missing", 5);
+        forceJengaProportions = EditorPrefs.GetBool("JengaGen_ForceProportions", true);
+        highlightProtectBrick = EditorPrefs.GetBool("JengaGen_HighlightProtect", true);
+
+        string prefabPath = EditorPrefs.GetString("JengaGen_PrefabPath", "");
+        if (!string.IsNullOrEmpty(prefabPath))
+        {
+            brickPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+        }
+    }
+
+    private void OnDisable()
+    {
+        SaveSettings();
+    }
+
+    private void SaveSettings()
+    {
+        EditorPrefs.SetInt("JengaGen_Rows", numberOfRows);
+        EditorPrefs.SetInt("JengaGen_Cols", numberOfColumns);
+        EditorPrefs.SetInt("JengaGen_Missing", missingBricks);
+        EditorPrefs.SetBool("JengaGen_ForceProportions", forceJengaProportions);
+        EditorPrefs.SetBool("JengaGen_HighlightProtect", highlightProtectBrick);
+
+        if (brickPrefab != null)
+        {
+            string path = AssetDatabase.GetAssetPath(brickPrefab);
+            EditorPrefs.SetString("JengaGen_PrefabPath", path);
+        }
+        else
+        {
+            EditorPrefs.SetString("JengaGen_PrefabPath", "");
+        }
+    }
+
     private void OnGUI()
     {
         GUILayout.Label("1. Setup", EditorStyles.boldLabel);
@@ -41,6 +80,7 @@ public class JengaLevelGeneratorWindow : EditorWindow
         EditorGUILayout.Space();
         if (GUILayout.Button("Generate Tower", GUILayout.Height(40)))
         {
+            SaveSettings();
             GenerateTower();
         }
     }
