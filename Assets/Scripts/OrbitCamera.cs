@@ -41,9 +41,18 @@ public class OrbitCamera : MonoBehaviour
 
         Vector3 pivotPosition = target != null ? target.position + new Vector3(0, 5, 0) : defaultPivot;
 
-        if (Pointer.current != null && Pointer.current.press.isPressed)
+        Vector2 delta = Vector2.zero;
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
         {
-            Vector2 delta = Pointer.current.delta.ReadValue();
+            delta = Touchscreen.current.primaryTouch.delta.ReadValue();
+        }
+        else if (Pointer.current != null && Pointer.current.press.isPressed)
+        {
+            delta = Pointer.current.delta.ReadValue();
+        }
+
+        if (delta != Vector2.zero)
+        {
             x += delta.x * xSpeed;
             y -= delta.y * ySpeed;
         }

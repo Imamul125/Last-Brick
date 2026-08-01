@@ -12,6 +12,25 @@ public class BrickInteractor : MonoBehaviour
     [Tooltip("Multiplier for the slide out animation speed.")]
     public float animationSpeed = 1.0f;
 
+    [Header("Input Settings")]
+    [Tooltip("Maximum movement in pixels to still be considered a click.")]
+    public float clickDragThreshold = 40f;
+    [Tooltip("Maximum time in seconds to still be considered a click.")]
+    public float clickTimeThreshold = 0.5f;
+
+    [Header("Visual Feedback")]
+    [Tooltip("Color to highlight the brick when touched.")]
+    [ColorUsage(true, true)]
+    public Color touchHighlightColor = Color.white * 2f;
+
+    private Vector2 pointerDownPosition;
+    private float pointerDownTime;
+    private bool isPointerDown = false;
+
+    private GameObject touchedBrick;
+    private Renderer touchedBrickRenderer;
+    private MaterialPropertyBlock propBlock;
+
     private System.Collections.Generic.HashSet<GameObject> removedBricks = new System.Collections.Generic.HashSet<GameObject>();
 
     public void RemoveFromRemovedBricks(GameObject brick)
@@ -25,38 +44,114 @@ public class BrickInteractor : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
+        propBlock = new MaterialPropertyBlock();
+    }
+
+    private bool WasPressed()
+    {
+        if (Touchscreen.current != null) return Touchscreen.current.primaryTouch.press.wasPressedThisFrame;
+        return Pointer.current != null && Pointer.current.press.wasPressedThisFrame;
+    }
+
+    private bool WasReleased()
+    {
+        if (Touchscreen.current != null) return Touchscreen.current.primaryTouch.press.wasReleasedThisFrame;
+        return Pointer.current != null && Pointer.current.press.wasReleasedThisFrame;
+    }
+
+    private Vector2 GetPosition()
+    {
+        if (Touchscreen.current != null) return Touchscreen.current.primaryTouch.position.ReadValue();
+        if (Pointer.current != null) return Pointer.current.position.ReadValue();
+        return Vector2.zero;
     }
 
     void Update()
     {
         if (LevelManager.Instance != null && LevelManager.Instance.IsLevelEnded) return;
 
-        if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
+        if (WasPressed())
         {
-            Vector2 pos = Pointer.current.position.ReadValue();
-            Ray ray = mainCamera.ScreenPointToRay(pos);
-            RaycastHit hit;
+            pointerDownPosition = GetPosition();
+            pointerDownTime = Time.unscaledTime;
+            isPointerDown = true;
 
-            if (Physics.Raycast(ray, out hit))
-            {
-                GameObject hitObj = hit.collider.gameObject;
-                if (hitObj.GetComponent<Rigidbody>() != null && !removedBricks.Contains(hitObj))
+                // Apply visual feedback on touch down
+                Ray ray = mainCamera.ScreenPointToRay(pointerDownPosition);
+                if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    if (PowerUpManager.Instance != null)
+                    GameObject hitObj = hit.collider.gameObject;
+                    if (hitObj.GetComponent<Rigidbody>() != null && !removedBricks.Contains(hitObj))
                     {
-                        PowerUpManager.Instance.SnapshotState();
-                        
-                        if (PowerUpManager.Instance.IsHammerModeActive)
+                        touchedBrick = hitObj;
+                        touchedBrickRenderer = touchedBrick.GetComponentInChildren<Renderer>();
+                        if (touchedBrickRenderer != null)
                         {
-                            PowerUpManager.Instance.UseHammer(hitObj);
-                            return; // Don't process normal sliding
+                            touchedBrickRenderer.GetPropertyBlock(propBlock);
+                            propBlock.SetColor("_BaseColor", touchHighlightColor);
+                            propBlock.SetColor("_EmissionColor", touchHighlightColor);
+                            touchedBrickRenderer.SetPropertyBlock(propBlock);
                         }
                     }
+                }
+            }
+            else if (isPointerDown)
+            {
+                Vector2 currentPosition = GetPosition();
+                float distance = Vector2.Distance(pointerDownPosition, currentPosition);
+                
+                // If dragged beyond threshold, clear visual feedback
+                if (distance > clickDragThreshold)
+                {
+                    ClearVisualFeedback();
+                }
 
-                    TryRemoveBrick(hitObj);
+                if (WasReleased())
+                {
+                    isPointerDown = false;
+                    ClearVisualFeedback();
+                    
+                    float timeDelta = Time.unscaledTime - pointerDownTime;
+
+                    if (distance <= clickDragThreshold && timeDelta <= clickTimeThreshold)
+                    {
+                        Ray ray = mainCamera.ScreenPointToRay(currentPosition);
+                        RaycastHit hit;
+
+                        if (Physics.Raycast(ray, out hit))
+                        {
+                            GameObject hitObj = hit.collider.gameObject;
+                            if (hitObj.GetComponent<Rigidbody>() != null && !removedBricks.Contains(hitObj))
+                            {
+                                if (PowerUpManager.Instance != null)
+                                {
+                                    PowerUpManager.Instance.SnapshotState();
+                                    
+                                    if (PowerUpManager.Instance.IsHammerModeActive)
+                                    {
+                                        PowerUpManager.Instance.UseHammer(hitObj);
+                                        return; // Don't process normal sliding
+                                    }
+                                }
+
+                                TryRemoveBrick(hitObj);
+                            }
+                        }
+                    }
                 }
             }
         }
+
+    private void ClearVisualFeedback()
+    {
+        if (touchedBrickRenderer != null)
+        {
+            touchedBrickRenderer.GetPropertyBlock(propBlock);
+            propBlock.Clear();
+            touchedBrickRenderer.SetPropertyBlock(propBlock);
+            touchedBrickRenderer = null;
+        }
+        touchedBrick = null;
     }
 
     private void TryRemoveBrick(GameObject brick)

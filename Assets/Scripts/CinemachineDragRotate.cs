@@ -26,10 +26,22 @@ public class CinemachineDragRotate : MonoBehaviour
         if (orbitalFollow == null) return;
 
         // Only rotate if the pointer/mouse is pressed down
-        if (Pointer.current != null && Pointer.current.press.isPressed)
+        bool isPressed = false;
+        Vector2 delta = Vector2.zero;
+
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
         {
-            Vector2 delta = Pointer.current.delta.ReadValue();
-            
+            isPressed = true;
+            delta = Touchscreen.current.primaryTouch.delta.ReadValue();
+        }
+        else if (Pointer.current != null && Pointer.current.press.isPressed)
+        {
+            isPressed = true;
+            delta = Pointer.current.delta.ReadValue();
+        }
+
+        if (isPressed && delta != Vector2.zero)
+        {
             // Adjust the Cinemachine Orbital Follow axes based on input delta
             orbitalFollow.HorizontalAxis.Value += delta.x * xSpeed;
             orbitalFollow.VerticalAxis.Value -= delta.y * ySpeed;
