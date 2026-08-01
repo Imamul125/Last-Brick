@@ -129,6 +129,13 @@ public class BrickInteractor : MonoBehaviour
                                     
                                     if (PowerUpManager.Instance.IsHammerModeActive)
                                     {
+                                        // Don't allow hammering the protected brick
+                                        if (hitObj.GetComponent<ProtectBrick>() != null)
+                                        {
+                                            if (HapticManager.Instance != null) HapticManager.Instance.VibrateError();
+                                            return;
+                                        }
+
                                         PowerUpManager.Instance.UseHammer(hitObj);
                                         return; // Don't process normal sliding
                                     }
