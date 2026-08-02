@@ -25,7 +25,10 @@ public class PetInteract : MonoBehaviour
         // Play Sound
         if (petSound != null && audioSource != null)
         {
-            audioSource.PlayOneShot(petSound);
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(petSound);
+            }
         }
         else if (petSound == null)
         {

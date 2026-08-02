@@ -19,8 +19,10 @@ public class QuestManager : MonoBehaviour
     public int questRewardCoins = 200;
 
     [Header("UI Reference")]
-    // Since UI is dynamically built, we'll try to find these or build a basic debug UI if null
-    private GameObject questPanel;
+    [Tooltip("Optional: Assign a custom prefab for the Quest Completed popup.")]
+    public GameObject questCompletedPrefab;
+    [Tooltip("Optional: Assign the specific Canvas or Panel where the popup should spawn.")]
+    public Transform questPopupParent;
 
     private void Awake()
     {
@@ -109,38 +111,74 @@ public class QuestManager : MonoBehaviour
             UIManager.Instance.AddCoin(questRewardCoins);
         }
 
-        // Show a temporary UI popup
-        Canvas canvas = FindAnyObjectByType<Canvas>();
-        if (canvas != null)
+        // Determine parent canvas
+        Transform parentCanvas = questPopupParent;
+        if (parentCanvas == null)
         {
-            GameObject popup = new GameObject("QuestPopup");
-            popup.transform.SetParent(canvas.transform, false);
-            
-            RectTransform rt = popup.AddComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0.5f, 1f);
-            rt.anchorMax = new Vector2(0.5f, 1f);
-            rt.anchoredPosition = new Vector2(0, -300);
-            rt.sizeDelta = new Vector2(800, 150);
-
-            Image bg = popup.AddComponent<Image>();
-            bg.color = new Color(0, 0, 0, 0.8f);
-
-            GameObject textObj = new GameObject("Text");
-            textObj.transform.SetParent(popup.transform, false);
-            TextMeshProUGUI txt = textObj.AddComponent<TextMeshProUGUI>();
-            txt.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
-            txt.text = $"QUEST COMPLETED!\n<size=40>{questName}</size>\n<color=#FFD700>+{questRewardCoins} COINS</color>";
-            txt.fontSize = 50;
-            txt.alignment = TextAlignmentOptions.Center;
-            txt.fontStyle = FontStyles.Bold;
-            textObj.GetComponent<RectTransform>().sizeDelta = new Vector2(800, 150);
-
-            Destroy(popup, 3.5f);
-            
-            if (SoundManager.Instance != null)
+            // Try to find a Screen Space Overlay canvas first, otherwise any canvas
+            Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
+            foreach (var c in canvases)
             {
-                SoundManager.Instance.PlayPlayerWinSound();
+                if (c.renderMode == RenderMode.ScreenSpaceOverlay)
+                {
+                    parentCanvas = c.transform;
+                    break;
+                }
             }
+            if (parentCanvas == null && canvases.Length > 0)
+            {
+                parentCanvas = canvases[0].transform;
+            }
+        }
+
+        if (parentCanvas != null)
+        {
+            if (questCompletedPrefab != null)
+            {
+                // Instantiate custom prefab
+                GameObject popup = Instantiate(questCompletedPrefab, parentCanvas);
+                
+                // Try to find a text component to set the message (if one exists)
+                TextMeshProUGUI txt = popup.GetComponentInChildren<TextMeshProUGUI>();
+                if (txt != null)
+                {
+                    txt.text = $"QUEST COMPLETED!\n<size=80%>{questName}</size>\n<color=#FFD700>+{questRewardCoins} COINS</color>";
+                }
+                
+                Destroy(popup, 3.5f);
+            }
+            else
+            {
+                // Fallback to dynamic creation
+                GameObject popup = new GameObject("QuestPopup");
+                popup.transform.SetParent(parentCanvas, false);
+                
+                RectTransform rt = popup.AddComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.5f, 1f);
+                rt.anchorMax = new Vector2(0.5f, 1f);
+                rt.anchoredPosition = new Vector2(0, -300);
+                rt.sizeDelta = new Vector2(600, 120);
+
+                Image bg = popup.AddComponent<Image>();
+                bg.color = new Color(0, 0, 0, 0.8f);
+
+                GameObject textObj = new GameObject("Text");
+                textObj.transform.SetParent(popup.transform, false);
+                TextMeshProUGUI txt = textObj.AddComponent<TextMeshProUGUI>();
+                txt.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+                txt.text = $"QUEST COMPLETED!\n<size=30>{questName}</size>\n<color=#FFD700>+{questRewardCoins} COINS</color>";
+                txt.fontSize = 35; // Reduced from 50
+                txt.alignment = TextAlignmentOptions.Center;
+                txt.fontStyle = FontStyles.Bold;
+                textObj.GetComponent<RectTransform>().sizeDelta = new Vector2(600, 120);
+
+                Destroy(popup, 3.5f);
+            }
+        }
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayPlayerWinSound();
         }
     }
 }

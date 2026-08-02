@@ -5618,7 +5618,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PetInteract
   petSound: {fileID: 8300000, guid: 3c32702f7810e3d4d93e7f2897451a7c, type: 3}
-  animationTriggerName: Interact
+  animationTriggerName: Run
 --- !u!82 &450838024
 AudioSource:
   m_ObjectHideFlags: 0
@@ -16790,6 +16790,8 @@ MonoBehaviour:
   hammerQuestTarget: 2
   comboQuestTarget: 5
   questRewardCoins: 200
+  questCompletedPrefab: {fileID: 9187543285650959278, guid: 43b0ad3894c3936499cfc5ac9f4374fc, type: 3}
+  questPopupParent: {fileID: 1475295228}
 --- !u!114 &1516993264
 MonoBehaviour:
   m_ObjectHideFlags: 0
