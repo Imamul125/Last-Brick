@@ -85,7 +85,7 @@ public class PetSelectionManager : MonoBehaviour
 
         if (playButton != null)
         {
-            playButton.interactable = isUnlocked;
+            playButton.gameObject.SetActive(isUnlocked);
         }
 
         if (unlockButton != null)
@@ -95,7 +95,7 @@ public class PetSelectionManager : MonoBehaviour
 
         if (customizeButton != null)
         {
-            customizeButton.interactable = isUnlocked && useCustomization;
+            customizeButton.gameObject.SetActive(isUnlocked && useCustomization);
         }
 
         // 4. Update Button Interactable States
@@ -193,6 +193,25 @@ public class PetSelectionManager : MonoBehaviour
             {
                 int missingCoins = requiredCoins - currentCoins;
                 requiredCoinsText.text = missingCoins.ToString();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Call this from a single invisible UI Button to interact with whichever pet is currently visible on the podium.
+    /// </summary>
+    public void InteractWithCurrentPet()
+    {
+        if (currentIndex >= 0 && currentIndex < pets.Count)
+        {
+            GameObject currentModel = pets[currentIndex].model;
+            if (currentModel != null)
+            {
+                PetInteract petInteract = currentModel.GetComponent<PetInteract>();
+                if (petInteract != null)
+                {
+                    petInteract.Interact();
+                }
             }
         }
     }
