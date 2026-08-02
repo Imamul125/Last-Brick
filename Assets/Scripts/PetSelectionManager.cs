@@ -13,6 +13,11 @@ public class PetSelectionManager : MonoBehaviour
     public Button prevButton;
     public GameObject lockOverlay;
     public Button playButton; // Reference to main play button so we can disable it if pet is locked
+    
+    [Header("New UI & Settings")]
+    public Button unlockButton;
+    public Button customizeButton;
+    public bool useCustomization = true;
 
     private int currentIndex = 0;
 
@@ -21,6 +26,7 @@ public class PetSelectionManager : MonoBehaviour
         // Add listeners to buttons
         if (nextButton != null) nextButton.onClick.AddListener(NextPet);
         if (prevButton != null) prevButton.onClick.AddListener(PrevPet);
+        if (playButton != null) playButton.onClick.AddListener(SaveSelectedPet);
 
         // Ensure only the first pet is visible initially
         UpdatePetDisplay();
@@ -56,7 +62,7 @@ public class PetSelectionManager : MonoBehaviour
         // 2. Check unlock status
         bool isUnlocked = PlayerPrefs.GetInt("PetUnlocked_" + currentIndex, currentIndex == 0 ? 1 : 0) == 1;
 
-        // 3. Update UI overlays
+        // 3. Update UI overlays and Buttons
         if (lockOverlay != null)
         {
             lockOverlay.SetActive(!isUnlocked);
@@ -65,6 +71,16 @@ public class PetSelectionManager : MonoBehaviour
         if (playButton != null)
         {
             playButton.interactable = isUnlocked;
+        }
+
+        if (unlockButton != null)
+        {
+            unlockButton.gameObject.SetActive(!isUnlocked);
+        }
+
+        if (customizeButton != null)
+        {
+            customizeButton.interactable = isUnlocked && useCustomization;
         }
 
         // 4. Update Button Interactable States
@@ -102,5 +118,18 @@ public class PetSelectionManager : MonoBehaviour
     public int GetSelectedPetIndex()
     {
         return currentIndex;
+    }
+
+    /// <summary>
+    /// Saves the currently selected pet to PlayerPrefs when Play is clicked.
+    /// </summary>
+    public void SaveSelectedPet()
+    {
+        bool isUnlocked = PlayerPrefs.GetInt("PetUnlocked_" + currentIndex, currentIndex == 0 ? 1 : 0) == 1;
+        if (isUnlocked)
+        {
+            PlayerPrefs.SetInt("SelectedPet", currentIndex);
+            PlayerPrefs.Save();
+        }
     }
 }
