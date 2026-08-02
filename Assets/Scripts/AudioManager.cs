@@ -8,6 +8,7 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Settings")]
     public AudioSource uiSource;
     public AudioClip buttonClickSound;
+    public AudioClip unlockSound;
 
     private void Awake()
     {
@@ -53,6 +54,14 @@ public class AudioManager : MonoBehaviour
         if (uiSource != null && buttonClickSound != null)
         {
             uiSource.PlayOneShot(buttonClickSound);
+        }
+    }
+
+    public void PlayUnlockSound()
+    {
+        if (uiSource != null && unlockSound != null)
+        {
+            uiSource.PlayOneShot(unlockSound);
         }
     }
 }

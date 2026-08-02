@@ -18,6 +18,11 @@ public class UIManager : MonoBehaviour
     [Header("Objective UI")]
     public TextMeshProUGUI objectiveProgressText;
 
+    [Header("Debug Settings")]
+    [Tooltip("Check this to override your saved coins with the debug amount on Start.")]
+    public bool overrideCoinsForTesting = false;
+    public int debugCoinAmount = 60000;
+
     [Header("State Values")]
     public int currentMoves = 0;
     public int maxMovesForLevel = 15;
@@ -45,6 +50,15 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+#if UNITY_EDITOR
+        if (overrideCoinsForTesting)
+        {
+            PlayerPrefs.SetInt("SavedCoins", debugCoinAmount);
+            PlayerPrefs.Save();
+            overrideCoinsForTesting = false; // Reset to avoid constant overriding if not wanted
+        }
+#endif
+
         currentCoins = PlayerPrefs.GetInt("SavedCoins", 0);
         UpdateAllUI();
     }

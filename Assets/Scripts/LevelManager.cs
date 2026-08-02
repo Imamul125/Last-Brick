@@ -58,6 +58,12 @@ public class LevelManager : MonoBehaviour
     public float cinematicRotationDuration = 2f;
     private Coroutine cinematicCoroutine;
 
+    [Header("Debug Settings")]
+    [Tooltip("Check this to override your saved level with the debug level on Start.")]
+    public bool overrideLevelForTesting = false;
+    [Tooltip("The level index to test (0 = Level 1, 1 = Level 2, etc.)")]
+    public int debugLevelIndex = 0;
+
     [Header("State")]
     public int currentLevelIndex = 0;
     private bool levelEnded = false;
@@ -74,6 +80,14 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+#if UNITY_EDITOR
+        if (overrideLevelForTesting)
+        {
+            PlayerPrefs.SetInt("SavedLevel", debugLevelIndex);
+            PlayerPrefs.Save();
+            overrideLevelForTesting = false;
+        }
+#endif
         currentLevelIndex = PlayerPrefs.GetInt("SavedLevel", 0);
         // Comment out the next line if you don't want the level to start automatically on load!
         // if (levels.Count > 0) StartLevel(currentLevelIndex);

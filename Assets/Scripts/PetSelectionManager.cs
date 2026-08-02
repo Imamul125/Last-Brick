@@ -1,12 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
+[System.Serializable]
+public class PetData
+{
+    [Tooltip("The 3D model for this pet")]
+    public GameObject model;
+    [Tooltip("The required coins to unlock this pet")]
+    public int cost;
+}
 
 public class PetSelectionManager : MonoBehaviour
 {
-    [Header("Pet Models (Place in order)")]
-    [Tooltip("Drag the 3D models from the PetShowcasePodium here. Index 0 is the default Cat.")]
-    public List<GameObject> petModels = new List<GameObject>();
+    [Header("Pet Settings (Place in order)")]
+    [Tooltip("Configure the 3D model and required coins for each pet. Index 0 is the default Cat.")]
+    public List<PetData> pets = new List<PetData>();
 
     [Header("UI References")]
     public Button nextButton;
@@ -19,6 +29,10 @@ public class PetSelectionManager : MonoBehaviour
     public Button customizeButton;
     public bool useCustomization = true;
 
+    [Header("Shop & Coins")]
+    public GameObject buyPanel;
+    public TextMeshProUGUI requiredCoinsText;
+
     private int currentIndex = 0;
 
     private void Start()
@@ -27,6 +41,7 @@ public class PetSelectionManager : MonoBehaviour
         if (nextButton != null) nextButton.onClick.AddListener(NextPet);
         if (prevButton != null) prevButton.onClick.AddListener(PrevPet);
         if (playButton != null) playButton.onClick.AddListener(SaveSelectedPet);
+        if (unlockButton != null) unlockButton.onClick.AddListener(OnUnlockButtonClicked);
 
         // Ensure only the first pet is visible initially
         UpdatePetDisplay();
@@ -34,7 +49,7 @@ public class PetSelectionManager : MonoBehaviour
 
     public void NextPet()
     {
-        if (petModels.Count == 0 || currentIndex >= petModels.Count - 1) return;
+        if (pets.Count == 0 || currentIndex >= pets.Count - 1) return;
 
         currentIndex++;
         UpdatePetDisplay();
@@ -42,7 +57,7 @@ public class PetSelectionManager : MonoBehaviour
 
     public void PrevPet()
     {
-        if (petModels.Count == 0 || currentIndex <= 0) return;
+        if (pets.Count == 0 || currentIndex <= 0) return;
 
         currentIndex--;
         UpdatePetDisplay();
@@ -51,11 +66,11 @@ public class PetSelectionManager : MonoBehaviour
     private void UpdatePetDisplay()
     {
         // 1. Toggle visibility of 3D models on the podium
-        for (int i = 0; i < petModels.Count; i++)
+        for (int i = 0; i < pets.Count; i++)
         {
-            if (petModels[i] != null)
+            if (pets[i] != null && pets[i].model != null)
             {
-                petModels[i].SetActive(i == currentIndex);
+                pets[i].model.SetActive(i == currentIndex);
             }
         }
 
@@ -86,7 +101,7 @@ public class PetSelectionManager : MonoBehaviour
         // 4. Update Button Interactable States
         if (nextButton != null)
         {
-            nextButton.interactable = (currentIndex < petModels.Count - 1);
+            nextButton.interactable = (currentIndex < pets.Count - 1);
         }
         
         if (prevButton != null)
@@ -130,6 +145,55 @@ public class PetSelectionManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("SelectedPet", currentIndex);
             PlayerPrefs.Save();
+        }
+    }
+
+    /// <summary>
+    /// Checks if user has enough coins to unlock the pet. If yes, unlocks it. Else shows buy panel.
+    /// </summary>
+    public void OnUnlockButtonClicked()
+    {
+        int requiredCoins = 0;
+        if (currentIndex < pets.Count)
+        {
+            requiredCoins = pets[currentIndex].cost;
+        }
+
+        int currentCoins = PlayerPrefs.GetInt("SavedCoins", 0);
+
+        if (currentCoins >= requiredCoins)
+        {
+            // Deduct coins
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.AddCoin(-requiredCoins);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("SavedCoins", currentCoins - requiredCoins);
+                PlayerPrefs.Save();
+            }
+
+            UnlockPet(currentIndex);
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayUnlockSound();
+            }
+        }
+        else
+        {
+            // Not enough coins, show Buy Panel
+            if (buyPanel != null)
+            {
+                buyPanel.SetActive(true);
+            }
+
+            if (requiredCoinsText != null)
+            {
+                int missingCoins = requiredCoins - currentCoins;
+                requiredCoinsText.text = missingCoins.ToString();
+            }
         }
     }
 }
