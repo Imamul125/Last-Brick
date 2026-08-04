@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI timerText2;
     public TextMeshProUGUI coinsText;
+    public TextMeshProUGUI anotherCoinsText;
 
     [Header("Objective UI")]
     public TextMeshProUGUI objectiveProgressText;
@@ -173,6 +174,7 @@ public class UIManager : MonoBehaviour
         UpdateTimerUI();
 
         if (coinsText != null) coinsText.text = currentCoins.ToString();
+        if (anotherCoinsText != null) anotherCoinsText.text = currentCoins.ToString();
         if (objectiveProgressText != null) objectiveProgressText.text = currentObjectiveProgress + "/" + targetObjective;
     }
 

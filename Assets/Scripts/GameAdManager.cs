@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Ump.Api;
 using System;
@@ -14,6 +15,11 @@ public class GameAdManager : MonoBehaviour
     [Header("GDPR UI")]
     [Tooltip("Button to show GDPR privacy options. Hidden if not in EEA.")]
     public GameObject gdprPrivacyButton;
+
+    [Header("Daily Reward Ad")]
+    public Button daily_coins;
+    public int dailyCoinRewardAmount = 50;
+    private const string LastDailyAdTimeKey = "LastDailyAdTime";
 
     [Header("Level Complete Ad")]
     public int completeFrequency = 3;
@@ -61,6 +67,12 @@ public class GameAdManager : MonoBehaviour
 
     private void Start()
     {
+        if (daily_coins != null)
+        {
+            daily_coins.onClick.AddListener(OnDailyCoinsClicked);
+            CheckDailyAdStatus();
+        }
+
         // Request GDPR consent first (User Messaging Platform)
         ConsentRequestParameters request = new ConsentRequestParameters();
 
@@ -333,6 +345,60 @@ public class GameAdManager : MonoBehaviour
                 currentRewardedAdClosedCallback = null;
                 currentRewardEarnedCallback = null;
             };
+        });
+    }
+
+    private void CheckDailyAdStatus()
+    {
+        if (daily_coins == null) return;
+        
+        string lastTimeString = PlayerPrefs.GetString(LastDailyAdTimeKey, "");
+        if (string.IsNullOrEmpty(lastTimeString))
+        {
+            daily_coins.gameObject.SetActive(true);
+            daily_coins.interactable = true;
+        }
+        else
+        {
+            DateTime lastTime;
+            if (DateTime.TryParse(lastTimeString, out lastTime))
+            {
+                if ((DateTime.Now - lastTime).TotalHours >= 24)
+                {
+                    daily_coins.gameObject.SetActive(true);
+                    daily_coins.interactable = true;
+                }
+                else
+                {
+                    daily_coins.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                daily_coins.gameObject.SetActive(true);
+                daily_coins.interactable = true;
+            }
+        }
+    }
+
+    private void OnDailyCoinsClicked()
+    {
+        if (daily_coins != null)
+            daily_coins.interactable = false;
+
+        ShowRewardedAd(() => 
+        {
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.AddCoin(dailyCoinRewardAmount);
+            }
+            
+            PlayerPrefs.SetString(LastDailyAdTimeKey, DateTime.Now.ToString());
+            PlayerPrefs.Save();
+        }, 
+        () => 
+        {
+            CheckDailyAdStatus();
         });
     }
 }

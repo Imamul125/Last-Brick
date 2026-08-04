@@ -23,6 +23,7 @@ public class PetSelectionManager : MonoBehaviour
     public Button prevButton;
     public GameObject lockOverlay;
     public Button playButton; // Reference to main play button so we can disable it if pet is locked
+    public Button invisibleButton;
     
     [Header("New UI & Settings")]
     public Button unlockButton;
@@ -96,6 +97,11 @@ public class PetSelectionManager : MonoBehaviour
         if (customizeButton != null)
         {
             customizeButton.gameObject.SetActive(isUnlocked && useCustomization);
+        }
+
+        if (invisibleButton != null)
+        {
+            invisibleButton.interactable = isUnlocked;
         }
 
         // 4. Update Button Interactable States
@@ -213,6 +219,54 @@ public class PetSelectionManager : MonoBehaviour
                     petInteract.Interact();
                 }
             }
+        }
+    }
+
+    public void StoreAndDisableNavButtons()
+    {
+        if (prevButton != null)
+        {
+            prevButton.interactable = false;
+        }
+        
+        if (nextButton != null)
+        {
+            nextButton.interactable = false;
+        }
+
+        if (playButton != null)
+        {
+            playButton.gameObject.SetActive(false);
+        }
+
+        if (unlockButton != null)
+        {
+            unlockButton.gameObject.SetActive(false);
+        }
+    }
+
+    public void RestoreNavButtons()
+    {
+        if (prevButton != null)
+        {
+            prevButton.interactable = (currentIndex > 0);
+        }
+        
+        if (nextButton != null)
+        {
+            nextButton.interactable = (currentIndex < pets.Count - 1);
+        }
+
+        bool isUnlocked = PlayerPrefs.GetInt("PetUnlocked_" + currentIndex, currentIndex == 0 ? 1 : 0) == 1;
+
+        if (playButton != null)
+        {
+            playButton.gameObject.SetActive(isUnlocked);
+        }
+
+        if (unlockButton != null)
+        {
+            unlockButton.gameObject.SetActive(!isUnlocked);
         }
     }
 }
