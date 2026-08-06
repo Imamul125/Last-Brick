@@ -197,6 +197,12 @@ public class GameAdManager : MonoBehaviour
 
     private bool ShowCompleteAd(Action onCompleteCallback)
     {
+        if (PlayerPrefs.GetInt("NoAdsPurchased", 0) == 1)
+        {
+            onCompleteCallback?.Invoke();
+            return true;
+        }
+
         if (completeAd != null && completeAd.CanShowAd())
         {
             currentCompleteAdClosedCallback = onCompleteCallback;
@@ -259,6 +265,12 @@ public class GameAdManager : MonoBehaviour
 
     private bool ShowRetryAd(Action onCompleteCallback)
     {
+        if (PlayerPrefs.GetInt("NoAdsPurchased", 0) == 1)
+        {
+            onCompleteCallback?.Invoke();
+            return true;
+        }
+
         if (retryAd != null && retryAd.CanShowAd())
         {
             currentRetryAdClosedCallback = onCompleteCallback;

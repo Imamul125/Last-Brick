@@ -36,6 +36,7 @@ public class LevelManager : MonoBehaviour
     public GameObject congratsUi;
     public GameObject retryUi;
     public GameObject homeButton;
+    public GameObject removeAdsPopup;
 
     [Header("Events")]
     public UnityEvent onCongrats;
@@ -57,6 +58,10 @@ public class LevelManager : MonoBehaviour
     public float cinematicRotationAmount = 360f;
     public float cinematicRotationDuration = 2f;
     private Coroutine cinematicCoroutine;
+
+    [Header("IAP Settings")]
+    [Tooltip("Show the Remove Ads popup every N levels")]
+    public int removeAdsPopupFrequency = 5;
 
     [Header("Debug Settings")]
     [Tooltip("Check this to override your saved level with the debug level on Start.")]
@@ -392,6 +397,18 @@ public class LevelManager : MonoBehaviour
         if (congratsUi != null) 
         {
             congratsUi.SetActive(true);
+        }
+
+        if (removeAdsPopup != null && removeAdsPopupFrequency > 0)
+        {
+            if (PlayerPrefs.GetInt("NoAdsPurchased", 0) == 0)
+            {
+                int currentLevelDisplay = currentLevelIndex + 1;
+                if (currentLevelDisplay > 0 && currentLevelDisplay % removeAdsPopupFrequency == 0)
+                {
+                    removeAdsPopup.SetActive(true);
+                }
+            }
         }
         
         if (UIManager.Instance != null)

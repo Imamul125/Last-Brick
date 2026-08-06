@@ -10,10 +10,14 @@ public class PetData
     public GameObject model;
     [Tooltip("The required coins to unlock this pet")]
     public int cost;
+    [Tooltip("The Unity IAP Product ID for this pet (if any)")]
+    public string iapProductID;
 }
 
 public class PetSelectionManager : MonoBehaviour
 {
+    public static PetSelectionManager Instance { get; private set; }
+
     [Header("Pet Settings (Place in order)")]
     [Tooltip("Configure the 3D model and required coins for each pet. Index 0 is the default Cat.")]
     public List<PetData> pets = new List<PetData>();
@@ -34,7 +38,24 @@ public class PetSelectionManager : MonoBehaviour
     public GameObject buyPanel;
     public TextMeshProUGUI requiredCoinsText;
 
+    [Header("IAP Pet Buying")]
+    public GameObject iapBuyDialog;
+    public Button iapBuyButton;
+    public TextMeshProUGUI iapPriceText;
+
     private int currentIndex = 0;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -189,16 +210,43 @@ public class PetSelectionManager : MonoBehaviour
         }
         else
         {
-            // Not enough coins, show Buy Panel
-            if (buyPanel != null)
-            {
-                buyPanel.SetActive(true);
-            }
+            // Not enough coins, check if we can buy with IAP
+            bool hasIAP = !string.IsNullOrEmpty(pets[currentIndex].iapProductID);
 
-            if (requiredCoinsText != null)
+            if (hasIAP && iapBuyDialog != null)
             {
-                int missingCoins = requiredCoins - currentCoins;
-                requiredCoinsText.text = missingCoins.ToString();
+                iapBuyDialog.SetActive(true);
+                if (iapPriceText != null && IAPManager.Instance != null)
+                {
+                    iapPriceText.text = IAPManager.Instance.GetLocalizedPriceString(pets[currentIndex].iapProductID);
+                }
+                if (iapBuyButton != null)
+                {
+                    iapBuyButton.onClick.RemoveAllListeners();
+                    int petToBuy = currentIndex;
+                    iapBuyButton.onClick.AddListener(() => {
+                        if (IAPManager.Instance != null)
+                        {
+                            IAPManager.Instance.BuyProductID(pets[petToBuy].iapProductID);
+                            // Optionally close the dialog
+                            iapBuyDialog.SetActive(false);
+                        }
+                    });
+                }
+            }
+            else
+            {
+                // Fallback to coins buy panel
+                if (buyPanel != null)
+                {
+                    buyPanel.SetActive(true);
+                }
+
+                if (requiredCoinsText != null)
+                {
+                    int missingCoins = requiredCoins - currentCoins;
+                    requiredCoinsText.text = missingCoins.ToString();
+                }
             }
         }
     }
