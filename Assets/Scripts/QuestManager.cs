@@ -23,6 +23,8 @@ public class QuestManager : MonoBehaviour
     public GameObject questCompletedPrefab;
     [Tooltip("Optional: Assign the specific Canvas or Panel where the popup should spawn.")]
     public Transform questPopupParent;
+    [Tooltip("The paper popup containing the quests list, which will be disabled when a quest completes.")]
+    public GameObject paperPopup;
 
     private void Awake()
     {
@@ -109,6 +111,12 @@ public class QuestManager : MonoBehaviour
         if (UIManager.Instance != null)
         {
             UIManager.Instance.AddCoin(questRewardCoins);
+        }
+
+        // Disable paper popup if assigned
+        if (paperPopup != null)
+        {
+            paperPopup.SetActive(false);
         }
 
         // Determine parent canvas
