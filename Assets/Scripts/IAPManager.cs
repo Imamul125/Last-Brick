@@ -15,8 +15,12 @@ public class IAPManager : MonoBehaviour, IDetailedStoreListener
 
     [Header("Remove Ads Product")]
     public string removeAdsProductId = "com.lastbrick.removeads";
+    [Tooltip("The actual button you click to pay")]
     public GameObject removeAdsBuyButton;
     public TextMeshProUGUI removeAdsPriceText;
+    
+    [Tooltip("Other UI elements to hide after purchase (like the Main Menu button that opens the popup)")]
+    public GameObject[] objectsToHideOnPurchase;
 
     [Header("Consumable (Optional, e.g. Coins)")]
     public string coinsProductId = "com.lastbrick.coins100";
@@ -43,9 +47,20 @@ public class IAPManager : MonoBehaviour, IDetailedStoreListener
         }
 
         // Initially hide or disable button if already purchased
-        if (PlayerPrefs.GetInt("NoAdsPurchased", 0) == 1 && removeAdsBuyButton != null)
+        if (PlayerPrefs.GetInt("NoAdsPurchased", 0) == 1)
         {
-            removeAdsBuyButton.SetActive(false);
+            if (removeAdsBuyButton != null)
+            {
+                removeAdsBuyButton.SetActive(false);
+            }
+            
+            if (objectsToHideOnPurchase != null)
+            {
+                foreach (var obj in objectsToHideOnPurchase)
+                {
+                    if (obj != null) obj.SetActive(false);
+                }
+            }
         }
         
         if (removeAdsBuyButton != null)
@@ -190,6 +205,14 @@ public class IAPManager : MonoBehaviour, IDetailedStoreListener
             if (removeAdsBuyButton != null)
             {
                 removeAdsBuyButton.SetActive(false);
+            }
+
+            if (objectsToHideOnPurchase != null)
+            {
+                foreach (var obj in objectsToHideOnPurchase)
+                {
+                    if (obj != null) obj.SetActive(false);
+                }
             }
         }
         else
