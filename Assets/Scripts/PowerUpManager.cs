@@ -165,7 +165,7 @@ public class PowerUpManager : MonoBehaviour
             {
                 if (LevelManager.Instance != null)
                 {
-                    LevelManager.Instance.Invoke("TriggerLoss", 3.0f);
+                    LevelManager.Instance.Invoke("TriggerLossNoMoves", 3.0f);
                 }
             }
         }

@@ -202,7 +202,7 @@ public class BrickInteractor : MonoBehaviour
                 // LevelManager will ignore TriggerLoss because levelEnded will be true.
                 if (LevelManager.Instance != null)
                 {
-                    LevelManager.Instance.Invoke("TriggerLoss", 3.0f);
+                    LevelManager.Instance.Invoke("TriggerLossNoMoves", 3.0f);
                 }
             }
         }

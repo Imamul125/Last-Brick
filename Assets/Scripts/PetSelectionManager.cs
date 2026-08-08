@@ -6,6 +6,8 @@ using TMPro;
 [System.Serializable]
 public class PetData
 {
+    [Tooltip("The name of this pet")]
+    public string petName;
     [Tooltip("The 3D model for this pet")]
     public GameObject model;
     [Tooltip("The required coins to unlock this pet")]
@@ -23,6 +25,8 @@ public class PetSelectionManager : MonoBehaviour
     public List<PetData> pets = new List<PetData>();
 
     [Header("UI References")]
+    public GameObject petNameParent;
+    public TextMeshProUGUI petNameText;
     public Button nextButton;
     public Button prevButton;
     public GameObject lockOverlay;
@@ -98,6 +102,16 @@ public class PetSelectionManager : MonoBehaviour
 
         // 2. Check unlock status
         bool isUnlocked = PlayerPrefs.GetInt("PetUnlocked_" + currentIndex, currentIndex == 0 ? 1 : 0) == 1;
+
+        if (petNameParent != null)
+        {
+            petNameParent.SetActive(!isUnlocked);
+        }
+
+        if (petNameText != null && currentIndex < pets.Count)
+        {
+            petNameText.text = pets[currentIndex].petName;
+        }
 
         // 3. Update UI overlays and Buttons
         if (lockOverlay != null)

@@ -37,6 +37,8 @@ public class LevelManager : MonoBehaviour
     public GameObject retryUi;
     public GameObject homeButton;
     public GameObject removeAdsPopup;
+    public GameObject outOfMovesImage;
+    public GameObject generalFailImage;
 
     [Header("Events")]
     public UnityEvent onCongrats;
@@ -328,11 +330,24 @@ public class LevelManager : MonoBehaviour
 
     public void TriggerLoss()
     {
+        ExecuteLoss(false);
+    }
+
+    public void TriggerLossNoMoves()
+    {
+        ExecuteLoss(true);
+    }
+
+    private void ExecuteLoss(bool isOutOfMoves)
+    {
         if (levelEnded) return;
         levelEnded = true;
-        Debug.Log("Protect Brick hit the ground! YOU LOSE!");
+        Debug.Log("Level lost!");
 
         if (homeButton != null) homeButton.SetActive(false);
+
+        if (outOfMovesImage != null) outOfMovesImage.SetActive(isOutOfMoves);
+        if (generalFailImage != null) generalFailImage.SetActive(!isOutOfMoves);
 
         if (FirebaseManager.Instance != null)
         {
