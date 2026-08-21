@@ -133,9 +133,14 @@ public class LevelManager : MonoBehaviour
             return;
         }
         
+        // Cancel any pending TriggerLossNoMoves or LoadNextLevel from previous attempts
+        CancelInvoke();
+        
         currentLevelIndex = index;
         LevelData currentLevel = levels[currentLevelIndex];
-        levelEnded = false;
+        
+        // Prevent any win/loss triggers or interactions while the level is loading
+        levelEnded = true;
 
         if (FirebaseManager.Instance != null)
         {
@@ -199,6 +204,9 @@ public class LevelManager : MonoBehaviour
         LoadLevelPrefab(currentLevel.levelNumber);
 
         SetupCameraForLevel(currentLevel.levelNumber);
+
+        // Level is fully loaded, allow interactions and triggers again
+        levelEnded = false;
 
         currentLevel.onLevelStart?.Invoke();
     }

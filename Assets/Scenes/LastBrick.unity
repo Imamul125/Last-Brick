@@ -11817,6 +11817,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941900362}
   m_CullTransparentMesh: 1
+--- !u!1 &942982855
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 942982856}
+  - component: {fileID: 942982859}
+  - component: {fileID: 942982858}
+  - component: {fileID: 942982857}
+  m_Layer: 0
+  m_Name: BG3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &942982856
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942982855}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2023900157}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 129.19998, y: -20.850098}
+  m_SizeDelta: {x: 258.40002, y: 41.6999}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &942982857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942982855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e029e4fc798423344a77b02d53713073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIAnimator
+  playStartAnimOnEnable: 1
+  startAnim:
+    animationType: 0
+    easeType: 2
+    duration: 0.5
+    amount: 500
+    delay: 0
+    onAnimationComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  endAnim:
+    animationType: 0
+    easeType: 2
+    duration: 0.5
+    amount: 500
+    delay: 0
+    onAnimationComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  playEndAnimOnClick: 0
+  disableAfterEndAnim: 1
+--- !u!114 &942982858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942982855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 0f180aaac14c28f45b736ecd8720c419, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &942982859
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942982855}
+  m_CullTransparentMesh: 1
 --- !u!1 &944994944
 GameObject:
   m_ObjectHideFlags: 0
@@ -17485,8 +17594,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShareAndRate
   packageName: com.bhorizonstudios.lastbrick
   shareChooserTitle: Share Last Brick
-  shareMessage: "\U0001F9F1 I'm playing Last Brick \u2014 can you beat my score?\nDownload
-    it here: https://play.google.com/store/apps/details?id=com.bhorizonstudios.lastbrick"
+  shareMessage: "\U0001F9F1 I'm playing Last Brick\nDownload it here: https://play.google.com/store/apps/details?id=com.bhorizonstudios.lastbrick"
   shareSubject: Check out Last Brick!
   supportEmail: bhorizonstudios@gmail.com
   supportEmailSubject: Last Brick - Support
@@ -17708,7 +17816,7 @@ MonoBehaviour:
   coinCanvas: {fileID: 1475295228}
   minCoinsToSpawn: 10
   maxCoinsToSpawn: 15
-  burstRadius: 150
+  burstRadius: 100
   spawnDelay: 0.05
   flowDuration: 0.7
   coinsToReward: 50
@@ -25988,6 +26096,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 942982856}
   - {fileID: 932938719}
   - {fileID: 786475435}
   - {fileID: 509547340}
@@ -26013,7 +26122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIAnimator
   playStartAnimOnEnable: 1
   startAnim:
-    animationType: 3
+    animationType: 0
     easeType: 2
     duration: 0.5
     amount: 500
@@ -26051,7 +26160,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2023900156}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8703b7a3a48901f429289abc0fb49bd2, type: 3}
   m_Name: 
@@ -26416,7 +26525,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -262, y: 0}
+  m_AnchoredPosition: {x: -18, y: 613.2}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2072122476
@@ -27448,8 +27557,6 @@ SceneRoots:
   - {fileID: 214644571}
   - {fileID: 783866343}
   - {fileID: 466652962}
-  - {fileID: 1407928905}
-  - {fileID: 1602342879}
   - {fileID: 933403402}
   - {fileID: 48714021}
   - {fileID: 1475295228}
@@ -27471,4 +27578,6 @@ SceneRoots:
   - {fileID: 1516993267}
   - {fileID: 2093290877}
   - {fileID: 1927835295}
+  - {fileID: 1407928905}
+  - {fileID: 1602342879}
   - {fileID: 1539073101}
