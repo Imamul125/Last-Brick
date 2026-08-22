@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3954145272347092418}
   - component: {fileID: 5856973004246123355}
   - component: {fileID: 4081195577429660898}
-  - component: {fileID: 4278423012955091299}
   m_Layer: 5
   m_Name: BadgeLevel_30
   m_TagString: Untagged
@@ -121,39 +120,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4278423012955091299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 696050695346875800}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &749777432923267594
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,7 +132,6 @@ GameObject:
   - component: {fileID: 7809274317601262761}
   - component: {fileID: 6797927009507336737}
   - component: {fileID: 5645155614405608312}
-  - component: {fileID: 6663068438540103220}
   m_Layer: 5
   m_Name: BadgeLevel_450
   m_TagString: Untagged
@@ -275,39 +240,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6663068438540103220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 749777432923267594}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &1135382478838802666
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,7 +252,6 @@ GameObject:
   - component: {fileID: 3403570520012431535}
   - component: {fileID: 6824556841868597935}
   - component: {fileID: 6128086744540075067}
-  - component: {fileID: 7657125080902214196}
   m_Layer: 5
   m_Name: Unlock_Text
   m_TagString: Untagged
@@ -429,39 +360,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7657125080902214196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1135382478838802666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 5
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &1179564435292528422
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,14 +372,13 @@ GameObject:
   - component: {fileID: 8557437884173333307}
   - component: {fileID: 487657088227779809}
   - component: {fileID: 6602842734133048543}
-  - component: {fileID: 1814637181651943055}
   m_Layer: 5
   m_Name: BadgeLevel_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5038197456169674735
 RectTransform:
   m_ObjectHideFlags: 0
@@ -583,39 +480,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1814637181651943055
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1179564435292528422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &1506925010719542915
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,7 +492,6 @@ GameObject:
   - component: {fileID: 8268839046192872064}
   - component: {fileID: 6995841862945101329}
   - component: {fileID: 3249556939985183048}
-  - component: {fileID: 4410927383621340284}
   m_Layer: 5
   m_Name: BadgeLevel_300
   m_TagString: Untagged
@@ -737,39 +600,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4410927383621340284
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1506925010719542915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &1570828169416107086
 GameObject:
   m_ObjectHideFlags: 0
@@ -782,7 +612,6 @@ GameObject:
   - component: {fileID: 6151374354749790099}
   - component: {fileID: 3699657020884159082}
   - component: {fileID: 6772369410794991035}
-  - component: {fileID: 8602311732846305197}
   m_Layer: 5
   m_Name: BadgeLevel_250
   m_TagString: Untagged
@@ -891,39 +720,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8602311732846305197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1570828169416107086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &2059751710408280535
 GameObject:
   m_ObjectHideFlags: 0
@@ -936,7 +732,6 @@ GameObject:
   - component: {fileID: 6966218041711262357}
   - component: {fileID: 3716586145449395659}
   - component: {fileID: 8601592109876935519}
-  - component: {fileID: 5188401857609495766}
   m_Layer: 5
   m_Name: BadgeLevel_400
   m_TagString: Untagged
@@ -1045,39 +840,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5188401857609495766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2059751710408280535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &2116291921155881746
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,7 +852,6 @@ GameObject:
   - component: {fileID: 7901419111322993308}
   - component: {fileID: 5373687160440462081}
   - component: {fileID: 722286395595999064}
-  - component: {fileID: 3474549134433810578}
   m_Layer: 5
   m_Name: BadgeLevel_700
   m_TagString: Untagged
@@ -1199,21 +960,97 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3474549134433810578
+--- !u!1 &2293057789276082391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3084837405277268391}
+  - component: {fileID: 2892766685602541250}
+  - component: {fileID: 1094175775990474177}
+  - component: {fileID: 3478039968589547608}
+  m_Layer: 0
+  m_Name: 'BG3 '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3084837405277268391
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2293057789276082391}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4051889959600187876}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 129.19998, y: -20.850098}
+  m_SizeDelta: {x: 258.55396, y: 41.6999}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2892766685602541250
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2293057789276082391}
+  m_CullTransparentMesh: 1
+--- !u!114 &1094175775990474177
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2116291921155881746}
+  m_GameObject: {fileID: 2293057789276082391}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 0f180aaac14c28f45b736ecd8720c419, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3478039968589547608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2293057789276082391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e029e4fc798423344a77b02d53713073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIAnimator
   playStartAnimOnEnable: 1
   startAnim:
-    animationType: 3
+    animationType: 0
     easeType: 2
     duration: 0.5
     amount: 500
@@ -1225,13 +1062,13 @@ MonoBehaviour:
     animationType: 0
     easeType: 2
     duration: 0.5
-    amount: 200
+    amount: 500
     delay: 0
     onAnimationComplete:
       m_PersistentCalls:
         m_Calls: []
   playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
+  disableAfterEndAnim: 1
 --- !u!1 &2646323099393096667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1244,7 +1081,6 @@ GameObject:
   - component: {fileID: 3342424384285440496}
   - component: {fileID: 7387081412543053430}
   - component: {fileID: 4194957432107644224}
-  - component: {fileID: 4832826198205699208}
   m_Layer: 5
   m_Name: BadgeLevel_80
   m_TagString: Untagged
@@ -1353,39 +1189,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4832826198205699208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2646323099393096667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &3679843751143150204
 GameObject:
   m_ObjectHideFlags: 0
@@ -1398,7 +1201,6 @@ GameObject:
   - component: {fileID: 6938022948883166875}
   - component: {fileID: 9042504604023089821}
   - component: {fileID: 1492789320299305817}
-  - component: {fileID: 6842244458901730772}
   m_Layer: 5
   m_Name: BadgeLevel_500
   m_TagString: Untagged
@@ -1507,39 +1309,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6842244458901730772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3679843751143150204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &4525499983789906546
 GameObject:
   m_ObjectHideFlags: 0
@@ -1552,7 +1321,6 @@ GameObject:
   - component: {fileID: 4735861971138768337}
   - component: {fileID: 6954335223456781560}
   - component: {fileID: 5430204372552574404}
-  - component: {fileID: 5595981083442831740}
   m_Layer: 5
   m_Name: BadgeLevel_350
   m_TagString: Untagged
@@ -1661,39 +1429,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5595981083442831740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4525499983789906546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &5242034295148399927
 GameObject:
   m_ObjectHideFlags: 0
@@ -1706,7 +1441,6 @@ GameObject:
   - component: {fileID: 1716740190511965219}
   - component: {fileID: 6434763139860013892}
   - component: {fileID: 1319164595183519843}
-  - component: {fileID: 8623034957828131113}
   m_Layer: 5
   m_Name: BadgeLevel_600
   m_TagString: Untagged
@@ -1815,39 +1549,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8623034957828131113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5242034295148399927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &5434603933101483935
 GameObject:
   m_ObjectHideFlags: 0
@@ -1865,7 +1566,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4051889959600187876
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1873,12 +1574,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5434603933101483935}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3084837405277268391}
   - {fileID: 2878790934306936772}
+  - {fileID: 8751160898433935179}
   - {fileID: 5038197456169674735}
   - {fileID: 4163449543792589564}
   - {fileID: 500295034819260648}
@@ -1952,7 +1655,6 @@ GameObject:
   - component: {fileID: 2447789365324720426}
   - component: {fileID: 8084200070341070529}
   - component: {fileID: 3323190248825936636}
-  - component: {fileID: 7548281215276896794}
   m_Layer: 5
   m_Name: BadgeLevel_15
   m_TagString: Untagged
@@ -2061,39 +1763,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7548281215276896794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5471333946204643986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 4
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &5513558484939384140
 GameObject:
   m_ObjectHideFlags: 0
@@ -2106,7 +1775,6 @@ GameObject:
   - component: {fileID: 4465406451830165556}
   - component: {fileID: 2187848194121028702}
   - component: {fileID: 4533866579694887672}
-  - component: {fileID: 395462913853088057}
   m_Layer: 5
   m_Name: BadgeLevel_50
   m_TagString: Untagged
@@ -2215,39 +1883,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &395462913853088057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5513558484939384140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 4
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
 --- !u!1 &6338091798225395580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2260,7 +1895,6 @@ GameObject:
   - component: {fileID: 8717107614912602668}
   - component: {fileID: 3695751684716225889}
   - component: {fileID: 4241537092196422774}
-  - component: {fileID: 4477540992554186119}
   m_Layer: 5
   m_Name: BadgeLevel_200
   m_TagString: Untagged
@@ -2369,39 +2003,126 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4477540992554186119
+--- !u!1 &6424893385362080823
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8751160898433935179}
+  - component: {fileID: 2647014206310731769}
+  - component: {fileID: 142528926622234886}
+  - component: {fileID: 9032536879938757562}
+  m_Layer: 5
+  m_Name: Awesome
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8751160898433935179
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6424893385362080823}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 4051889959600187876}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -326}
+  m_SizeDelta: {x: 300, y: 123.8}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2647014206310731769
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6424893385362080823}
+  m_CullTransparentMesh: 1
+--- !u!114 &142528926622234886
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6338091798225395580}
+  m_GameObject: {fileID: 6424893385362080823}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 3
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 81b86f32c87f37847a6a95c9f7c89029, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9032536879938757562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6424893385362080823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 142528926622234886}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6498918588424348188
 GameObject:
   m_ObjectHideFlags: 0
@@ -2449,7 +2170,6 @@ GameObject:
   - component: {fileID: 3569179978571828240}
   - component: {fileID: 8593183910628555228}
   - component: {fileID: 131769554053708496}
-  - component: {fileID: 7697355046750267454}
   m_Layer: 5
   m_Name: BadgeLevel_120
   m_TagString: Untagged
@@ -2558,36 +2278,3 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7697355046750267454
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7253734034573118028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8547909d5ff5a84ebbdae8bb4ef644c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playStartAnimOnEnable: 1
-  startAnim:
-    animationType: 4
-    easeType: 2
-    duration: 0.5
-    amount: 500
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  endAnim:
-    animationType: 0
-    easeType: 2
-    duration: 0.5
-    amount: 200
-    delay: 0
-    onAnimationComplete:
-      m_PersistentCalls:
-        m_Calls: []
-  playEndAnimOnClick: 0
-  disableAfterEndAnim: 0

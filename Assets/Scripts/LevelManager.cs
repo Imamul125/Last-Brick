@@ -143,6 +143,8 @@ public class LevelManager : MonoBehaviour
         currentLevelIndex = index;
         LevelData currentLevel = levels[currentLevelIndex];
         
+        isLoadingNextLevel = false;
+        
         // Prevent any win/loss triggers or interactions while the level is loading
         levelEnded = true;
 
@@ -209,11 +211,7 @@ public class LevelManager : MonoBehaviour
 
         SetupCameraForLevel(currentLevel.levelNumber);
 
-        // Check if there is a badge or quote to reveal for this level
-        if (BadgeManager.Instance != null && BadgeManager.Instance.HasBadgeForLevel(currentLevel.levelNumber))
-        {
-            yield return StartCoroutine(BadgeManager.Instance.RevealBadgeCoroutine(currentLevel.levelNumber));
-        }
+        // Check if there is a badge or quote to reveal for this level is now moved to WinSequenceRoutine
 
         // Level is fully loaded, allow interactions and triggers again
         levelEnded = false;
@@ -474,9 +472,30 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    private bool isLoadingNextLevel = false;
+
     // Helper to easily progress to the next level in the list
     public void LoadNextLevel()
     {
+        if (isLoadingNextLevel) return;
+        isLoadingNextLevel = true;
+        
+        CancelInvoke(nameof(LoadNextLevel));
+        StartCoroutine(LoadNextLevelWithBadgeCheckRoutine());
+    }
+
+    private IEnumerator LoadNextLevelWithBadgeCheckRoutine()
+    {
+        int completedLevelNumber = levels[currentLevelIndex].levelNumber;
+        if (BadgeManager.Instance != null && BadgeManager.Instance.HasBadgeForLevel(completedLevelNumber))
+        {
+            // Hide congrats UI and popups to ensure they don't block clicks on the Acknowledge button
+            if (congratsUi != null) congratsUi.SetActive(false);
+            if (removeAdsPopup != null) removeAdsPopup.SetActive(false);
+
+            yield return StartCoroutine(BadgeManager.Instance.RevealBadgeCoroutine(completedLevelNumber));
+        }
+
         if (GameAdManager.Instance != null)
         {
             GameAdManager.Instance.OnLevelCompleted(() => {

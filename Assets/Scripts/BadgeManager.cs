@@ -83,6 +83,14 @@ public class BadgeManager : MonoBehaviour
         if (acknowledgeButton != null)
         {
             acknowledgeButton.SetActive(false);
+            
+            // Auto-hook the button click to avoid Unity Inspector reference issues
+            UnityEngine.UI.Button btn = acknowledgeButton.GetComponent<UnityEngine.UI.Button>();
+            if (btn != null)
+            {
+                btn.onClick.RemoveListener(AcknowledgeBadge);
+                btn.onClick.AddListener(AcknowledgeBadge);
+            }
         }
 
         if (badgeContainer != null)
@@ -263,12 +271,6 @@ public class BadgeManager : MonoBehaviour
             badgeRect.localScale = targetScale * breathScale;
             
             yield return null;
-        }
-
-        // Hide the acknowledge button
-        if (acknowledgeButton != null)
-        {
-            acknowledgeButton.SetActive(false);
         }
 
         // --- Fly Out Animation ---
