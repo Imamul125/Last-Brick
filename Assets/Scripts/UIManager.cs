@@ -138,6 +138,15 @@ public class UIManager : MonoBehaviour
     {
         currentCoins += amount;
         PlayerPrefs.SetInt("SavedCoins", currentCoins);
+
+        // Track lifetime coins (only for additions, not when buying things)
+        if (amount > 0)
+        {
+            int lifetimeCoins = PlayerPrefs.GetInt("LifetimeCoins", 0);
+            lifetimeCoins += amount;
+            PlayerPrefs.SetInt("LifetimeCoins", lifetimeCoins);
+        }
+
         PlayerPrefs.Save();
         UpdateAllUI();
     }

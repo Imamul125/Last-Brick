@@ -1,4 +1,6 @@
 using UnityEngine;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 
 public class GooglePlayManager : MonoBehaviour
 {
@@ -16,6 +18,8 @@ public class GooglePlayManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        InitializeGPGS();
     }
 
     void Start()
@@ -23,28 +27,82 @@ public class GooglePlayManager : MonoBehaviour
         SignInToGooglePlay();
     }
 
-    public void SignInToGooglePlay()
+    private void InitializeGPGS()
     {
-        Debug.Log("[GooglePlayManager] Leaderboard not set up yet. Using PlayerPrefs.");
+#if UNITY_ANDROID
+        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.Activate();
+#endif
     }
 
-    public void PostScore(int score)
+    public void SignInToGooglePlay()
     {
-        int currentHighScore = PlayerPrefs.GetInt("HighScore", 0);
-        if (score > currentHighScore)
+#if UNITY_ANDROID
+        Social.localUser.Authenticate((bool success) =>
         {
-            PlayerPrefs.SetInt("HighScore", score);
-            PlayerPrefs.Save();
-            Debug.Log($"[GooglePlayManager] New High Score {score} saved to PlayerPrefs.");
-        }
-        else
+            if (success)
+            {
+                Debug.Log("[GooglePlayManager] Successfully Signed In to Google Play Games!");
+            }
+            else
+            {
+                Debug.LogWarning("[GooglePlayManager] Failed to Sign In to Google Play Games.");
+            }
+        });
+#endif
+    }
+
+    public void PostScore()
+    {
+#if UNITY_ANDROID
+        if (!Social.localUser.authenticated)
         {
-            Debug.Log($"[GooglePlayManager] Score {score} posted (HighScore is {currentHighScore}).");
+            Debug.LogWarning("[GooglePlayManager] Cannot post score, user not authenticated.");
+            return;
         }
+
+        // 1. Get Highest Level (from PlayerPrefs, LevelManager saves it as "SavedLevel")
+        int currentLevel = PlayerPrefs.GetInt("SavedLevel", 0);
+        
+        // 2. Get Total Retries
+        long totalRetries = PlayerPrefs.GetInt("TotalRetries", 0);
+        
+        // 3. Get Lifetime Coins
+        long lifetimeCoins = PlayerPrefs.GetInt("LifetimeCoins", 0);
+
+        // Clamp values just to be safe
+        long maxRetriesTracked = 99999;
+        long clampedRetries = System.Math.Min(totalRetries, maxRetriesTracked);
+        long clampedCoins = System.Math.Min(lifetimeCoins, 9999999L);
+
+        // Formula: Score = (Highest Level * 100,000,000,000) + ((99,999 - Retries) * 1,000,000) + Lifetime Coins
+        long packedScore = (currentLevel * 100000000000L) + ((maxRetriesTracked - clampedRetries) * 1000000L) + clampedCoins;
+
+        Social.ReportScore(packedScore, GPGSIds.leaderboard_best_score, (bool success) =>
+        {
+            if (success)
+            {
+                Debug.Log($"[GooglePlayManager] Successfully posted packed score: {packedScore}");
+            }
+            else
+            {
+                Debug.LogWarning("[GooglePlayManager] Failed to post score.");
+            }
+        });
+#endif
     }
 
     public void ShowLeaderboardUI()
     {
-        Debug.Log("[GooglePlayManager] Leaderboard UI not implemented yet.");
+#if UNITY_ANDROID
+        if (Social.localUser.authenticated)
+        {
+            Social.ShowLeaderboardUI();
+        }
+        else
+        {
+            SignInToGooglePlay();
+        }
+#endif
     }
 }

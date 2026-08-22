@@ -113,6 +113,10 @@ public class LevelManager : MonoBehaviour
     // Connect your UI 'Retry' Button to this method!
     public void RetryCurrentLevel()
     {
+        int totalRetries = PlayerPrefs.GetInt("TotalRetries", 0);
+        PlayerPrefs.SetInt("TotalRetries", totalRetries + 1);
+        PlayerPrefs.Save();
+
         if (GameAdManager.Instance != null)
         {
             GameAdManager.Instance.OnLevelRetry(() => {
@@ -205,6 +209,12 @@ public class LevelManager : MonoBehaviour
 
         SetupCameraForLevel(currentLevel.levelNumber);
 
+        // Check if there is a badge or quote to reveal for this level
+        if (BadgeManager.Instance != null && BadgeManager.Instance.HasBadgeForLevel(currentLevel.levelNumber))
+        {
+            yield return StartCoroutine(BadgeManager.Instance.RevealBadgeCoroutine(currentLevel.levelNumber));
+        }
+
         // Level is fully loaded, allow interactions and triggers again
         levelEnded = false;
 
@@ -289,6 +299,11 @@ public class LevelManager : MonoBehaviour
         if (cat != null)
         {
             cat.RunAway();
+        }
+
+        if (GooglePlayManager.Instance != null)
+        {
+            GooglePlayManager.Instance.PostScore();
         }
 
         StartCoroutine(WinSequenceRoutine());
