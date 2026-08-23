@@ -496,6 +496,14 @@ public class LevelManager : MonoBehaviour
             yield return StartCoroutine(BadgeManager.Instance.RevealBadgeCoroutine(completedLevelNumber));
         }
 
+        if (PowerUpUnlockManager.Instance != null && PowerUpUnlockManager.Instance.HasPowerUpForLevel(completedLevelNumber))
+        {
+            if (congratsUi != null) congratsUi.SetActive(false);
+            if (removeAdsPopup != null) removeAdsPopup.SetActive(false);
+
+            yield return StartCoroutine(PowerUpUnlockManager.Instance.RevealPowerUpCoroutine(completedLevelNumber));
+        }
+
         if (GameAdManager.Instance != null)
         {
             GameAdManager.Instance.OnLevelCompleted(() => {
