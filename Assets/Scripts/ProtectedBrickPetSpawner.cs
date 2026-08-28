@@ -62,6 +62,10 @@ public class ProtectedBrickPetSpawner : MonoBehaviour
             // Make it a child of the protected brick
             spawnedPet.transform.SetParent(this.transform);
             
+            // Counteract the parent's scale so the pet doesn't get stretched
+            Vector3 pScale = this.transform.lossyScale;
+            spawnedPet.transform.localScale = new Vector3(1f / pScale.x, 1f / pScale.y, 1f / pScale.z);
+            
             // Set position and rotation to match the empty transform
             spawnedPet.transform.position = data.spawnPoint.position;
             spawnedPet.transform.rotation = data.spawnPoint.rotation;
