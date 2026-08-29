@@ -5190,7 +5190,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &330585545
 Camera:
   m_ObjectHideFlags: 0
@@ -21683,7 +21683,7 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 19
     maxMoves: 9
-    timeLimit: 13
+    timeLimit: 16
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21692,7 +21692,70 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 20
     maxMoves: 18
-    timeLimit: 29
+    timeLimit: 31
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 21
+    maxMoves: 15
+    timeLimit: 23
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 22
+    maxMoves: 15
+    timeLimit: 30
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 23
+    maxMoves: 7
+    timeLimit: 15
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 24
+    maxMoves: 8
+    timeLimit: 25
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 25
+    maxMoves: 15
+    timeLimit: 45
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 26
+    maxMoves: 17
+    timeLimit: 45
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 27
+    maxMoves: 15
+    timeLimit: 60
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21794,7 +21857,7 @@ MonoBehaviour:
   cinematicRotationDuration: 3
   removeAdsPopupFrequency: 3
   overrideLevelForTesting: 1
-  debugLevelIndex: 19
+  debugLevelIndex: 26
   currentLevelIndex: 0
   protectedBricksInLevel: []
 --- !u!1 &1602551972
