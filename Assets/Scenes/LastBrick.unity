@@ -21755,6 +21755,33 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 27
     maxMoves: 15
+    timeLimit: 34
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 28
+    maxMoves: 15
+    timeLimit: 30
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 29
+    maxMoves: 17
+    timeLimit: 55
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 30
+    maxMoves: 15
     timeLimit: 60
     onLevelStart:
       m_PersistentCalls:
@@ -21857,7 +21884,7 @@ MonoBehaviour:
   cinematicRotationDuration: 3
   removeAdsPopupFrequency: 3
   overrideLevelForTesting: 1
-  debugLevelIndex: 26
+  debugLevelIndex: 29
   currentLevelIndex: 0
   protectedBricksInLevel: []
 --- !u!1 &1602551972
