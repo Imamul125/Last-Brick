@@ -21619,8 +21619,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - levelNumber: 12
-    maxMoves: 15
-    timeLimit: 60
+    maxMoves: 10
+    timeLimit: 37
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21629,7 +21629,70 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 13
     maxMoves: 15
+    timeLimit: 80
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 14
+    maxMoves: 13
+    timeLimit: 40
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 15
+    maxMoves: 15
     timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 16
+    maxMoves: 19
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 17
+    maxMoves: 19
+    timeLimit: 52
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 18
+    maxMoves: 15
+    timeLimit: 25
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 19
+    maxMoves: 9
+    timeLimit: 13
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 20
+    maxMoves: 18
+    timeLimit: 29
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21731,7 +21794,7 @@ MonoBehaviour:
   cinematicRotationDuration: 3
   removeAdsPopupFrequency: 3
   overrideLevelForTesting: 1
-  debugLevelIndex: 8
+  debugLevelIndex: 19
   currentLevelIndex: 0
   protectedBricksInLevel: []
 --- !u!1 &1602551972

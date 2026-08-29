@@ -77,24 +77,10 @@ public class ProtectBrick : MonoBehaviour
         {
             if (rb != null && rb.linearVelocity.sqrMagnitude < 0.1f && rb.angularVelocity.sqrMagnitude < 0.1f)
             {
-                // Check if any face is flat against the ground
-                float dotUp = Mathf.Abs(Vector3.Dot(transform.up, Vector3.up));
-                float dotRight = Mathf.Abs(Vector3.Dot(transform.right, Vector3.up));
-                float dotForward = Mathf.Abs(Vector3.Dot(transform.forward, Vector3.up));
-                
-                float maxDot = Mathf.Max(dotUp, Mathf.Max(dotRight, dotForward));
-
-                if (maxDot > 0.95f) // Roughly 18 degrees of tolerance for "flatness"
+                if (!isTouchingPedestal)
                 {
-                    if (!isTouchingPedestal)
-                    {
-                        isTouchingPedestal = true;
-                        Invoke(nameof(SetSafe), pedestalWinDelay);
-                    }
-                }
-                else
-                {
-                    CancelSafeState();
+                    isTouchingPedestal = true;
+                    Invoke(nameof(SetSafe), pedestalWinDelay);
                 }
             }
             else
