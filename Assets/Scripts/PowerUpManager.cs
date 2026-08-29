@@ -193,6 +193,16 @@ public class PowerUpManager : MonoBehaviour
 
         // Disable the brick instead of destroying so it can be undone
         brick.SetActive(false);
+
+        // Wake up all rigidbodies so nothing floats
+        Rigidbody[] allRb = FindObjectsByType<Rigidbody>(FindObjectsSortMode.None);
+        foreach(Rigidbody rb in allRb)
+        {
+            if (rb != null && !rb.isKinematic)
+            {
+                rb.WakeUp();
+            }
+        }
     }
 
     public void SnapshotState()

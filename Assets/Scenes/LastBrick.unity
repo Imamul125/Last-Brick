@@ -2108,6 +2108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProtectBrick
   brickMesh: {fileID: 0}
+  isSafeAndDelayed: 0
   pedestalWinDelay: 1
 --- !u!114 &168336580
 MonoBehaviour:
@@ -5189,7 +5190,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &330585545
 Camera:
   m_ObjectHideFlags: 0
@@ -21555,8 +21556,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - levelNumber: 5
-    maxMoves: 15
-    timeLimit: 60
+    maxMoves: 17
+    timeLimit: 30
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21564,8 +21565,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - levelNumber: 6
-    maxMoves: 12
-    timeLimit: 60
+    maxMoves: 20
+    timeLimit: 30
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21573,8 +21574,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - levelNumber: 7
-    maxMoves: 9
-    timeLimit: 60
+    maxMoves: 13
+    timeLimit: 29
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21583,7 +21584,7 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 8
     maxMoves: 15
-    timeLimit: 60
+    timeLimit: 14
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21592,7 +21593,7 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 9
     maxMoves: 15
-    timeLimit: 60
+    timeLimit: 20
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21600,7 +21601,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - levelNumber: 10
-    maxMoves: 15
+    maxMoves: 23
     timeLimit: 60
     onLevelStart:
       m_PersistentCalls:
@@ -21609,7 +21610,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - levelNumber: 11
-    maxMoves: 15
+    maxMoves: 25
     timeLimit: 60
     onLevelStart:
       m_PersistentCalls:
@@ -21728,10 +21729,11 @@ MonoBehaviour:
   congratsCamera: {fileID: 783866342}
   cinematicRotationAmount: 360
   cinematicRotationDuration: 3
-  removeAdsPopupFrequency: 10
+  removeAdsPopupFrequency: 3
   overrideLevelForTesting: 1
-  debugLevelIndex: 9
+  debugLevelIndex: 8
   currentLevelIndex: 0
+  protectedBricksInLevel: []
 --- !u!1 &1602551972
 GameObject:
   m_ObjectHideFlags: 0
@@ -23309,6 +23311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProtectBrick
   brickMesh: {fileID: 0}
+  isSafeAndDelayed: 0
   pedestalWinDelay: 1
 --- !u!1 &1681790117
 GameObject:

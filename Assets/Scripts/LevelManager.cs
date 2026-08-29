@@ -76,8 +76,12 @@ public class LevelManager : MonoBehaviour
     private bool levelEnded = false;
     public bool IsLevelEnded => levelEnded;
     private GameObject currentLevelInstance;
-    private GameObject currentProtectBrick;
+    [HideInInspector]
+    public List<ProtectBrick> protectedBricksInLevel = new List<ProtectBrick>();
     private Coroutine _loadLevelCoroutine;
+
+    private bool pendingRemoveAdsPopup = false;
+    private bool waitingForAdsPopupToClose = false;
 
     private void Awake()
     {
@@ -85,6 +89,14 @@ public class LevelManager : MonoBehaviour
         else Destroy(this);
     }
 
+    private void Update()
+    {
+        if (waitingForAdsPopupToClose && removeAdsPopup != null && !removeAdsPopup.activeInHierarchy)
+        {
+            waitingForAdsPopupToClose = false;
+            levelEnded = false;
+        }
+    }
     private void Start()
     {
 #if UNITY_EDITOR
@@ -213,8 +225,25 @@ public class LevelManager : MonoBehaviour
 
         // Check if there is a badge or quote to reveal for this level is now moved to WinSequenceRoutine
 
-        // Level is fully loaded, allow interactions and triggers again
-        levelEnded = false;
+        // Level is fully loaded, check if we need to show the remove ads popup
+        if (pendingRemoveAdsPopup)
+        {
+            pendingRemoveAdsPopup = false;
+            if (removeAdsPopup != null)
+            {
+                removeAdsPopup.SetActive(true);
+                waitingForAdsPopupToClose = true;
+                levelEnded = true; // Keeps the timer paused
+            }
+            else
+            {
+                levelEnded = false;
+            }
+        }
+        else
+        {
+            levelEnded = false;
+        }
 
         currentLevel.onLevelStart?.Invoke();
     }
@@ -241,11 +270,8 @@ public class LevelManager : MonoBehaviour
         {
             currentLevelInstance = Instantiate(levelPrefab, Vector3.zero, Quaternion.identity);
             
-            ProtectBrick pb = currentLevelInstance.GetComponentInChildren<ProtectBrick>();
-            if (pb != null)
-            {
-                currentProtectBrick = pb.gameObject;
-            }
+            ProtectBrick[] pbs = currentLevelInstance.GetComponentsInChildren<ProtectBrick>();
+            protectedBricksInLevel = new List<ProtectBrick>(pbs);
 
             Debug.Log("[LevelManager] Loaded " + levelName);
         }
@@ -253,6 +279,26 @@ public class LevelManager : MonoBehaviour
         {
             Debug.LogError("[LevelManager] Could not find level prefab: " + levelName + " in Resources/Levels");
         }
+    }
+
+    public void CheckWinCondition()
+    {
+        if (levelEnded) return;
+
+        foreach (var pb in protectedBricksInLevel)
+        {
+            if (!pb.isSafeAndDelayed)
+            {
+                return;
+            }
+        }
+        
+        // All safe!
+        foreach (var pb in protectedBricksInLevel)
+        {
+            pb.TriggerWinEffect();
+        }
+        TriggerWin();
     }
 
     public void TriggerWin()
@@ -293,10 +339,13 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        CatController cat = FindAnyObjectByType<CatController>();
-        if (cat != null)
+        CatController[] cats = FindObjectsByType<CatController>(FindObjectsSortMode.None);
+        foreach (var cat in cats)
         {
-            cat.RunAway();
+            if (cat != null)
+            {
+                cat.RunAway();
+            }
         }
 
         if (GooglePlayManager.Instance != null)
@@ -442,7 +491,7 @@ public class LevelManager : MonoBehaviour
                 int currentLevelDisplay = currentLevelIndex + 1;
                 if (currentLevelDisplay > 0 && currentLevelDisplay % removeAdsPopupFrequency == 0)
                 {
-                    removeAdsPopup.SetActive(true);
+                    pendingRemoveAdsPopup = true;
                 }
             }
         }

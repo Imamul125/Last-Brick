@@ -235,12 +235,26 @@ public class BrickInteractor : MonoBehaviour
         brick.transform.position = startPos;
     }
 
+    private void WakeUpAllBricks()
+    {
+        Rigidbody[] allRb = FindObjectsByType<Rigidbody>(FindObjectsSortMode.None);
+        foreach(Rigidbody rb in allRb)
+        {
+            if (rb != null && !rb.isKinematic)
+            {
+                rb.WakeUp();
+            }
+        }
+    }
+
     private IEnumerator RemoveBrickRoutine(GameObject brick, Vector3 slideDir, float length)
     {
         removedBricks.Add(brick); // Prevent clicking again
         
         Collider col = brick.GetComponent<Collider>();
         if (col != null) col.enabled = false;
+
+        WakeUpAllBricks();
 
         Rigidbody rb = brick.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
