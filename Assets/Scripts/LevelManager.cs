@@ -102,7 +102,8 @@ public class LevelManager : MonoBehaviour
 #if UNITY_EDITOR
         if (overrideLevelForTesting)
         {
-            PlayerPrefs.SetInt("SavedLevel", debugLevelIndex);
+            int indexToSave = Mathf.Max(0, debugLevelIndex - 1);
+            PlayerPrefs.SetInt("SavedLevel", indexToSave);
             PlayerPrefs.Save();
             overrideLevelForTesting = false;
         }
@@ -159,6 +160,11 @@ public class LevelManager : MonoBehaviour
         
         // Prevent any win/loss triggers or interactions while the level is loading
         levelEnded = true;
+
+        if (PowerUpManager.Instance != null)
+        {
+            PowerUpManager.Instance.ResetLevelStats();
+        }
 
         if (FirebaseManager.Instance != null)
         {
@@ -461,6 +467,7 @@ public class LevelManager : MonoBehaviour
 
     public void ResumeAfterUndo()
     {
+        CancelInvoke("TriggerLossNoMoves");
         levelEnded = false;
         
         if (retryUi != null) retryUi.SetActive(false);

@@ -21,8 +21,9 @@ public class UIWobbleAnimator : MonoBehaviour
     public float maxWobbleAngle = 5.0f;
 
     private Quaternion originalRotation;
+    private float animationTime;
 
-    private void Awake()
+    private void Start()
     {
         // Store original transform states so we can return to them safely
         if (autoGrabBaseScale)
@@ -30,7 +31,8 @@ public class UIWobbleAnimator : MonoBehaviour
             baseScale = transform.localScale;
             
             // Safety check: if the button starts completely shrunk (0,0,0) by another script, default it to (1,1,1)
-            if (baseScale.sqrMagnitude < 0.01f)
+            // Increased the threshold slightly to catch small artifacts from mobile CanvasScaler instantiations
+            if (baseScale.sqrMagnitude < 0.1f)
             {
                 baseScale = Vector3.one;
             }
@@ -41,12 +43,13 @@ public class UIWobbleAnimator : MonoBehaviour
 
     private void Update()
     {
-        // We use Time.unscaledTime so it keeps animating even if the game is paused (Time.timeScale = 0)
+        // Use an accumulated time variable to prevent float precision issues on mobile with large uptimes
+        animationTime += Time.unscaledDeltaTime;
 
         if (enableScalePulse)
         {
             // Maps a sine wave into a 0 to 1 range
-            float scaleT = (Mathf.Sin(Time.unscaledTime * pulseSpeed * Mathf.PI * 2f) + 1f) / 2f;
+            float scaleT = (Mathf.Sin(animationTime * pulseSpeed * Mathf.PI * 2f) + 1f) / 2f;
             float currentScale = Mathf.Lerp(1f, maxScaleMultiplier, scaleT);
             
             transform.localScale = baseScale * currentScale;
@@ -55,7 +58,7 @@ public class UIWobbleAnimator : MonoBehaviour
         if (enableRotationWobble)
         {
             // Uses a sine wave from -1 to 1
-            float angle = Mathf.Sin(Time.unscaledTime * wobbleSpeed * Mathf.PI * 2f) * maxWobbleAngle;
+            float angle = Mathf.Sin(animationTime * wobbleSpeed * Mathf.PI * 2f) * maxWobbleAngle;
             
             transform.localRotation = originalRotation * Quaternion.Euler(0, 0, angle);
         }

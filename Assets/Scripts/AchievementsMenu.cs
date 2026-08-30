@@ -65,7 +65,8 @@ public class AchievementsMenu : MonoBehaviour
         // For testing purposes in the editor, if overrideLevelForTesting is enabled, simulate the level
         if (LevelManager.Instance != null && LevelManager.Instance.overrideLevelForTesting)
         {
-            savedLevel = Mathf.Max(LevelManager.Instance.currentLevelIndex, LevelManager.Instance.debugLevelIndex);
+            int testIndex = Mathf.Max(0, LevelManager.Instance.debugLevelIndex - 1);
+            savedLevel = Mathf.Max(LevelManager.Instance.currentLevelIndex, testIndex);
         }
 #endif
 

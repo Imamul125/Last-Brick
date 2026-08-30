@@ -5190,7 +5190,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &330585545
 Camera:
   m_ObjectHideFlags: 0
@@ -20429,6 +20429,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   maxAdHammersPerLevel: 2
+  powerUpActionSound: {fileID: 8300000, guid: c2e43855be4107942abe808edba4c944, type: 3}
 --- !u!4 &1516993267
 Transform:
   m_ObjectHideFlags: 0
@@ -21789,6 +21790,168 @@ MonoBehaviour:
     onLevelComplete:
       m_PersistentCalls:
         m_Calls: []
+  - levelNumber: 31
+    maxMoves: 18
+    timeLimit: 28
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 32
+    maxMoves: 17
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 33
+    maxMoves: 20
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 34
+    maxMoves: 25
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 35
+    maxMoves: 9
+    timeLimit: 12
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 36
+    maxMoves: 15
+    timeLimit: 23
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 37
+    maxMoves: 25
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 38
+    maxMoves: 15
+    timeLimit: 37
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 39
+    maxMoves: 9
+    timeLimit: 25
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 40
+    maxMoves: 25
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 41
+    maxMoves: 16
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 42
+    maxMoves: 25
+    timeLimit: 70
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 43
+    maxMoves: 25
+    timeLimit: 20
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 44
+    maxMoves: 30
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 45
+    maxMoves: 25
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 46
+    maxMoves: 25
+    timeLimit: 70
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 47
+    maxMoves: 27
+    timeLimit: 60
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 48
+    maxMoves: 30
+    timeLimit: 80
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
   levelLoadDelay: 2
   congratsUi: {fileID: 2023900156}
   retryUi: {fileID: 1631724658}
@@ -21874,9 +22037,13 @@ MonoBehaviour:
     cameraTarget: {fileID: 607077030}
     orbitalRadius: 19
   - startLevel: 9
-    endLevel: 50
+    endLevel: 30
     cameraTarget: {fileID: 607077030}
     orbitalRadius: 19
+  - startLevel: 31
+    endLevel: 50
+    cameraTarget: {fileID: 607077030}
+    orbitalRadius: 21
   orbitCamera: {fileID: 214644570}
   freeLookCamera: {fileID: 1595053106}
   congratsCamera: {fileID: 783866342}
@@ -21884,7 +22051,7 @@ MonoBehaviour:
   cinematicRotationDuration: 3
   removeAdsPopupFrequency: 3
   overrideLevelForTesting: 1
-  debugLevelIndex: 29
+  debugLevelIndex: 48
   currentLevelIndex: 0
   protectedBricksInLevel: []
 --- !u!1 &1602551972

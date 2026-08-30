@@ -38,15 +38,15 @@ public class GooglePlayManager : MonoBehaviour
     public void SignInToGooglePlay()
     {
 #if UNITY_ANDROID
-        Social.localUser.Authenticate((bool success) =>
+        PlayGamesPlatform.Instance.Authenticate((SignInStatus status) =>
         {
-            if (success)
+            if (status == SignInStatus.Success)
             {
                 Debug.Log("[GooglePlayManager] Successfully Signed In to Google Play Games!");
             }
             else
             {
-                Debug.LogWarning("[GooglePlayManager] Failed to Sign In to Google Play Games.");
+                Debug.LogWarning("[GooglePlayManager] Failed to Sign In to Google Play Games. Status: " + status);
             }
         });
 #endif
@@ -97,11 +97,21 @@ public class GooglePlayManager : MonoBehaviour
 #if UNITY_ANDROID
         if (Social.localUser.authenticated)
         {
-            Social.ShowLeaderboardUI();
+            PlayGamesPlatform.Instance.ShowLeaderboardUI(GPGSIds.leaderboard_best_score);
         }
         else
         {
-            SignInToGooglePlay();
+            PlayGamesPlatform.Instance.ManuallyAuthenticate((SignInStatus status) =>
+            {
+                if (status == SignInStatus.Success)
+                {
+                    PlayGamesPlatform.Instance.ShowLeaderboardUI(GPGSIds.leaderboard_best_score);
+                }
+                else
+                {
+                    Debug.LogWarning("[GooglePlayManager] Failed manual sign in for leaderboard. Status: " + status);
+                }
+            });
         }
 #endif
     }

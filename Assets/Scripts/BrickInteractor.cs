@@ -32,6 +32,7 @@ public class BrickInteractor : MonoBehaviour
     private MaterialPropertyBlock propBlock;
 
     private System.Collections.Generic.HashSet<GameObject> removedBricks = new System.Collections.Generic.HashSet<GameObject>();
+    private System.Collections.Generic.Dictionary<GameObject, Coroutine> activeCoroutines = new System.Collections.Generic.Dictionary<GameObject, Coroutine>();
 
     public void RemoveFromRemovedBricks(GameObject brick)
     {
@@ -39,6 +40,20 @@ public class BrickInteractor : MonoBehaviour
         {
             removedBricks.Remove(brick);
         }
+        
+        if (activeCoroutines.ContainsKey(brick))
+        {
+            if (activeCoroutines[brick] != null)
+            {
+                StopCoroutine(activeCoroutines[brick]);
+            }
+            activeCoroutines.Remove(brick);
+        }
+    }
+
+    public bool IsBrickRemoved(GameObject brick)
+    {
+        return removedBricks.Contains(brick);
     }
 
     void Start()
@@ -72,30 +87,48 @@ public class BrickInteractor : MonoBehaviour
 
         if (WasPressed())
         {
+            // Ignore touches that are over UI elements
+            if (UnityEngine.EventSystems.EventSystem.current != null && 
+                UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            
+            // For touch devices, we need to check the specific touch ID
+            if (Touchscreen.current != null && Touchscreen.current.touches.Count > 0)
+            {
+                var touch = Touchscreen.current.touches[0];
+                if (UnityEngine.EventSystems.EventSystem.current != null && 
+                    UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(touch.touchId.ReadValue()))
+                {
+                    return;
+                }
+            }
+
             pointerDownPosition = GetPosition();
             pointerDownTime = Time.unscaledTime;
             isPointerDown = true;
 
-                // Apply visual feedback on touch down
-                Ray ray = mainCamera.ScreenPointToRay(pointerDownPosition);
-                if (Physics.Raycast(ray, out RaycastHit hit))
+            // Apply visual feedback on touch down
+            Ray ray = mainCamera.ScreenPointToRay(pointerDownPosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                GameObject hitObj = hit.collider.gameObject;
+                if (hitObj.GetComponent<Rigidbody>() != null && !removedBricks.Contains(hitObj))
                 {
-                    GameObject hitObj = hit.collider.gameObject;
-                    if (hitObj.GetComponent<Rigidbody>() != null && !removedBricks.Contains(hitObj))
+                    touchedBrick = hitObj;
+                    touchedBrickRenderer = touchedBrick.GetComponentInChildren<Renderer>();
+                    if (touchedBrickRenderer != null)
                     {
-                        touchedBrick = hitObj;
-                        touchedBrickRenderer = touchedBrick.GetComponentInChildren<Renderer>();
-                        if (touchedBrickRenderer != null)
-                        {
-                            touchedBrickRenderer.GetPropertyBlock(propBlock);
-                            propBlock.SetColor("_BaseColor", touchHighlightColor);
-                            propBlock.SetColor("_EmissionColor", touchHighlightColor);
-                            touchedBrickRenderer.SetPropertyBlock(propBlock);
-                        }
+                        touchedBrickRenderer.GetPropertyBlock(propBlock);
+                        propBlock.SetColor("_BaseColor", touchHighlightColor);
+                        propBlock.SetColor("_EmissionColor", touchHighlightColor);
+                        touchedBrickRenderer.SetPropertyBlock(propBlock);
                     }
                 }
             }
-            else if (isPointerDown)
+        }
+        else if (isPointerDown)
             {
                 Vector2 currentPosition = GetPosition();
                 float distance = Vector2.Distance(pointerDownPosition, currentPosition);
@@ -220,7 +253,8 @@ public class BrickInteractor : MonoBehaviour
         if (HapticManager.Instance != null) HapticManager.Instance.VibrateSuccess();
 
         OnBrickRemoved?.Invoke();
-        StartCoroutine(RemoveBrickRoutine(brick, slideDir, length));
+        Coroutine c = StartCoroutine(RemoveBrickRoutine(brick, slideDir, length));
+        activeCoroutines[brick] = c;
     }
 
     private IEnumerator ShakeRoutine(GameObject brick)
@@ -300,6 +334,12 @@ public class BrickInteractor : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
+
+        // Clean up from dictionary
+        if (activeCoroutines.ContainsKey(brick))
+        {
+            activeCoroutines.Remove(brick);
+        }
 
         // Note: Dissolve is now handled systemically by BrickCollisionSound.cs
         // when the brick hits the ground!

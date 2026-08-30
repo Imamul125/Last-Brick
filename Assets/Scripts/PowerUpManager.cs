@@ -39,11 +39,17 @@ public class PowerUpManager : MonoBehaviour
         return currentAdHammersUsed;
     }
 
+    [Header("Audio")]
+    public AudioClip powerUpActionSound;
+    private AudioSource audioSource;
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
         }
         else
         {
@@ -76,7 +82,7 @@ public class PowerUpManager : MonoBehaviour
         }
     }
 
-    private void ResetLevelStats()
+    public void ResetLevelStats()
     {
         currentAdHammersUsed = 0;
         isAdHammerCharged = false;
@@ -86,6 +92,11 @@ public class PowerUpManager : MonoBehaviour
 
     public void ToggleHammerMode()
     {
+        if (powerUpActionSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(powerUpActionSound);
+        }
+
         if (!IsHammerModeActive)
         {
             // Try to activate
@@ -209,9 +220,15 @@ public class PowerUpManager : MonoBehaviour
     {
         List<RigidbodyState> snapshot = new List<RigidbodyState>();
         Rigidbody[] allRigidbodies = FindObjectsByType<Rigidbody>(FindObjectsSortMode.None);
+        BrickInteractor interactor = FindAnyObjectByType<BrickInteractor>();
         
         foreach (Rigidbody rb in allRigidbodies)
         {
+            // Do not snapshot bricks that have already been clicked and are animating out.
+            // This prevents them from being restored mid-air with isKinematic = true on subsequent undos.
+            if (interactor != null && interactor.IsBrickRemoved(rb.gameObject))
+                continue;
+
             snapshot.Add(new RigidbodyState
             {
                 rb = rb,
@@ -232,8 +249,17 @@ public class PowerUpManager : MonoBehaviour
         stateHistory.Push(snapshot);
     }
 
+    private bool isUndoing = false;
+
     public void UndoLastMove()
     {
+        if (isUndoing) return;
+
+        if (powerUpActionSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(powerUpActionSound);
+        }
+
         if (stateHistory.Count == 0)
         {
             Debug.Log("Nothing to undo!");
@@ -248,17 +274,22 @@ public class PowerUpManager : MonoBehaviour
         }
         else
         {
+            isUndoing = true; // Prevent spamming ads
             // Try fallback to Ad
             if (GameAdManager.Instance != null)
             {
                 bool earnedReward = false;
                 GameAdManager.Instance.ShowRewardedAd(
                     () => { earnedReward = true; },
-                    () => { if (earnedReward) ExecuteUndoLogic(); }
+                    () => { 
+                        isUndoing = false;
+                        if (earnedReward) ExecuteUndoLogic(); 
+                    }
                 );
             }
             else
             {
+                isUndoing = false;
                 Debug.LogWarning("Not enough coins and no AdManager found!");
                 if (HapticManager.Instance != null) HapticManager.Instance.VibrateError();
             }
@@ -290,6 +321,9 @@ public class PowerUpManager : MonoBehaviour
                 {
                     pb.ResetTriggerState();
                 }
+
+                Collider col = state.rb.GetComponent<Collider>();
+                if (col != null) col.enabled = true;
 
                 if (interactor != null)
                 {
