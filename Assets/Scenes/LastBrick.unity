@@ -5190,7 +5190,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &330585545
 Camera:
   m_ObjectHideFlags: 0
@@ -21621,7 +21621,7 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 12
     maxMoves: 10
-    timeLimit: 37
+    timeLimit: 30
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21629,8 +21629,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - levelNumber: 13
-    maxMoves: 15
-    timeLimit: 80
+    maxMoves: 12
+    timeLimit: 30
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21639,7 +21639,7 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 14
     maxMoves: 13
-    timeLimit: 40
+    timeLimit: 30
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21648,7 +21648,7 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 15
     maxMoves: 15
-    timeLimit: 60
+    timeLimit: 30
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21944,7 +21944,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - levelNumber: 48
-    maxMoves: 30
+    maxMoves: 40
     timeLimit: 80
     onLevelStart:
       m_PersistentCalls:
@@ -22051,7 +22051,7 @@ MonoBehaviour:
   cinematicRotationDuration: 3
   removeAdsPopupFrequency: 3
   overrideLevelForTesting: 1
-  debugLevelIndex: 48
+  debugLevelIndex: 12
   currentLevelIndex: 0
   protectedBricksInLevel: []
 --- !u!1 &1602551972
