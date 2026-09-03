@@ -11,6 +11,8 @@ public class BrickInteractor : MonoBehaviour
     [Header("Animation Settings")]
     [Tooltip("Multiplier for the slide out animation speed.")]
     public float animationSpeed = 1.0f;
+    [Tooltip("Multiplier for how far the brick slides out. Increase this if your tower is wider.")]
+    public float slideOutDistanceMultiplier = 1.5f;
 
     [Header("Input Settings")]
     [Tooltip("Maximum movement in pixels to still be considered a click.")]
@@ -300,7 +302,7 @@ public class BrickInteractor : MonoBehaviour
         }
 
         Vector3 startPos = brick.transform.position;
-        Vector3 endPos = startPos + slideDir * (length * 1.5f);
+        Vector3 endPos = startPos + slideDir * (length * slideOutDistanceMultiplier);
 
         float duration = 0.4f / Mathf.Max(0.1f, animationSpeed);
         float elapsed = 0f;
