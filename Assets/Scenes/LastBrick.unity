@@ -18965,7 +18965,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 100000
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: af8126ef605ac53488de72507a162e6e, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -19032,7 +19032,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1375566448
@@ -21953,6 +21953,24 @@ MonoBehaviour:
     onLevelComplete:
       m_PersistentCalls:
         m_Calls: []
+  - levelNumber: 49
+    maxMoves: 25
+    timeLimit: 80
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  - levelNumber: 50
+    maxMoves: 29
+    timeLimit: 80
+    onLevelStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onLevelComplete:
+      m_PersistentCalls:
+        m_Calls: []
   levelLoadDelay: 2
   congratsUi: {fileID: 2023900156}
   retryUi: {fileID: 1631724658}
@@ -22042,9 +22060,13 @@ MonoBehaviour:
     cameraTarget: {fileID: 607077030}
     orbitalRadius: 19
   - startLevel: 31
-    endLevel: 50
+    endLevel: 48
     cameraTarget: {fileID: 607077030}
     orbitalRadius: 21
+  - startLevel: 49
+    endLevel: 100
+    cameraTarget: {fileID: 607077030}
+    orbitalRadius: 28
   orbitCamera: {fileID: 214644570}
   freeLookCamera: {fileID: 1595053106}
   congratsCamera: {fileID: 783866342}
@@ -22052,7 +22074,7 @@ MonoBehaviour:
   cinematicRotationDuration: 3
   removeAdsPopupFrequency: 3
   overrideLevelForTesting: 0
-  debugLevelIndex: 0
+  debugLevelIndex: 50
   currentLevelIndex: 0
   protectedBricksInLevel: []
 --- !u!1 &1602551972
