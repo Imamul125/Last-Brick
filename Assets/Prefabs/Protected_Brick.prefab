@@ -36,6 +36,7 @@ Transform:
   m_Children:
   - {fileID: 1943065505422148118}
   - {fileID: 5032835526367891406}
+  - {fileID: 4948756209871618747}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1700015684644617118
@@ -111,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProtectBrick
   brickMesh: {fileID: 517893022561721908}
+  isSafeAndDelayed: 0
   pedestalWinDelay: 1.5
 --- !u!114 &1787411704614689041
 MonoBehaviour:
@@ -129,8 +131,39 @@ MonoBehaviour:
     spawnPoint: {fileID: 5032835526367891406}
     movementType: 0
   - petPrefab: {fileID: 6702635459858530726, guid: ad8c2e4e0b206614abbcc03a38753ca9, type: 3}
-    spawnPoint: {fileID: 5032835526367891406}
+    spawnPoint: {fileID: 4948756209871618747}
     movementType: 0
+--- !u!1 &2425223990284410445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4948756209871618747}
+  m_Layer: 0
+  m_Name: Dog_EmptyPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4948756209871618747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2425223990284410445}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.61, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1.0579711}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1799928741982152828}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3716896677167637027
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +174,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5032835526367891406}
   m_Layer: 0
-  m_Name: Cat_Dog_EmptyPos
+  m_Name: Cat_EmptyPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
