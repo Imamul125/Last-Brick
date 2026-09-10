@@ -34,6 +34,9 @@ public class PlayableBrickInteractor : MonoBehaviour
     [Tooltip("Dust trail spawned while a brick slides. Left empty, no trail is spawned.")]
     public GameObject slideTrailPrefab;
 
+    [Tooltip("Root whose Rigidbodies are woken when a brick slides out. Usually the tower.")]
+    public Transform physicsRoot;
+
     [Header("Diagnostics")]
     [Tooltip("Logs every pointer event and raycast result. Leave off for shipping builds.")]
     public bool logInput;
@@ -49,6 +52,7 @@ public class PlayableBrickInteractor : MonoBehaviour
     private bool isPointerDown;
 
     private Renderer touchedBrickRenderer;
+    private Rigidbody[] cachedBodies;
 
     private readonly HashSet<GameObject> removedBricks = new HashSet<GameObject>();
 
@@ -222,11 +226,27 @@ public class PlayableBrickInteractor : MonoBehaviour
         brick.transform.position = startPos;
     }
 
-    private void WakeUpAllBricks()
+    /// <summary>
+    /// Wakes the tower so it reacts to a brick leaving. Deliberately walks a cached list from
+    /// physicsRoot rather than a scene-wide search: Object.FindObjectsByType is Unity 2022.2+ and
+    /// is not part of the API surface the Playworks C#-to-JS compiler implements, and re-scanning
+    /// the scene on every removal would be wasteful regardless.
+    /// </summary>
+    private void WakeUpAllBricks(GameObject context)
     {
-        Rigidbody[] all = FindObjectsByType<Rigidbody>(FindObjectsSortMode.None);
-        for (int i = 0; i < all.Length; i++)
-            if (all[i] != null && !all[i].isKinematic) all[i].WakeUp();
+        if (cachedBodies == null)
+        {
+            // physicsRoot when wired; otherwise the removed brick's own root, which is the tower.
+            Transform root = physicsRoot != null ? physicsRoot
+                           : (context != null ? context.transform.root : null);
+
+            cachedBodies = root != null
+                ? root.GetComponentsInChildren<Rigidbody>(true)
+                : new Rigidbody[0];
+        }
+
+        for (int i = 0; i < cachedBodies.Length; i++)
+            if (cachedBodies[i] != null && !cachedBodies[i].isKinematic) cachedBodies[i].WakeUp();
     }
 
     private IEnumerator RemoveBrickRoutine(GameObject brick, Vector3 slideDir, float length)
@@ -234,7 +254,7 @@ public class PlayableBrickInteractor : MonoBehaviour
         Collider col = brick.GetComponent<Collider>();
         if (col != null) col.enabled = false;
 
-        WakeUpAllBricks();
+        WakeUpAllBricks(brick);
 
         Rigidbody rb = brick.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;

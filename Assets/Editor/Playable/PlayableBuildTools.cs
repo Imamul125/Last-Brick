@@ -674,6 +674,8 @@ public static class PlayableBuildTools
         interactor.logInput = false;
         var controller = go.AddComponent<PlayableAdController>();
 
+        interactor.physicsRoot = tower.transform;
+
         controller.interactor = interactor;
         controller.endCard = ui.EndCard;
         controller.tutorialHand = ui.Hand;
