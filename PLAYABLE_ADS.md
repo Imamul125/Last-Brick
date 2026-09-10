@@ -225,7 +225,7 @@ That copy is a build environment, not a second game. It differs deliberately:
 
 | Change | Why |
 |---|---|
-| `NO_CINEMACHINE` in Scripting Define Symbols | Cinemachine is removed there; the shims in `CinemachineCompat.cs` stand in so `LevelManager` and `CinemachineDragRotate` still compile |
+| `PLAYABLE_BUILD` in Scripting Define Symbols | Cinemachine is removed there; it activates the shims in `CinemachineCompat.cs` and the SDK shells, so `LevelManager` and `CinemachineDragRotate` still compile |
 | `com.unity.cinemachine` removed from the manifest | The playable strips every Cinemachine component and uses `PlayableCameraRig` |
 | `Assets/Firebase/` and `Assets/GoogleMobileAds/` deleted | ~232 MB of mobile-only SDKs the playable cannot use |
 | `com.unity.collections`, `com.unity.modules.adaptiveperformance`, `com.unity.modules.vectorgraphics` removed | Do not exist in 6000.0; Collections is a transitive URP dependency there |

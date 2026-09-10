@@ -5,7 +5,7 @@
 // The callbacks fire immediately rather than being dropped: LevelManager advances the level from
 // inside OnLevelCompleted's callback, so swallowing it would stall progression. "No ad" here
 // means "carry on", which is also the right behaviour for a build with no ads in it.
-#if UNITY_WEBGL
+#if UNITY_WEBGL || PLAYABLE_BUILD
 using System;
 using UnityEngine;
 using UnityEngine.UI;

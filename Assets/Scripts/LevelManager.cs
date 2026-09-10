@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
-#if !NO_CINEMACHINE   // NO_CINEMACHINE swaps in the shims in CinemachineCompat.cs
+#if !PLAYABLE_BUILD   // PLAYABLE_BUILD swaps in the shims in CinemachineCompat.cs
 using Unity.Cinemachine;
 #endif
 

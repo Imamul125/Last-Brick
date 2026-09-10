@@ -1,7 +1,9 @@
 // Firebase ships Android/iOS-only libraries, so the real implementation cannot compile for the
 // WebGL target. Web builds (the Playworks playable ad, and any plain WebGL build) get an inert
 // shell instead, which keeps the LevelManager call sites valid without any change to Android.
-#if UNITY_WEBGL
+// Active on the WebGL target, or wherever the PLAYABLE_BUILD define is set — the playable
+// project deletes the SDK outright and does not build for WebGL, so it needs the define.
+#if UNITY_WEBGL || PLAYABLE_BUILD
 using UnityEngine;
 
 public class FirebaseManager : MonoBehaviour
