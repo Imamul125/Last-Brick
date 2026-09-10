@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+#if !NO_CINEMACHINE   // NO_CINEMACHINE swaps in the shims in CinemachineCompat.cs
 using Unity.Cinemachine;
+#endif
 
 [RequireComponent(typeof(CinemachineCamera))]
 public class CinemachineDragRotate : MonoBehaviour
