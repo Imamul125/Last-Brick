@@ -1,3 +1,26 @@
+// Firebase ships Android/iOS-only libraries, so the real implementation cannot compile for the
+// WebGL target. Web builds (the Playworks playable ad, and any plain WebGL build) get an inert
+// shell instead, which keeps the LevelManager call sites valid without any change to Android.
+#if UNITY_WEBGL
+using UnityEngine;
+
+public class FirebaseManager : MonoBehaviour
+{
+    public static FirebaseManager Instance { get; private set; }
+
+    public bool IsFirebaseReady { get { return false; } }
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
+    public void LogLevelStarted(int levelIndex) { }
+    public void LogLevelCompleted(int levelIndex) { }
+    public void LogLevelFailed(int levelIndex) { }
+}
+#else
 using UnityEngine;
 using Firebase;
 using Firebase.Analytics;
@@ -119,3 +142,5 @@ public class FirebaseManager : MonoBehaviour
         FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLevelEnd, new Parameter(FirebaseAnalytics.ParameterLevelName, "Level_" + levelIndex), new Parameter("success", 0));
     }
 }
+
+#endif

@@ -1,0 +1,262 @@
+{
+    "version": "7.2.0",
+    "projectId": "0133b0e7c4f6f284bb43021e4c815ddf",
+    "applicationID": 42561,
+    "creativeName": "",
+    "pgServer": "EU",
+    "window": {
+        "‐⁘": true
+    },
+    "unity": {
+        "environmentID": -611466136,
+        "scripts": {
+            "excludes": [
+                "**/Editor/",
+                "Assets/Scripts/",
+                "Assets/Firebase/",
+                "Assets/GoogleMobileAds/",
+                "Assets/GooglePlayGames/",
+                "Assets/ExternalDependencyManager/",
+                "Assets/Plugins/",
+                "Assets/GeneratedLocalRepo/",
+                "Assets/SineVFX/",
+                "Assets/UnityTechnologies/",
+                "Assets/TutorialInfo/",
+                "Assets/PolyOne/",
+                "Assets/GPGSIds.cs",
+                "**/FacebookSDK/",
+                "**/googleads**/",
+                "**/AdMobPlugin/",
+                "**/InMobiAds/",
+                "**/AudienceNetwork/",
+                "**/YandexMobileAds/",
+                "**/Fyber/",
+                "**/FairBid/",
+                "**/AppsFlyer/",
+                "**/IronSource/",
+                "**/Vungle/",
+                "**/NiceVibrations/",
+                "**/GameAnalytics/",
+                "**/UnityAds/",
+                "**/UnityPurchasing/",
+                "**/SupersonicWisdom/",
+                "**/StompyRobot/SRDebugger/",
+                "**/StompyRobot/SRF/",
+                "**/StompyRobot/SROptions/",
+                "**/ThirdParty/Obi/",
+                "**/Obi/",
+                "**/UniWebView/",
+                "**/Plugins/Sirenix/Assemblies/",
+                "**/Plugins/Sirenix/Odin Inspector/",
+                "**/Sirenix/Assemblies/",
+                "**/Sirenix/Odin Inspector/",
+                "**/MeshCombiner/",
+                "**/AnimationBaker/",
+                "Stubs/GameAnalyticsSDK",
+                "Stubs/Facebook.Unity",
+                "Stubs/FacebookGames",
+                "Stubs/FacebookPlatformServiceClient",
+                "Stubs/AdMobPlugin",
+                "Stubs/UnityEngine.Monetization",
+                "Stubs/UnityEngine.Advertisements",
+                "Stubs/UnityEngine.Purchasing",
+                "Stubs/Uniject",
+                "Stubs/InMobiAds",
+                "Stubs/AudienceNetwork",
+                "Stubs/YandexMobileAds",
+                "Stubs/Fyber",
+                "Stubs/GoogleMobileAds",
+                "Stubs/MiniJSON",
+                "Stubs/Firebase",
+                "Stubs/AppsFlyer",
+                "Stubs/IronSource",
+                "Stubs/Vungle",
+                "Stubs/MoreMountains.NiceVibrations",
+                "Stubs/StompyRobot/SRDebugger/",
+                "Stubs/StompyRobot/SRF/",
+                "Stubs/StompyRobot/SROptions/",
+                "Stubs/ThirdParty/Obi/",
+                "Stubs/Obi/",
+                "Stubs/UniWebView/",
+                "Stubs/Plugins/Sirenix/Assemblies/",
+                "Stubs/Plugins/Sirenix/Odin Inspector/",
+                "Stubs/Sirenix/Assemblies/",
+                "Stubs/Sirenix/Odin Inspector/",
+                "Stubs/MeshCombiner/",
+                "Stubs/AnimationBaker/",
+                "Stubs/SupersonicWisdom/"
+            ],
+            "msbuildMac64": "/Library/Frameworks/Mono.framework/Versions/Current/bin/msbuild",
+            "msbuildWin64": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "externalSources": [],
+            "externalJSLibraries": [],
+            "scriptingDefines": [
+                "LUNA_PLAYABLE"
+            ],
+            "msbuildVersion": "17.14",
+            "monoVersion": "9.0.5",
+            "dotnetVersion": ""
+        },
+        "assets": {
+            "export": [],
+            "excludes": [
+                "**/Editor/",
+                "Assets/Firebase/",
+                "Assets/GooglePlayGames/",
+                "Assets/GoogleMobileAds/",
+                "Assets/ExternalDependencyManager/",
+                "Assets/SineVFX/",
+                "Assets/UnityTechnologies/",
+                "Assets/TutorialInfo/"
+            ],
+            "includes": [
+                "Assets/TextMesh Pro/Resources/TMP Settings.asset"
+            ]
+        },
+        "scenes": [
+            "Assets/Scenes/WebGL/PlayableAds.unity"
+        ],
+        "disabledScenes": [],
+        "startupScene": 0,
+        "packages": {
+            "default": {
+                "applicationName": "Last Brick",
+                "orientation": "unspecified",
+                "languages": [
+                    "en"
+                ]
+            },
+            "ironsource": {
+                "packageType": 0
+            },
+            "facebook": {
+                "assetID": "",
+                "packageType": 0,
+                "disableCompression": false
+            }
+        },
+        "preloader": {
+            "logo": ""
+        },
+        "enableRealtimeShadows": false,
+        "enableLunaCompilerV2": false,
+        "optimiseShaderVariantsExport": true,
+        "enableMecanimWASM": true,
+        "minify": true,
+        "forceUncompressed": false,
+        "forceBase64": false,
+        "graphicsConstraint": 24,
+        "genericCheck": true,
+        "disableAntiAliasing": true,
+        "forceStableRandomSeed": false,
+        "unusedModules": [
+            {
+                "name": "physics3d",
+                "excluded": false,
+                "forceIncluded": true
+            },
+            {
+                "name": "particle-system",
+                "excluded": false,
+                "forceIncluded": false
+            },
+            {
+                "name": "reflection",
+                "excluded": false,
+                "forceIncluded": false
+            },
+            {
+                "name": "prefabs",
+                "excluded": false,
+                "forceIncluded": true
+            }
+        ],
+        "disableRuntimeAnalysisForCode": false,
+        "disableRuntimeAnalysisForShaders": false,
+        "useShadersCache": true,
+        "usePreservativeDynamicBatching": true,
+        "preventUpdatingRAListWhenRAIsDisabled": false,
+        "unusedClasses": [],
+        "unusedMethods": [],
+        "stubberDataList": [],
+        "stubberData": {
+            "SDKName": "",
+            "Namespace": "",
+            "className": "",
+            "buildPlatform": "",
+            "enabled": false
+        },
+        "playerPrefs": true,
+        "enableStaticBatching": false,
+        "enableDynamicBatching": false,
+        "forceSourcesBasedCompilation": false
+    },
+    "assets": {
+        "rules": {
+            "texture": {
+                "default": {
+                    "maxWidth": 512,
+                    "maxHeight": 512,
+                    "format": "png32",
+                    "compression": "quantSize",
+                    "quality": 65,
+                    "script": "",
+                    "ext": ""
+                },
+                "overrides": []
+            },
+            "sound": {
+                "default": {
+                    "channels": 1,
+                    "startTime": "00:00.000",
+                    "endTime": "00:00.000",
+                    "lengthInSeconds": 0.0,
+                    "bitrate": 128,
+                    "script": "",
+                    "ext": ""
+                },
+                "overrides": []
+            },
+            "font": {
+                "default": {
+                    "data": {
+                        "alphabet": " §1234567890-=qwertyuiop[]asdfghjkl;'\\`zxcvbnm,./±!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"|~ZXCVBNM<>?",
+                        "size": 64,
+                        "textureWidth": 1024,
+                        "textureHeight": 1024
+                    }
+                },
+                "overrides": []
+            },
+            "meshes": {
+                "default": {
+                    "halfPrecision": true,
+                    "useSimplification": false,
+                    "simplificationPercentage": 30,
+                    "linkCloseVertices": true
+                },
+                "overrides": []
+            },
+            "animations": {
+                "default": {
+                    "halfPrecision": true,
+                    "stripCurves": true
+                },
+                "overrides": []
+            }
+        }
+    },
+    "postprocesses": {
+        "ssao": {
+            "isActive": false,
+            "samplingQuality": 1,
+            "normalsQuality": 0,
+            "blurQuality": 0,
+            "radius": 0.1,
+            "intensity": 1.0,
+            "falloff": 100.0
+        }
+    },
+    "logLevel_Cs": "",
+    "logLevel_Js": ""
+}

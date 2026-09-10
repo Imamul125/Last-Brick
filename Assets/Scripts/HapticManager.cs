@@ -54,8 +54,10 @@ public class HapticManager : MonoBehaviour
         // iOS default Handheld.Vibrate is generally a short system haptic on modern iPhones.
         // True intensity control on iOS requires a custom Objective-C plugin (UIImpactFeedbackGenerator).
         Handheld.Vibrate();
-#else
+#elif !UNITY_WEBGL
         Handheld.Vibrate();
 #endif
+        // WebGL has no Handheld API and browsers gate vibration behind a user gesture, so the
+        // web/playable builds simply do nothing here.
     }
 }
