@@ -1,3 +1,53 @@
+// Google Mobile Ads is an Android/iOS-only plugin, so the real implementation cannot compile for
+// the WebGL target, and the playable-ad project deletes the SDK outright. Web builds get an inert
+// shell with the same public surface instead, so LevelManager and PowerUpManager still compile.
+//
+// The callbacks fire immediately rather than being dropped: LevelManager advances the level from
+// inside OnLevelCompleted's callback, so swallowing it would stall progression. "No ad" here
+// means "carry on", which is also the right behaviour for a build with no ads in it.
+#if UNITY_WEBGL
+using System;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GameAdManager : MonoBehaviour
+{
+    public static GameAdManager Instance { get; private set; }
+
+    public GameObject gdprPrivacyButton;
+    public Button daily_coins;
+    public int dailyCoinRewardAmount = 50;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
+    public void UpdatePrivacyButton()
+    {
+        if (gdprPrivacyButton != null) gdprPrivacyButton.SetActive(false);
+    }
+
+    public void ShowPrivacyOptionsForm() { }
+
+    public void OnLevelCompleted(Action onCompleteCallback = null)
+    {
+        if (onCompleteCallback != null) onCompleteCallback();
+    }
+
+    public void OnLevelRetry(Action onCompleteCallback = null)
+    {
+        if (onCompleteCallback != null) onCompleteCallback();
+    }
+
+    public void ShowRewardedAd(Action onRewardEarned, Action onAdClosed = null)
+    {
+        if (onRewardEarned != null) onRewardEarned();
+        if (onAdClosed != null) onAdClosed();
+    }
+}
+#else
 using UnityEngine;
 using UnityEngine.UI;
 using GoogleMobileAds.Api;
@@ -414,3 +464,5 @@ public class GameAdManager : MonoBehaviour
         });
     }
 }
+
+#endif

@@ -216,6 +216,28 @@ grep -c "0000000000000000[ef]000000000000000" Assets/Scenes/WebGL/PlayableAds.un
 If the export still fails after this, the remaining fix is to open the project in **Unity
 6000.0 LTS**, which is the newest version Playworks actually supports.
 
+## Building in a separate 6000.0 project
+
+Playworks 7.2.0 cannot run on Unity 6000.3+ (see LP1025 above), so the playable is built from a
+copy of this branch opened in **Unity 6000.0 LTS**, leaving the main project on 6000.4.
+
+That copy is a build environment, not a second game. It differs deliberately:
+
+| Change | Why |
+|---|---|
+| `NO_CINEMACHINE` in Scripting Define Symbols | Cinemachine is removed there; the shims in `CinemachineCompat.cs` stand in so `LevelManager` and `CinemachineDragRotate` still compile |
+| `com.unity.cinemachine` removed from the manifest | The playable strips every Cinemachine component and uses `PlayableCameraRig` |
+| `Assets/Firebase/` and `Assets/GoogleMobileAds/` deleted | ~232 MB of mobile-only SDKs the playable cannot use |
+| `com.unity.collections`, `com.unity.modules.adaptiveperformance`, `com.unity.modules.vectorgraphics` removed | Do not exist in 6000.0; Collections is a transitive URP dependency there |
+
+None of that is needed in this repo, and none of it affects the Android build. The `#if UNITY_WEBGL`
+shells in `FirebaseManager`, `GooglePlayManager` and `GameAdManager` are what let the project
+compile with those SDKs absent — their `#else` branches are the untouched originals.
+
+`GameAdManager`'s shell invokes its callbacks immediately rather than dropping them: `LevelManager`
+advances the level from inside `OnLevelCompleted`'s callback, so swallowing it would stall
+progression. "No ad" has to mean "carry on".
+
 ## Caveats worth knowing
 
 - **Unity version.** Playworks lists 2021.3 LTS, 2022.3 LTS and 6000.0 LTS as supported. This
