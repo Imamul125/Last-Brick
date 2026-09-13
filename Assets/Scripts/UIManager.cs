@@ -33,9 +33,18 @@ public class UIManager : MonoBehaviour
     public int targetObjective = 15;
     public int currentObjectiveProgress = 0;
 
+    [Header("Animation Settings")]
+    [Tooltip("How much the moves text scales up when running out of moves.")]
+    public float movesTextAnimScale = 1.5f;
+    [Tooltip("How fast the moves text zooms in and out.")]
+    public float movesTextAnimDuration = 0.15f;
+
     private float timeRemaining;
     private bool timerRunning = false;
     private int lastTimerSecond = -1;
+    
+    private Coroutine movesAnimCoroutine;
+    private Vector3 originalMovesTextScale = Vector3.one;
 
     private void Awake()
     {
@@ -61,6 +70,10 @@ public class UIManager : MonoBehaviour
 #endif
 
         currentCoins = PlayerPrefs.GetInt("SavedCoins", 0);
+        if (movesText != null)
+        {
+            originalMovesTextScale = movesText.transform.localScale;
+        }
         UpdateAllUI();
     }
 
@@ -132,6 +145,46 @@ public class UIManager : MonoBehaviour
     {
         currentMoves++;
         UpdateAllUI();
+
+        if (maxMovesForLevel > 0 && MovesRemaining < 4)
+        {
+            if (movesAnimCoroutine != null) StopCoroutine(movesAnimCoroutine);
+            movesAnimCoroutine = StartCoroutine(AnimateMovesText());
+        }
+    }
+
+    private System.Collections.IEnumerator AnimateMovesText()
+    {
+        if (movesText == null) yield break;
+
+        float duration = movesTextAnimDuration;
+        float elapsed = 0f;
+        Vector3 targetScale = originalMovesTextScale * movesTextAnimScale;
+
+        Debug.Log($"[UIManager] AnimateMovesText started! Original Scale: {originalMovesTextScale}, Target Scale: {targetScale}, Duration: {duration}");
+
+        // Zoom In
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            movesText.transform.localScale = Vector3.Lerp(originalMovesTextScale, targetScale, t);
+            yield return null;
+        }
+        
+        movesText.transform.localScale = targetScale;
+        elapsed = 0f;
+
+        // Zoom Out
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            movesText.transform.localScale = Vector3.Lerp(targetScale, originalMovesTextScale, t);
+            yield return null;
+        }
+
+        movesText.transform.localScale = originalMovesTextScale;
     }
 
     public void AddCoin(int amount)

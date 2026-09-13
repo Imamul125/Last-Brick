@@ -19333,6 +19333,8 @@ MonoBehaviour:
   currentCoins: 0
   targetObjective: 15
   currentObjectiveProgress: 0
+  movesTextAnimScale: 6
+  movesTextAnimDuration: 0.15
 --- !u!4 &1407928905
 Transform:
   m_ObjectHideFlags: 0
@@ -21559,7 +21561,7 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 5
     maxMoves: 17
-    timeLimit: 30
+    timeLimit: 40
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -21586,7 +21588,7 @@ MonoBehaviour:
         m_Calls: []
   - levelNumber: 8
     maxMoves: 15
-    timeLimit: 14
+    timeLimit: 18
     onLevelStart:
       m_PersistentCalls:
         m_Calls: []
@@ -22074,7 +22076,7 @@ MonoBehaviour:
   cinematicRotationDuration: 3
   removeAdsPopupFrequency: 3
   overrideLevelForTesting: 0
-  debugLevelIndex: 50
+  debugLevelIndex: 0
   currentLevelIndex: 0
   protectedBricksInLevel: []
 --- !u!1 &1602551972
