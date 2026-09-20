@@ -1,0 +1,339 @@
+SCENE: Assets/Scenes/LastBrick.unity
+ROOT COUNT: 37
+
+Main Camera  [kids:0 desc:0]  {Camera, AudioListener, UniversalAdditionalCameraData, CinemachineBrain}
+
+Directional Light  [kids:0 desc:0 INACTIVE]  {Light, UniversalAdditionalLightData}
+
+Global Volume  [kids:0 desc:0]  {Volume}
+
+Floor  [kids:1 desc:1]
+  Floor  [kids:0 desc:0]  {MeshFilter, BoxCollider, MeshRenderer}
+
+EventSystem  [kids:0 desc:0]  {EventSystem, InputSystemUIInputModule}
+
+FreeLook Camera  [kids:0 desc:0]  {CinemachineCamera, CinemachineOrbitalFollow, CinemachineRotationComposer, CinemachineFreeLookModifier, CinemachineInputAxisController}
+
+Camera Target  [kids:0 desc:0]
+
+CinemachineCamera  [kids:0 desc:0 INACTIVE]  {CinemachineCamera, CinemachineOrbitalFollow, CinemachineHardLookAt, CinemachineInputAxisController}
+
+CongratsCamera  [kids:0 desc:0 INACTIVE]  {CinemachineCamera}
+
+Camera Level Target  [kids:1 desc:1]
+  Camera Target  [kids:0 desc:0]
+
+Audio  [kids:4 desc:4]
+  SoundManager  [kids:0 desc:0]  {SoundManager}
+  AudioSource  [kids:0 desc:0]  {AudioSource}
+  AudioUXManager  [kids:0 desc:0]  {AudioManager}
+  UXAudioSource  [kids:0 desc:0]  {AudioSource}
+
+Pets  [kids:0 desc:0]
+
+Canvas  [kids:13 desc:175]  {Canvas, CanvasScaler, GraphicRaycaster}
+  MainMenu  [kids:7 desc:7 INACTIVE]
+    Panel  [kids:0 desc:0]  {CanvasRenderer, Image}
+    Title  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    PlayBtn  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Stats  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+    Settings  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Coins  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+    DailyCoins  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+  MainMenu_Cat  [kids:16 desc:28]
+    Panel  [kids:0 desc:0]  {CanvasRenderer, Image}
+    Title  [kids:1 desc:1]  {CanvasRenderer, Image, UIAnimator}
+    PlayBtn  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator, UIWobbleAnimator}
+    Stats  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+    Settings  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Coins  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+    PetDisplaySlot  [kids:1 desc:1]  {CanvasRenderer, RawImage}
+    PrevPetButton  [kids:1 desc:1]  {CanvasRenderer, Image, Button}
+    NextPetButton  [kids:1 desc:1]  {CanvasRenderer, Image, Button}
+    InvisibleButton  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Select  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+    Unlock  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator, UIWobbleAnimator}
+    Customise  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Bottom_Panel  [kids:3 desc:6]  {GridLayoutGroup}
+    Coins  [kids:1 desc:1]  {CanvasRenderer, Image, UIAnimator}
+    PetName  [kids:1 desc:1]  {CanvasRenderer, Image}
+  Setting  [kids:8 desc:8 INACTIVE]  {UIAnimator}
+    Panel  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Share  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Rateus  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Support  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    PrivacyPolicy  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    PrivacyPolicySetting  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Close  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Text (TMP)  [kids:0 desc:0]  {CanvasRenderer, TextMeshProUGUI, VersionDisplay}
+  Policy  [kids:4 desc:4 INACTIVE]  {UIAnimator}
+    SettingPanel  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Panel  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    View  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Close  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+  Buy_Pet  [kids:6 desc:7 INACTIVE]  {UIAnimator}
+    Panel  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Close  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Coins  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    SettingPanel  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, UIAnimator}
+    Buy  [kids:1 desc:1]  {CanvasRenderer, Image, Button, UIAnimator, UIWobbleAnimator}
+    Text (TMP)  [kids:0 desc:0]  {CanvasRenderer, TextMeshProUGUI}
+  Remove_Ads  [kids:6 desc:7 INACTIVE]  {UIAnimator}
+    Panel  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image}
+    Panel  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Close  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Coins  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+    SettingPanel  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, UIAnimator}
+    Buy  [kids:1 desc:1]  {CanvasRenderer, Image, Button, UIAnimator, UIWobbleAnimator}
+  Update Panel  [kids:3 desc:3 INACTIVE]  {UIAnimator}
+    Panel  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Update  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Close  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+  Congrats Panel  [kids:5 desc:5 INACTIVE]  {UIAnimator, CongratsStarsAnimator}
+    BG3  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Panel  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Star  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Update  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+    Close  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+  Badges_Achievement  [kids:6 desc:30 INACTIVE]  {CanvasRenderer, Image}
+    MenuBG  [kids:0 desc:0]  {CanvasRenderer, Image}
+    Level  [kids:1 desc:1 INACTIVE]  {CanvasRenderer, Image}
+    Scroll View  [kids:3 desc:23]  {CanvasRenderer, Image, ScrollRect}
+    AllBadges  [kids:0 desc:0]  {GridLayoutGroup}
+    Text (TMP)  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, TextMeshProUGUI}
+    HomeButton  [kids:0 desc:0]  {CanvasRenderer, Image, Button}
+  RetryPanel  [kids:7 desc:7 INACTIVE]  {UIAnimator}
+    BG2  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Panel_Retry  [kids:0 desc:0]  {CanvasRenderer, Image, UIAnimator}
+    Retry_Outofmove  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, UIAnimator}
+    RetryButton  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator, UIWobbleAnimator}
+    WatchAd  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator, UIWobbleAnimator}
+    Update  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+    Close  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Image, Button, UIAnimator}
+  MainScene  [kids:10 desc:56 INACTIVE]
+    Coins  [kids:2 desc:2]  {CanvasRenderer, Image, UIAnimator}
+    Moves  [kids:1 desc:1]  {CanvasRenderer, Image, UIAnimator}
+    Paper_Instruction  [kids:2 desc:2 INACTIVE]  {CanvasRenderer, Image, UIAnimator}
+    HammerMode_Text  [kids:3 desc:4 INACTIVE]  {CanvasRenderer, Image, UIAnimator}
+    Home  [kids:0 desc:0]  {CanvasRenderer, Image, Button, UIAnimator}
+    Hammar  [kids:4 desc:4]  {DynamicPowerUpButton, UIAnimator}
+    Undo  [kids:3 desc:3]  {DynamicPowerUpButton, UIAnimator}
+    Level  [kids:2 desc:3]  {CanvasRenderer, Image, UIAnimator}
+    Badges  [kids:19 desc:19 INACTIVE]  {CanvasRenderer, Image}
+    PowerUp  [kids:6 desc:8]  {CanvasRenderer, Image}
+  SpawnCenterPoint  [kids:0 desc:0]
+  GameObject  [kids:0 desc:0]
+
+Perfect_Brick_LowPoly  [kids:2 desc:2 INACTIVE]  {BoxCollider, Rigidbody, BrickCollisionSound}
+  Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Cat_EmptyPos  [kids:0 desc:0]
+
+Tower_4  [kids:31 desc:62 INACTIVE]
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer, ProtectBrick}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound, ProtectBrick}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Perfect_Brick_LowPoly(Clone)  [kids:1 desc:1]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+
+Pedestal_New  [kids:0 desc:0 INACTIVE]  {MeshFilter, MeshRenderer, BoxCollider, PedestalAnimator}
+
+Environment  [kids:10 desc:11]
+  Ancient_Ruins_Columns  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Ancient_Ruins_Columns (3)  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Ancient_Ruins_Columns (6)  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Ancient_Ruins_Columns (1)  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Ancient_Ruins_Columns (4)  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Ancient_Ruins_Columns (2)  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Ancient_Ruins_Columns (5)  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+  Broken_Mid_Shaft  [kids:0 desc:0 INACTIVE]  {MeshFilter, MeshRenderer}
+  Ancient_Broken_Stone  [kids:1 desc:1 INACTIVE]  {MeshFilter, MeshRenderer}
+    Stone_Glow_Light  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Ancient_Ground  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+
+Lights  [kids:13 desc:13]
+  Stone_Glow_Light  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (2)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (3)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (4)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (5)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (6)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (7)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (8)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (9)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (10)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+  Stone_Glow_Light (11)  [kids:0 desc:0]  {Light, UniversalAdditionalLightData}
+
+Share Rate  [kids:0 desc:0]  {ShareAndRate}
+
+App Update Checker  [kids:0 desc:0]  {AppUpdateChecker}
+
+Tower_1  [kids:8 desc:25 INACTIVE]
+  Perfect_Brick_LowPoly  [kids:2 desc:2]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+    Cat_EmptyPos  [kids:0 desc:0]
+  Perfect_Brick_LowPoly  [kids:2 desc:2]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+    Cat_EmptyPos  [kids:0 desc:0]
+  Perfect_Brick_LowPoly  [kids:2 desc:2]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+    Cat_EmptyPos  [kids:0 desc:0]
+  Perfect_Brick_LowPoly  [kids:2 desc:2]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+    Cat_EmptyPos  [kids:0 desc:0]
+  Perfect_Brick_LowPoly  [kids:2 desc:2]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+    Cat_EmptyPos  [kids:0 desc:0]
+  Perfect_Brick_LowPoly  [kids:2 desc:2]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+    Cat_EmptyPos  [kids:0 desc:0]
+  Protected_Brick  [kids:3 desc:3]  {BoxCollider, Rigidbody, BrickCollisionSound, ProtectBrick, ProtectedBrickPetSpawner}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+    Cat_EmptyPos  [kids:0 desc:0]
+    Dog_EmptyPos  [kids:0 desc:0]
+  Perfect_Brick_LowPoly  [kids:2 desc:2]  {BoxCollider, Rigidbody, BrickCollisionSound}
+    Brick_LowPoly  [kids:0 desc:0]  {MeshFilter, MeshRenderer}
+    Cat_EmptyPos  [kids:0 desc:0]
+
+ParticleManager  [kids:0 desc:0]  {ParticleManager}
+
+Effects  [kids:5 desc:77]
+  MagmaBarrierWall  [kids:9 desc:15 INACTIVE]
+    ---------EmergeVFX---------  [kids:0 desc:0]
+    RocksLongAnimated  [kids:6 desc:6]  {Animator}
+    ---------IgniteVFX---------  [kids:0 desc:0]
+    MagmaBarrierWall_Wave_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    MagmaBarrierWall_Sparks_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    ---------CoreVFX---------  [kids:0 desc:0]
+    MagmaBarrierWall_MagmaSplashes_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    MagmaBarrierWall_Ground_02  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    MagmaBarrierWall_Sparks_02  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+  SpiralFlames  [kids:9 desc:14 INACTIVE]  {AutoScaleMaster}
+    ---------BuildupVFX---------  [kids:0 desc:0]
+    SpiralFlames_AppearVerticalHeatWave_02  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    SpiralFlames_AppearVerticalHeatWave_02v2  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    SpiralFlames_Indicator_Emissive_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    SpiralFlames_Indicator_Emissive_02  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    SpiralFlames_Sparks_03  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    ---------CoreVFX---------  [kids:0 desc:0]
+    SpiralFlames_Flames_01_Control_01  [kids:1 desc:5]  {ParticleSystem, ParticleSystemRenderer}
+    SpiralFlames_AppearVerticalHeatWave_05  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+  Fireworks_02  [kids:8 desc:17 INACTIVE]  {AutoScaleMaster}
+    ---------CoreVFX---------  [kids:0 desc:0]
+    Fireworks_02_FireworksRocket_01  [kids:4 desc:9]  {ParticleSystem, ParticleSystemRenderer}
+    ---------BuildupVFX---------  [kids:0 desc:0]
+    Fireworks_02_Flare_03  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    Fireworks_02_Flare_04  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    Fireworks_02_Flare_05  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    Fireworks_02_Flare_07  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    Fireworks_02_Wave_03  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+  BarrelOfFlames_Dynamic  [kids:14 desc:18 INACTIVE]  {AutoScaleMaster}
+    ---------CoreVFX---------  [kids:0 desc:0]
+    BarrelOfFlames_GasBarrel  [kids:1 desc:3]
+    BarrelOfFlames_Indicator_Emissive_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    BarrelOfFlames_Indicator_Darkening_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    BarrelOfFlames_BarrelHeat_04  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    BarrelOfFlames_BarrelHeat_06  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    BarrelOfFlames_BarrelHeat_Background_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    BarrelOfFlames_Sparks_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    BarrelOfFlames_Sparks_02  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    BarrelOfFlames_Flames_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    --------AppearVFX--------  [kids:0 desc:0]
+    BarrelOfFlames_Wave_01  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+    BarrelOfFlames_Sparks_03a  [kids:1 desc:1]  {ParticleSystem, ParticleSystemRenderer}
+    BarrelOfFlames_Flames_02  [kids:0 desc:0]  {ParticleSystem, ParticleSystemRenderer}
+  Fireworks_03  [kids:1 desc:8 INACTIVE]  {AutoScaleMaster}
+    Fireworks_03_Flare_01  [kids:4 desc:7]  {ParticleSystem, ParticleSystemRenderer}
+
+CatLeftPoint  [kids:0 desc:0]
+
+CatRightPoint  [kids:0 desc:0]
+
+GameAdManager  [kids:0 desc:0]  {GameAdManager}
+
+FireBaseManager  [kids:0 desc:0]  {FirebaseManager}
+
+TutorialManager  [kids:0 desc:0]  {TutorialManager}
+
+GameManager  [kids:0 desc:0]  {PowerUpManager, ComboManager, HapticManager, QuestManager, CatCustomizationManager}
+
+TutorialUI  [kids:2 desc:2]  {Canvas}
+  ClickHand  [kids:0 desc:0 INACTIVE]  {Animator, SpriteRenderer}
+  RotateHand  [kids:0 desc:0 INACTIVE]  {CanvasRenderer, Animator, SpriteRenderer}
+
+PetStudio  [kids:2 desc:66]  {PetSelectionManager}
+  PetShowcasePodium  [kids:2 desc:64]
+    Cat  [kids:2 desc:30]  {Animator, AudioSource, PetInteract}
+    Dog  [kids:2 desc:32 INACTIVE]  {Animator, AudioSource, PetInteract}
+  PetShowcaseCam  [kids:0 desc:0]  {Camera, UniversalAdditionalCameraData}
+
+UiManager  [kids:0 desc:0]  {UIManager, CoinAnimator}
+
+LevelManager  [kids:0 desc:0]  {BrickInteractor, LevelManager}
+
+IAP_Pay_Manager  [kids:0 desc:0]  {IAPManager}
+
+Achivement_Manager  [kids:0 desc:0]  {AchievementsMenu, BadgeManager}
+
+GooglePlayManager  [kids:0 desc:0]  {GooglePlayManager}
+
+PowerUp_Manager  [kids:0 desc:0]  {PowerUpUnlockManager}
+
