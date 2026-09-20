@@ -45,6 +45,18 @@ public class FirebaseManager : MonoBehaviour
                 // 4. Setup Cloud Messaging (Notifications)
                 FirebaseMessaging.TokenReceived += OnTokenReceived;
                 FirebaseMessaging.MessageReceived += OnMessageReceived;
+
+                // Request notification permission (Required for iOS and Android 13+)
+                FirebaseMessaging.RequestPermissionAsync().ContinueWith(task => {
+                    if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
+                    {
+                        Debug.Log("Notification permission granted.");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Notification permission not granted or request failed.");
+                    }
+                });
                 
                 // Log that the app was opened
                 LogAppOpened();
