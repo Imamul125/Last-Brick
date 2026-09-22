@@ -23,19 +23,18 @@ public class FirebaseSPMSigningPostProcessor
         string frameworkTarget = project.GetUnityFrameworkTargetGuid();
         string projectGuid = project.ProjectGuid();
 
-        // Apply team ID using Unity`s native method
         project.SetTeamId(mainTarget, teamId);
         project.SetTeamId(frameworkTarget, teamId);
         
-        // Also forcefully set the properties on both targets and the project-level configuration
-        // so that dynamically added SPM packages inherit the manual team profile
         project.SetBuildProperty(mainTarget, "DEVELOPMENT_TEAM", teamId);
         project.SetBuildProperty(frameworkTarget, "DEVELOPMENT_TEAM", teamId);
         project.SetBuildProperty(projectGuid, "DEVELOPMENT_TEAM", teamId);
         
         project.SetBuildProperty(mainTarget, "CODE_SIGN_STYLE", "Manual");
         project.SetBuildProperty(frameworkTarget, "CODE_SIGN_STYLE", "Manual");
-        project.SetBuildProperty(projectGuid, "CODE_SIGN_STYLE", "Manual");
+        
+        // Removed projectGuid manual signing so we do not force SPM targets to manual globally if UCB overrides it
+        // We will rely on GYM_XCARGS instead.
 
         project.WriteToFile(projectPath);
     }
