@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using System.IO;
-using System.Text.RegularExpressions;
 
 /// <summary>
 /// Post-process build script that fixes Firebase/Google SPM package signing issues
@@ -12,14 +11,15 @@ using System.Text.RegularExpressions;
 ///
 /// Problem: Firebase iOS SDK pulled via Swift Package Manager creates Xcode targets
 /// (Firebase_FirebaseCoreExtension, Firebase_FirebaseMessaging, GoogleUtilities, etc.)
-/// that require a development team for code signing. These SPM targets are resolved
-/// by Xcode AFTER Unity generates the project, so Unity's PBXProject API cannot
-/// configure them.
+/// that require a development team for code signing. Unity Cloud Build's fastlane
+/// pipeline passes CODE_SIGN_IDENTITY on the xcodebuild command line which applies
+/// to ALL targets. SPM targets then try to sign but fail because they have no
+/// DEVELOPMENT_TEAM (stripped by UCB's sed step) and no provisioning profile.
 ///
-/// Solution: We create a custom .xcconfig file and reference it as the base
-/// configuration for the Xcode project. This xcconfig sets CODE_SIGNING_ALLOWED=NO
-/// by default, which SPM targets will inherit. We then explicitly override it to YES
-/// on the main Unity-iPhone and UnityFramework targets.
+/// Solution: Set CODE_SIGNING_ALLOWED=NO at the Xcode PROJECT level using PBXProject
+/// API. SPM package targets inherit project-level build settings. Then explicitly
+/// set CODE_SIGNING_ALLOWED=YES on the main app targets to override the project default.
+/// This way SPM targets skip signing entirely while the app targets sign normally.
 /// </summary>
 public class FirebaseSPMSigningPostProcessor
 {
@@ -38,68 +38,43 @@ public class FirebaseSPMSigningPostProcessor
 
         string mainTarget = project.GetUnityMainTargetGuid();
         string frameworkTarget = project.GetUnityFrameworkTargetGuid();
+        string projectGuid = project.ProjectGuid();
 
-        // --- Configure signing for the main app targets ---
+        // =============================================================
+        // STEP 1: Disable signing at the PROJECT level.
+        // SPM package targets (Firebase, GoogleUtilities, etc.) inherit
+        // project-level build settings. By setting NO here, they won't
+        // attempt code signing and won't need a development team.
+        // =============================================================
+        project.SetBuildProperty(projectGuid, "CODE_SIGNING_ALLOWED", "NO");
+        project.SetBuildProperty(projectGuid, "CODE_SIGNING_REQUIRED", "NO");
+
+        // =============================================================
+        // STEP 2: Enable signing on the main app targets.
+        // These explicit target-level settings override the project-level
+        // NO set above. This ensures the app and framework are signed
+        // correctly with the provisioning profile and team ID.
+        // =============================================================
+        
+        // Unity-iPhone (main app target)
         project.SetTeamId(mainTarget, teamId);
-        project.SetTeamId(frameworkTarget, teamId);
-
         project.SetBuildProperty(mainTarget, "DEVELOPMENT_TEAM", teamId);
-        project.SetBuildProperty(frameworkTarget, "DEVELOPMENT_TEAM", teamId);
-
         project.SetBuildProperty(mainTarget, "CODE_SIGN_STYLE", "Manual");
-        project.SetBuildProperty(frameworkTarget, "CODE_SIGN_STYLE", "Manual");
-
-        // Explicitly allow signing on the main app targets — these override
-        // the project-level NO that we inject below.
         project.SetBuildProperty(mainTarget, "CODE_SIGNING_ALLOWED", "YES");
         project.SetBuildProperty(mainTarget, "CODE_SIGNING_REQUIRED", "YES");
+
+        // UnityFramework (framework target)
+        project.SetTeamId(frameworkTarget, teamId);
+        project.SetBuildProperty(frameworkTarget, "DEVELOPMENT_TEAM", teamId);
+        project.SetBuildProperty(frameworkTarget, "CODE_SIGN_STYLE", "Manual");
         project.SetBuildProperty(frameworkTarget, "CODE_SIGNING_ALLOWED", "YES");
         project.SetBuildProperty(frameworkTarget, "CODE_SIGNING_REQUIRED", "YES");
 
         project.WriteToFile(projectPath);
 
-        // --- Patch the pbxproj to disable signing at the project level ---
-        // This ensures SPM package targets (which inherit project-level settings)
-        // won't fail with "requires a development team" errors.
-        PatchProjectLevelSigning(projectPath);
-
-        Debug.Log("[FirebaseSPMSigningPostProcessor] Successfully patched Xcode project.");
-    }
-
-    /// <summary>
-    /// Directly patches the .pbxproj file to inject CODE_SIGNING_ALLOWED = NO
-    /// into the project-level build settings. 
-    /// 
-    /// SPM package targets inherit from the project object's build settings when
-    /// they don't have their own explicit override. By setting NO at the project
-    /// level, SPM targets won't require signing. The Unity-iPhone and
-    /// UnityFramework targets already have explicit YES set above, so they
-    /// override this project-level default.
-    /// </summary>
-    private static void PatchProjectLevelSigning(string projectPath)
-    {
-        string content = File.ReadAllText(projectPath);
-
-        if (content.Contains("/* SPM_SIGNING_FIX */"))
-        {
-            Debug.Log("[FirebaseSPMSigningPostProcessor] Project already patched, skipping.");
-            return;
-        }
-
-        // Strategy: Find all occurrences of "ALWAYS_SEARCH_USER_PATHS = NO;" in the 
-        // project-level build settings and inject our signing overrides after them.
-        // ALWAYS_SEARCH_USER_PATHS is present in every Unity-generated pbxproj
-        // in both the Debug and Release build configuration sections.
-        string searchStr = "ALWAYS_SEARCH_USER_PATHS = NO;";
-        string replaceStr = 
-            "ALWAYS_SEARCH_USER_PATHS = NO;\n" +
-            "\t\t\t\tCODE_SIGNING_ALLOWED = NO; /* SPM_SIGNING_FIX */\n" +
-            "\t\t\t\tCODE_SIGNING_REQUIRED = NO; /* SPM_SIGNING_FIX */";
-        
-        content = content.Replace(searchStr, replaceStr);
-        File.WriteAllText(projectPath, content);
-        
-        Debug.Log("[FirebaseSPMSigningPostProcessor] Injected project-level CODE_SIGNING_ALLOWED=NO.");
+        Debug.Log($"[FirebaseSPMSigningPostProcessor] Patched Xcode project: " +
+                  $"project-level CODE_SIGNING_ALLOWED=NO, " +
+                  $"app targets CODE_SIGNING_ALLOWED=YES with team {teamId}");
     }
 }
 #endif
