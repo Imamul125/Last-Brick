@@ -5,8 +5,8 @@ using System.IO;
 
 public class PodfilePostProcessor
 {
-    // Run after EDM4U generates the Podfile (usually around 40-50)
-    [PostProcessBuild(60)] 
+    // Run after EDM4U generates the Podfile (40) but before it runs pod install (50)
+    [PostProcessBuild(45)] 
     public static void OnPostProcessBuild(BuildTarget target, string path)
     {
         if (target != BuildTarget.iOS) return;
