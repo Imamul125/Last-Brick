@@ -19,7 +19,7 @@ public class ShareAndRate : MonoBehaviour
     [Tooltip("Your Play Store package name (auto-detected if left empty)")]
     public string packageName = "com.bhorizonstudios.lastbrick";
     [Tooltip("Numeric Apple ID of the app (App Store Connect > App Information > Apple ID)")]
-    public string appStoreId = "";
+    public string appStoreId = "6814111682";
 
     [Header("Share Settings")]
     [Tooltip("Title shown in the share chooser dialog")]
