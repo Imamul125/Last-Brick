@@ -29,9 +29,22 @@ done
 
 # Write an App Store Connect API key JSON file for fastlane.
 KEY_JSON="$(mktemp -t asc_key).json"
-ruby -rjson -rbase64 -e '
-  key = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"].gsub("\\n", "\n")
-  key = Base64.decode64(key) unless key.include?("BEGIN PRIVATE KEY")
+# UCB env vars are single-line, so the .p8 line breaks are usually lost; rebuild
+# a well-formed PEM from whatever form (raw, flattened, \n-escaped, base64) was pasted.
+ruby -rjson -rbase64 -ropenssl -e '
+  raw = ENV["APP_STORE_CONNECT_API_KEY_CONTENT"].gsub("\\n", "\n").strip
+  unless raw.include?("PRIVATE KEY")
+    decoded = Base64.decode64(raw)
+    raw = decoded if decoded.include?("PRIVATE KEY")
+  end
+  body = raw.gsub(/-----(BEGIN|END) PRIVATE KEY-----/, "").gsub(/[^A-Za-z0-9+\/=]/, "")
+  key = "-----BEGIN PRIVATE KEY-----\n#{body.scan(/.{1,64}/).join("\n")}\n-----END PRIVATE KEY-----\n"
+  begin
+    OpenSSL::PKey.read(key)
+  rescue => e
+    abort "ERROR: APP_STORE_CONNECT_API_KEY_CONTENT is not a valid .p8 key (#{e.class}). " \
+          "Paste the full contents of AuthKey_XXXX.p8 into the Unity Cloud env var."
+  end
   File.write(ARGV[0], JSON.generate(
     key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
     issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
