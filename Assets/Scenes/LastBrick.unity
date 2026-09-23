@@ -1817,6 +1817,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GooglePlayManager
   leaderboardButton: {fileID: 638467651}
+  gameCenterLeaderboardId: lastbrick_best_score
 --- !u!4 &130231784
 Transform:
   m_ObjectHideFlags: 0
@@ -2409,15 +2410,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5191d2fbed35714b98e6cdce3107b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameAdManager
-  isTestMode: 0
+  isTestMode: 1
   gdprPrivacyButton: {fileID: 886596288}
   daily_coins: {fileID: 1176196822}
   dailyCoinRewardAmount: 50
   completeFrequency: 3
   liveCompleteAdIdAndroid: ca-app-pub-1954957296482912/7380476731
+  liveCompleteAdIdIOS: ca-app-pub-1954957296482912/5797601593
   retryFrequency: 3
   liveRetryAdIdAndroid: ca-app-pub-1954957296482912/1609275301
+  liveRetryAdIdIOS: ca-app-pub-1954957296482912/9858020129
   liveRewardedAdIdAndroid: ca-app-pub-1954957296482912/5516695335
+  liveRewardedAdIdIOS: ca-app-pub-1954957296482912/6980575340
 --- !u!4 &186283273
 Transform:
   m_ObjectHideFlags: 0
@@ -19074,9 +19078,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShareAndRate
   packageName: com.bhorizonstudios.lastbrick
+  appStoreId: 6814111682
   shareChooserTitle: Share Last Brick
   shareMessage: "\U0001F9F1 I'm playing Last Brick\nDownload it here: https://play.google.com/store/apps/details?id=com.bhorizonstudios.lastbrick"
   shareSubject: Check out Last Brick!
+  shareMessageIOS: "\U0001F9F1 I'm playing Last Brick \u2014 can you beat my score?\nDownload
+    it here: {0}"
   supportEmail: bhorizonstudios@gmail.com
   supportEmailSubject: Last Brick - Support
   privacyPolicyUrl: https://sites.google.com/view/bhorizonstudios
