@@ -26,7 +26,7 @@ public class GameAdManager : MonoBehaviour
     [Tooltip("Your real Interstitial Ad Unit ID for Level Complete")]
     public string liveCompleteAdIdAndroid = "ca-app-pub-1954957296482912/7380476731";
     [Tooltip("Your real iOS Interstitial Ad Unit ID for Level Complete (test ad is used while empty)")]
-    public string liveCompleteAdIdIOS = "";
+    public string liveCompleteAdIdIOS = "ca-app-pub-1954957296482912/5797601593";
     private int levelsCompletedSinceLastAd = 0;
     private InterstitialAd completeAd;
     private Action currentCompleteAdClosedCallback;
@@ -36,7 +36,7 @@ public class GameAdManager : MonoBehaviour
     [Tooltip("Your real Interstitial Ad Unit ID for Retry")]
     public string liveRetryAdIdAndroid = "ca-app-pub-1954957296482912/1609275301";
     [Tooltip("Your real iOS Interstitial Ad Unit ID for Retry (test ad is used while empty)")]
-    public string liveRetryAdIdIOS = "";
+    public string liveRetryAdIdIOS = "ca-app-pub-1954957296482912/9858020129";
     private int retriesSinceLastAd = 0;
     private InterstitialAd retryAd;
     private Action currentRetryAdClosedCallback;
@@ -45,7 +45,7 @@ public class GameAdManager : MonoBehaviour
     [Tooltip("Your real Rewarded Ad Unit ID")]
     public string liveRewardedAdIdAndroid = "ca-app-pub-1954957296482912/5516695335";
     [Tooltip("Your real iOS Rewarded Ad Unit ID (test ad is used while empty)")]
-    public string liveRewardedAdIdIOS = "";
+    public string liveRewardedAdIdIOS = "ca-app-pub-1954957296482912/6980575340";
     private RewardedAd rewardedAd;
     private Action currentRewardedAdClosedCallback;
     private Action currentRewardEarnedCallback;
