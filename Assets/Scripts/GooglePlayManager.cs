@@ -8,8 +8,15 @@ public class GooglePlayManager : MonoBehaviour
 {
     public static GooglePlayManager Instance { get; private set; }
 
+    [Tooltip("Leaderboard button; hidden on platforms without Google Play Games (iOS)")]
+    public GameObject leaderboardButton;
+
     void Awake()
     {
+#if !UNITY_ANDROID
+        if (leaderboardButton != null) leaderboardButton.SetActive(false);
+#endif
+
         if (Instance == null)
         {
             Instance = this;

@@ -25,6 +25,8 @@ public class GameAdManager : MonoBehaviour
     public int completeFrequency = 3;
     [Tooltip("Your real Interstitial Ad Unit ID for Level Complete")]
     public string liveCompleteAdIdAndroid = "ca-app-pub-1954957296482912/7380476731";
+    [Tooltip("Your real iOS Interstitial Ad Unit ID for Level Complete (test ad is used while empty)")]
+    public string liveCompleteAdIdIOS = "";
     private int levelsCompletedSinceLastAd = 0;
     private InterstitialAd completeAd;
     private Action currentCompleteAdClosedCallback;
@@ -33,6 +35,8 @@ public class GameAdManager : MonoBehaviour
     public int retryFrequency = 3;
     [Tooltip("Your real Interstitial Ad Unit ID for Retry")]
     public string liveRetryAdIdAndroid = "ca-app-pub-1954957296482912/1609275301";
+    [Tooltip("Your real iOS Interstitial Ad Unit ID for Retry (test ad is used while empty)")]
+    public string liveRetryAdIdIOS = "";
     private int retriesSinceLastAd = 0;
     private InterstitialAd retryAd;
     private Action currentRetryAdClosedCallback;
@@ -40,6 +44,8 @@ public class GameAdManager : MonoBehaviour
     [Header("Rewarded Ad")]
     [Tooltip("Your real Rewarded Ad Unit ID")]
     public string liveRewardedAdIdAndroid = "ca-app-pub-1954957296482912/5516695335";
+    [Tooltip("Your real iOS Rewarded Ad Unit ID (test ad is used while empty)")]
+    public string liveRewardedAdIdIOS = "";
     private RewardedAd rewardedAd;
     private Action currentRewardedAdClosedCallback;
     private Action currentRewardEarnedCallback;
@@ -47,6 +53,19 @@ public class GameAdManager : MonoBehaviour
     // Standard Google Test IDs (Safe to use for testing)
     private string testInterstitialIdAndroid = "ca-app-pub-3940256099942544/1033173712";
     private string testRewardedIdAndroid = "ca-app-pub-3940256099942544/5224354917";
+    private string testInterstitialIdIOS = "ca-app-pub-3940256099942544/4411468910";
+    private string testRewardedIdIOS = "ca-app-pub-3940256099942544/1712485313";
+
+    // Android ad units don't serve on iOS, so each platform needs its own IDs.
+    // On iOS an empty live ID falls back to Google's test ad.
+    private string PickAdUnit(string testAndroid, string liveAndroid, string testIOS, string liveIOS)
+    {
+#if UNITY_IOS
+        return isTestMode || string.IsNullOrEmpty(liveIOS) ? testIOS : liveIOS;
+#else
+        return isTestMode ? testAndroid : liveAndroid;
+#endif
+    }
 
     private bool isAdMobInitialized = false;
 
@@ -171,7 +190,7 @@ public class GameAdManager : MonoBehaviour
         }
 
         var adRequest = new AdRequest();
-        string adUnitId = isTestMode ? testInterstitialIdAndroid : liveCompleteAdIdAndroid;
+        string adUnitId = PickAdUnit(testInterstitialIdAndroid, liveCompleteAdIdAndroid, testInterstitialIdIOS, liveCompleteAdIdIOS);
 
         InterstitialAd.Load(adUnitId, adRequest, (InterstitialAd ad, LoadAdError error) =>
         {
@@ -239,7 +258,7 @@ public class GameAdManager : MonoBehaviour
         }
 
         var adRequest = new AdRequest();
-        string adUnitId = isTestMode ? testInterstitialIdAndroid : liveRetryAdIdAndroid;
+        string adUnitId = PickAdUnit(testInterstitialIdAndroid, liveRetryAdIdAndroid, testInterstitialIdIOS, liveRetryAdIdIOS);
 
         InterstitialAd.Load(adUnitId, adRequest, (InterstitialAd ad, LoadAdError error) =>
         {
@@ -323,7 +342,7 @@ public class GameAdManager : MonoBehaviour
         }
 
         var adRequest = new AdRequest();
-        string adUnitId = isTestMode ? testRewardedIdAndroid : liveRewardedAdIdAndroid;
+        string adUnitId = PickAdUnit(testRewardedIdAndroid, liveRewardedAdIdAndroid, testRewardedIdIOS, liveRewardedAdIdIOS);
 
         RewardedAd.Load(adUnitId, adRequest, (RewardedAd ad, LoadAdError error) =>
         {

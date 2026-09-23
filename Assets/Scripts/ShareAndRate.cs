@@ -1,15 +1,25 @@
 using UnityEngine;
+#if UNITY_IOS && !UNITY_EDITOR
+using System.Runtime.InteropServices;
+#endif
 
 /// <summary>
-/// Handles Share and Rate Us functionality using native Android intents.
+/// Handles Share and Rate Us functionality using native Android intents and,
+/// on iOS, the native share sheet (Assets/Plugins/iOS/LastBrickNative.mm) and App Store.
 /// Attach to any GameObject and call ShareApp() / RateApp() from your UI buttons.
-/// No extra packages required — uses Android JNI directly.
 /// </summary>
 public class ShareAndRate : MonoBehaviour
 {
+#if UNITY_IOS && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern void _LB_ShareText(string text, string subject);
+#endif
+
     [Header("App Info")]
     [Tooltip("Your Play Store package name (auto-detected if left empty)")]
     public string packageName = "com.bhorizonstudios.lastbrick";
+    [Tooltip("Numeric Apple ID of the app (App Store Connect > App Information > Apple ID)")]
+    public string appStoreId = "";
 
     [Header("Share Settings")]
     [Tooltip("Title shown in the share chooser dialog")]
@@ -19,6 +29,9 @@ public class ShareAndRate : MonoBehaviour
     public string shareMessage = "🧱 I'm playing Last Brick — can you beat my score?\nDownload it here: https://play.google.com/store/apps/details?id=com.bhorizonstudios.lastbrick";
     [Tooltip("Subject line (used by email apps)")]
     public string shareSubject = "Check out Last Brick!";
+    [Tooltip("The message shared on iOS; {0} is replaced with the App Store link")]
+    [TextArea(2, 4)]
+    public string shareMessageIOS = "🧱 I'm playing Last Brick — can you beat my score?\nDownload it here: {0}";
 
     [Header("Support")]
     [Tooltip("Support email address")]
@@ -62,6 +75,8 @@ public class ShareAndRate : MonoBehaviour
         {
             Debug.LogError($"[ShareAndRate] Share failed: {ex.Message}");
         }
+#elif UNITY_IOS && !UNITY_EDITOR
+        _LB_ShareText(string.Format(shareMessageIOS, AppStoreUrl), shareSubject);
 #else
         Debug.Log($"[ShareAndRate] Share (Editor): {shareMessage}");
 #endif
@@ -110,11 +125,20 @@ public class ShareAndRate : MonoBehaviour
             Application.OpenURL(storeUrl);
             Debug.LogError($"[ShareAndRate] Rate failed, opened browser: {ex.Message}");
         }
+#elif UNITY_IOS && !UNITY_EDITOR
+        // Opens the App Store "Write a Review" page (works once the app is live on the App Store).
+        Application.OpenURL(string.IsNullOrEmpty(appStoreId)
+            ? AppStoreUrl
+            : $"itms-apps://itunes.apple.com/app/id{appStoreId}?action=write-review");
 #else
         Application.OpenURL(storeUrl);
         Debug.Log($"[ShareAndRate] Rate (Editor): Opening {storeUrl}");
 #endif
     }
+
+    private string AppStoreUrl => string.IsNullOrEmpty(appStoreId)
+        ? "https://apps.apple.com/search?term=Last%20Brick%203D"
+        : $"https://apps.apple.com/app/id{appStoreId}";
 
     /// <summary>
     /// Opens the user's email app with support email pre-filled.
