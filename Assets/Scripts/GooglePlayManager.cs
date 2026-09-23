@@ -81,6 +81,8 @@ public class GooglePlayManager : MonoBehaviour
             if (success)
             {
                 Debug.Log("[GooglePlayManager] Signed in to Game Center.");
+                if (BadgeManager.Instance != null) BadgeManager.Instance.SyncEarnedAchievements();
+                PostScore();
                 onSuccess?.Invoke();
             }
             else

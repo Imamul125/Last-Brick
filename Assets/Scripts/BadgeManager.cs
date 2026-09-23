@@ -11,6 +11,9 @@ public class BadgeConfig
     public RectTransform badgeUI;
     [Tooltip("The GPGS Achievement ID string (e.g. GPGSIds.achievement_rookie_escaper)")]
     public string playGamesAchievementId;
+
+    /// <summary>Game Center achievement ID, created in App Store Connect as lastbrick_level_&lt;unlockLevel&gt;.</summary>
+    public string GameCenterAchievementId => $"lastbrick_level_{unlockLevel}";
 }
 
 public class BadgeManager : MonoBehaviour
@@ -179,7 +182,7 @@ public class BadgeManager : MonoBehaviour
         if (completedLevelNumber < previouslySavedLevel && !isTestMode)
         {
             // Even if we skip the animation, try to unlock the achievement just in case they were offline previously
-            UnlockGPGSAchievement(badgeToReveal.playGamesAchievementId);
+            UnlockAchievement(badgeToReveal);
             yield break; 
         }
 
@@ -188,7 +191,7 @@ public class BadgeManager : MonoBehaviour
         RectTransform badgeRect = badgeToReveal.badgeUI;
 
         // Unlock the achievement for this badge
-        UnlockGPGSAchievement(badgeToReveal.playGamesAchievementId);
+        UnlockAchievement(badgeToReveal);
 
         // Save original transform state
         Vector2 originalAnchoredPos = badgeRect.anchoredPosition;
@@ -338,11 +341,34 @@ public class BadgeManager : MonoBehaviour
         return 1f - Mathf.Pow(1f - t, 3f);
     }
 
-    private void UnlockGPGSAchievement(string achievementId)
+    private void UnlockAchievement(BadgeConfig badge)
+    {
+#if UNITY_ANDROID
+        ReportAchievement(badge.playGamesAchievementId);
+#elif UNITY_IOS
+        ReportAchievement(badge.GameCenterAchievementId);
+#endif
+    }
+
+    /// <summary>
+    /// Reports every badge already earned (e.g. levels beaten before signing in to Game Center).
+    /// Called by GooglePlayManager after a successful Game Center sign-in.
+    /// </summary>
+    public void SyncEarnedAchievements()
+    {
+        int savedLevel = PlayerPrefs.GetInt("SavedLevel", 0);
+        foreach (var badge in badges)
+        {
+            // SavedLevel is the next level to play, so a badge is earned once it's past unlockLevel
+            if (savedLevel >= badge.unlockLevel) UnlockAchievement(badge);
+        }
+    }
+
+    private void ReportAchievement(string achievementId)
     {
         if (string.IsNullOrEmpty(achievementId)) return;
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS
         if (Social.localUser.authenticated)
         {
             Social.ReportProgress(achievementId, 100.0f, (bool success) =>
