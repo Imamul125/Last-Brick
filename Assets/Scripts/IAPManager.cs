@@ -1,31 +1,36 @@
 using UnityEngine;
 using UnityEngine.Purchasing;
-using UnityEngine.Purchasing.Extension;
 using TMPro;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-public class IAPManager : MonoBehaviour, IDetailedStoreListener
+/// <summary>
+/// In-app purchases for Google Play and the Apple App Store (Unity IAP v5 StoreController).
+/// Products are all non-consumable: Remove Ads and pets. Product IDs must match in
+/// Google Play Console and App Store Connect.
+/// </summary>
+public class IAPManager : MonoBehaviour
 {
     public static IAPManager Instance { get; private set; }
 
-    private IStoreController storeController;
-    private IExtensionProvider storeExtensionProvider;
+    private StoreController store;
+    private bool productsReady;
 
     [Header("Remove Ads Product")]
     public string removeAdsProductId = "com.lastbrick.removeads";
     [Tooltip("The actual button you click to pay")]
     public GameObject removeAdsBuyButton;
     public TextMeshProUGUI removeAdsPriceText;
-    
+
     [Tooltip("Other UI elements to hide after purchase (like the Main Menu button that opens the popup)")]
     public GameObject[] objectsToHideOnPurchase;
 
     [Header("Consumable (Optional, e.g. Coins)")]
     public string coinsProductId = "com.lastbrick.coins100";
 
-    private void Awake()
+    private async void Awake()
     {
         if (Instance == null)
         {
@@ -37,68 +42,118 @@ public class IAPManager : MonoBehaviour, IDetailedStoreListener
             Destroy(gameObject);
             return;
         }
+
+        store = UnityIAPServices.StoreController();
+
+        // Subscribe to every event BEFORE Connect: unfinished purchases from a previous session may arrive immediately.
+        store.OnStoreConnected += OnStoreConnected;
+        store.OnStoreDisconnected += failure => Debug.LogWarning($"[IAP] Store disconnected: {failure.message}");
+        store.OnProductsFetched += OnProductsFetched;
+        store.OnProductsFetchFailed += failure => Debug.LogWarning($"[IAP] Product fetch failed: {failure.FailureReason}");
+        store.OnPurchasesFetched += OnPurchasesFetched;
+        store.OnPurchasesFetchFailed += failure => Debug.LogWarning($"[IAP] Purchase fetch failed: {failure.message}");
+        store.OnPurchasePending += OnPurchasePending;
+        store.OnPurchaseConfirmed += OnPurchaseConfirmed;
+        store.OnPurchaseFailed += failed => Debug.LogWarning($"[IAP] Purchase failed: {failed.FailureReason} - {failed.Details}");
+        store.OnPurchaseDeferred += deferred => Debug.Log("[IAP] Purchase waiting for approval (Ask to Buy / pending payment).");
+
+        try
+        {
+            await store.Connect();
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"[IAP] Connect failed: {e.Message}");
+        }
     }
 
     private void Start()
     {
-        if (storeController == null)
-        {
-            InitializePurchasing();
-        }
-
         // Initially hide or disable button if already purchased
         if (PlayerPrefs.GetInt("NoAdsPurchased", 0) == 1)
         {
-            if (removeAdsBuyButton != null)
-            {
-                removeAdsBuyButton.SetActive(false);
-            }
-            
-            if (objectsToHideOnPurchase != null)
-            {
-                foreach (var obj in objectsToHideOnPurchase)
-                {
-                    if (obj != null) obj.SetActive(false);
-                }
-            }
+            HideRemoveAdsUI();
         }
-        
+
         if (removeAdsBuyButton != null)
         {
             removeAdsBuyButton.GetComponent<Button>().onClick.AddListener(BuyRemoveAds);
         }
     }
 
-    public void InitializePurchasing()
+    private void OnStoreConnected()
     {
-        if (IsInitialized()) return;
+        var products = new List<ProductDefinition>
+        {
+            new ProductDefinition(removeAdsProductId, ProductType.NonConsumable)
+        };
 
-        var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-
-        builder.AddProduct(removeAdsProductId, ProductType.NonConsumable);
-        
-        // You can add more products here if needed
-        // builder.AddProduct(coinsProductId, ProductType.Consumable);
-
-        // Also add Pet Products if they are statically known, or add them dynamically if needed.
-        // It's better to add them here if you know their IDs.
+        // Pet products (the pet shop is set up by the time the store connects)
         if (PetSelectionManager.Instance != null)
         {
             foreach (var pet in PetSelectionManager.Instance.pets)
             {
                 if (!string.IsNullOrEmpty(pet.iapProductID))
                 {
-                    builder.AddProduct(pet.iapProductID, ProductType.NonConsumable);
+                    products.Add(new ProductDefinition(pet.iapProductID, ProductType.NonConsumable));
                 }
             }
         }
 
-        UnityPurchasing.Initialize(this, builder);
+        store.FetchProducts(products);
+    }
+
+    private void OnProductsFetched(List<Product> products)
+    {
+        productsReady = true;
+        Debug.Log($"[IAP] {products.Count} products ready.");
+
+        // Update UI with localized price for Remove Ads
+        if (removeAdsPriceText != null)
+        {
+            removeAdsPriceText.text = GetLocalizedPriceString(removeAdsProductId);
+        }
+
+        // Re-grant anything already owned (e.g. after reinstalling or on a new device)
+        store.FetchPurchases();
+    }
+
+    private void OnPurchasesFetched(Orders orders)
+    {
+        foreach (var order in orders.ConfirmedOrders)
+        {
+            GrantProduct(GetProductId(order), false);
+        }
+    }
+
+    private void OnPurchasePending(PendingOrder order)
+    {
+        // Grant first, then confirm. Granting is idempotent, so a re-delivered order is harmless.
+        GrantProduct(GetProductId(order), true);
+        store.ConfirmPurchase(order);
+    }
+
+    private void OnPurchaseConfirmed(Order order)
+    {
+        switch (order)
+        {
+            case ConfirmedOrder confirmed:
+                Debug.Log($"[IAP] Purchase confirmed: {GetProductId(confirmed)}");
+                break;
+            case FailedOrder failed:
+                Debug.LogWarning($"[IAP] Confirmation failed: {failed.FailureReason} - {failed.Details}");
+                break;
+        }
+    }
+
+    private static string GetProductId(Order order)
+    {
+        return order.CartOrdered.Items().FirstOrDefault()?.Product?.definition.id;
     }
 
     private bool IsInitialized()
     {
-        return storeController != null && storeExtensionProvider != null;
+        return store != null && productsReady;
     }
 
     public void BuyRemoveAds()
@@ -108,22 +163,21 @@ public class IAPManager : MonoBehaviour, IDetailedStoreListener
 
     public void BuyProductID(string productId)
     {
-        if (IsInitialized())
+        if (!IsInitialized())
         {
-            Product product = storeController.products.WithID(productId);
-            if (product != null && product.availableToPurchase)
-            {
-                Debug.Log($"Purchasing product asynchronously: '{product.definition.id}'");
-                storeController.InitiatePurchase(product);
-            }
-            else
-            {
-                Debug.Log("BuyProductID: FAIL. Not purchasing product, either is not found or is not available for purchase.");
-            }
+            Debug.Log("[IAP] BuyProductID FAIL. Store not ready.");
+            return;
+        }
+
+        Product product = store.GetProductById(productId);
+        if (product != null && product.availableToPurchase)
+        {
+            Debug.Log($"[IAP] Purchasing '{productId}'");
+            store.PurchaseProduct(product);
         }
         else
         {
-            Debug.Log("BuyProductID FAIL. Not initialized.");
+            Debug.Log($"[IAP] BuyProductID FAIL. '{productId}' not found or not available for purchase.");
         }
     }
 
@@ -131,7 +185,7 @@ public class IAPManager : MonoBehaviour, IDetailedStoreListener
     {
         if (IsInitialized())
         {
-            Product product = storeController.products.WithID(productId);
+            Product product = store.GetProductById(productId);
             if (product != null)
             {
                 return product.metadata.localizedPriceString;
@@ -140,117 +194,80 @@ public class IAPManager : MonoBehaviour, IDetailedStoreListener
         return "$0.00"; // Fallback
     }
 
+    /// <summary>
+    /// Connect to a "Restore Purchases" button. Required by Apple for non-consumable purchases.
+    /// Each restored purchase is delivered again through OnPurchasePending.
+    /// </summary>
     public void RestorePurchases()
     {
-        if (!IsInitialized())
+        if (store == null)
         {
-            Debug.Log("RestorePurchases FAIL. Not initialized.");
+            Debug.Log("[IAP] RestorePurchases FAIL. Not initialized.");
             return;
         }
 
-        if (Application.platform == RuntimePlatform.IPhonePlayer || 
-            Application.platform == RuntimePlatform.OSXPlayer)
+        store.RestoreTransactions((success, error) =>
         {
-            Debug.Log("RestorePurchases started ...");
-            var apple = storeExtensionProvider.GetExtension<IAppleExtensions>();
-            apple.RestoreTransactions((result, error) => {
-                Debug.Log("RestorePurchases continuing: " + result + ". If no further messages, no purchases available to restore.");
-            });
-        }
-        else
-        {
-            Debug.Log("RestorePurchases is only handled implicitly on Android (Google Play).");
-        }
-    }
-
-    // --- IDetailedStoreListener Methods ---
-
-    public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
-    {
-        Debug.Log("OnInitialized: PASS");
-        storeController = controller;
-        storeExtensionProvider = extensions;
-
-        // Update UI with localized price for Remove Ads
-        if (removeAdsPriceText != null)
-        {
-            Product product = storeController.products.WithID(removeAdsProductId);
-            if (product != null)
+            if (success)
             {
-                removeAdsPriceText.text = product.metadata.localizedPriceString;
+                Debug.Log("[IAP] Restore finished.");
+                store.FetchPurchases();
             }
-        }
+            else
+            {
+                Debug.LogWarning($"[IAP] Restore failed: {error}");
+            }
+        });
     }
 
-    public void OnInitializeFailed(InitializationFailureReason error)
+    private void GrantProduct(string productId, bool isNewPurchase)
     {
-        Debug.Log($"OnInitializeFailed InitializationFailureReason:{error}");
-    }
-
-    public void OnInitializeFailed(InitializationFailureReason error, string message)
-    {
-        Debug.Log($"OnInitializeFailed InitializationFailureReason:{error} message:{message}");
-    }
-
-    public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
-    {
-        string productId = args.purchasedProduct.definition.id;
+        if (string.IsNullOrEmpty(productId)) return;
 
         if (String.Equals(productId, removeAdsProductId, StringComparison.Ordinal))
         {
-            Debug.Log("ProcessPurchase: PASS. Product: " + args.purchasedProduct.definition.id);
+            Debug.Log("[IAP] Granting Remove Ads");
             PlayerPrefs.SetInt("NoAdsPurchased", 1);
             PlayerPrefs.Save();
-            
-            if (removeAdsBuyButton != null)
-            {
-                removeAdsBuyButton.SetActive(false);
-            }
-
-            if (objectsToHideOnPurchase != null)
-            {
-                foreach (var obj in objectsToHideOnPurchase)
-                {
-                    if (obj != null) obj.SetActive(false);
-                }
-            }
+            HideRemoveAdsUI();
+            return;
         }
-        else
+
+        // Check if it's a pet purchase
+        if (PetSelectionManager.Instance != null)
         {
-            // Check if it's a pet purchase
-            if (PetSelectionManager.Instance != null)
+            for (int i = 0; i < PetSelectionManager.Instance.pets.Count; i++)
             {
-                for (int i = 0; i < PetSelectionManager.Instance.pets.Count; i++)
+                if (String.Equals(productId, PetSelectionManager.Instance.pets[i].iapProductID, StringComparison.Ordinal))
                 {
-                    if (String.Equals(productId, PetSelectionManager.Instance.pets[i].iapProductID, StringComparison.Ordinal))
+                    Debug.Log("[IAP] Unlocking pet index: " + i);
+                    PetSelectionManager.Instance.UnlockPet(i);
+
+                    if (isNewPurchase && AudioManager.Instance != null)
                     {
-                        Debug.Log("ProcessPurchase: PASS. Unlocking pet index: " + i);
-                        PetSelectionManager.Instance.UnlockPet(i);
-                        
-                        // Optionally play sound
-                        if (AudioManager.Instance != null)
-                        {
-                            AudioManager.Instance.PlayUnlockSound();
-                        }
-                        
-                        return PurchaseProcessingResult.Complete;
+                        AudioManager.Instance.PlayUnlockSound();
                     }
+                    return;
                 }
             }
-
-            Debug.Log(string.Format("ProcessPurchase: FAIL. Unrecognized product: '{0}'", args.purchasedProduct.definition.id));
         }
 
-        return PurchaseProcessingResult.Complete;
+        Debug.Log($"[IAP] Unrecognized product: '{productId}'");
     }
 
-    public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
+    private void HideRemoveAdsUI()
     {
-        Debug.Log($"OnPurchaseFailed: FAIL. Product: '{product.definition.storeSpecificId}', PurchaseFailureReason: {failureReason}");
-    }
+        if (removeAdsBuyButton != null)
+        {
+            removeAdsBuyButton.SetActive(false);
+        }
 
-    public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
-    {
-         Debug.Log($"OnPurchaseFailed: FAIL. Product: '{product.definition.storeSpecificId}', Description: {failureDescription.message}");
+        if (objectsToHideOnPurchase != null)
+        {
+            foreach (var obj in objectsToHideOnPurchase)
+            {
+                if (obj != null) obj.SetActive(false);
+            }
+        }
     }
 }
