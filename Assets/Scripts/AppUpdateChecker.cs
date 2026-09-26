@@ -17,6 +17,30 @@ public class AppUpdateChecker : MonoBehaviour
         public int latest_version_code;
         public bool force_update;
         public string update_message;
+
+        // Optional iOS overrides, so iOS and Android can be released separately.
+        // When latest_version_ios is missing/empty, the shared fields above are used on iOS too.
+        public string latest_version_ios;
+        public bool force_update_ios;
+        public string update_message_ios;
+
+        public string LatestVersion =>
+#if UNITY_IOS
+            !string.IsNullOrEmpty(latest_version_ios) ? latest_version_ios :
+#endif
+            latest_version;
+
+        public bool ForceUpdate =>
+#if UNITY_IOS
+            !string.IsNullOrEmpty(latest_version_ios) ? force_update_ios :
+#endif
+            force_update;
+
+        public string UpdateMessage =>
+#if UNITY_IOS
+            !string.IsNullOrEmpty(update_message_ios) ? update_message_ios :
+#endif
+            update_message;
     }
 
     [Header("Settings")]
@@ -25,6 +49,9 @@ public class AppUpdateChecker : MonoBehaviour
 
     [Tooltip("Your Play Store package name")]
     public string packageName = "com.bhorizonstudios.lastbrick";
+
+    [Tooltip("Numeric Apple ID of the app (App Store Connect > App Information > Apple ID)")]
+    public string appStoreId = "6814111682";
 
     [Tooltip("Check for updates on start")]
     public bool checkOnStart = true;
@@ -89,14 +116,14 @@ public class AppUpdateChecker : MonoBehaviour
             }
 
             string currentVersion = Application.version;
-            int comparison = CompareVersions(currentVersion, latestVersionInfo.latest_version);
+            int comparison = CompareVersions(currentVersion, latestVersionInfo.LatestVersion);
 
-            Debug.Log($"[AppUpdateChecker] Current: {currentVersion} | Latest: {latestVersionInfo.latest_version} | Force: {latestVersionInfo.force_update}");
+            Debug.Log($"[AppUpdateChecker] Current: {currentVersion} | Latest: {latestVersionInfo.LatestVersion} | Force: {latestVersionInfo.ForceUpdate}");
 
             if (comparison < 0)
             {
                 // Current version is older
-                if (latestVersionInfo.force_update)
+                if (latestVersionInfo.ForceUpdate)
                 {
                     Debug.Log("[AppUpdateChecker] Force update required!");
                     onForceUpdateRequired?.Invoke();
@@ -116,14 +143,16 @@ public class AppUpdateChecker : MonoBehaviour
     }
 
     /// <summary>
-    /// Opens the Play Store page for updating.
+    /// Opens the store page for updating: the App Store on iOS, the Play Store elsewhere.
     /// Connect this to your "Update Now" button.
     /// </summary>
     public void OpenPlayStore()
     {
         string storeUrl = $"https://play.google.com/store/apps/details?id={packageName}";
 
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_IOS && !UNITY_EDITOR
+        Application.OpenURL($"itms-apps://itunes.apple.com/app/id{appStoreId}");
+#elif UNITY_ANDROID && !UNITY_EDITOR
         try
         {
             string marketUri = $"market://details?id={packageName}";
@@ -144,7 +173,7 @@ public class AppUpdateChecker : MonoBehaviour
     /// </summary>
     public string GetUpdateMessage()
     {
-        return latestVersionInfo != null ? latestVersionInfo.update_message : "";
+        return latestVersionInfo != null ? latestVersionInfo.UpdateMessage : "";
     }
 
     /// <summary>
