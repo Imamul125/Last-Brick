@@ -12,8 +12,12 @@ public class BadgeConfig
     [Tooltip("The GPGS Achievement ID string (e.g. GPGSIds.achievement_rookie_escaper)")]
     public string playGamesAchievementId;
 
-    /// <summary>Game Center achievement ID, created in App Store Connect as lastbrick_level_&lt;unlockLevel&gt;.</summary>
-    public string GameCenterAchievementId => $"lastbrick_level_{unlockLevel}";
+    [Tooltip("The Game Center Achievement ID from App Store Connect (e.g. lastbrick_level_5). Empty = lastbrick_level_<unlockLevel>")]
+    public string gameCenterAchievementId;
+
+    public string GameCenterAchievementId => string.IsNullOrEmpty(gameCenterAchievementId)
+        ? $"lastbrick_level_{unlockLevel}"
+        : gameCenterAchievementId;
 }
 
 public class BadgeManager : MonoBehaviour
