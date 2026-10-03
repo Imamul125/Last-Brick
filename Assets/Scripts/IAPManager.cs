@@ -69,6 +69,12 @@ public class IAPManager : MonoBehaviour
 
     private void Start()
     {
+        // Replace the placeholder text in the scene until the store returns the real price
+        if (removeAdsPriceText != null && !productsReady)
+        {
+            removeAdsPriceText.text = "...";
+        }
+
         // Initially hide or disable button if already purchased
         if (PlayerPrefs.GetInt("NoAdsPurchased", 0) == 1)
         {
@@ -191,7 +197,7 @@ public class IAPManager : MonoBehaviour
                 return product.metadata.localizedPriceString;
             }
         }
-        return "$0.00"; // Fallback
+        return "..."; // Shown until the store returns real prices (never show a fake price)
     }
 
     /// <summary>
