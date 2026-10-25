@@ -29,7 +29,7 @@ public class TowerBatchGenerator : EditorWindow
     private int startLevel = 51;
     private int count = 100;
     private bool physicsTest = true;
-    private bool overwrite = false;
+    private bool overwrite = true;
     private bool addToLevelManager = true;
     private float pedestalWidth = 3f;
     private float pedestalDepth = 3f;
@@ -107,34 +107,19 @@ public class TowerBatchGenerator : EditorWindow
         public Vector3 baseScale;
     }
 
-    /// <summary>Difficulty curve: 0 = first new level, 1 = last.</summary>
-    private static Design DesignFor(int level, int first, int total, System.Random rng)
+    /// <summary>
+    /// Difficulty never goes down. Level 51 starts at Tower_50's difficulty (4 columns, 12 rows, 3 cats) and every
+    /// following level adds rows, columns, cats or missing bricks - all values are monotonic in the level number.
+    /// </summary>
+    private static Design DesignFor(int level)
     {
-        float t = total <= 1 ? 1f : Mathf.Clamp01((level - first) / (float)(total - 1));
-        bool boss = level % 10 == 0;
-        var d = new Design();
-
-        float roll = (float)rng.NextDouble();
-        if (roll < 0.45f) d.shape = Shape.Standard;
-        else if (roll < 0.62f) d.shape = Shape.SolidHouse;
-        else if (roll < 0.76f) d.shape = Shape.HollowHouse;
-        else if (roll < 0.88f) d.shape = Shape.Pyramid;
-        else d.shape = Shape.Stairs;
-
-        d.cols = rng.NextDouble() < Mathf.Lerp(0.25f, 0.75f, t) ? 4 : 3;
-        if (d.shape == Shape.HollowHouse) d.cols = 4;
-        if (d.shape == Shape.Pyramid || d.shape == Shape.Stairs) d.cols = Mathf.Max(d.cols, 4) + (t > 0.6f && rng.NextDouble() < 0.5 ? 1 : 0);
-
-        d.rows = Mathf.RoundToInt(Mathf.Lerp(8f, 13f, t)) + rng.Next(-1, 2) + (boss ? 1 : 0);
-        d.rows = Mathf.Clamp(d.rows, 6, 14);
-        d.missing = d.shape == Shape.Standard ? Mathf.Clamp(Mathf.RoundToInt(Mathf.Lerp(2f, 6f, t)) + rng.Next(-1, 2), 0, d.rows - 2) : 0;
-
-        d.protect = 1;
-        if (t > 0.3f && rng.NextDouble() < Mathf.Lerp(0.3f, 0.8f, t)) d.protect = 2;
-        if (t > 0.7f && rng.NextDouble() < 0.35f) d.protect = 3;
-        if (boss) d.protect = Mathf.Min(3, d.protect + 1);
-
-        d.pushOut = rng.Next(0, 2) + Mathf.RoundToInt(Mathf.Lerp(0f, 2f, t));
+        int k = Mathf.Max(0, level - 51);            // 0 for level 51
+        var d = new Design { shape = Shape.Standard };
+        d.rows = Mathf.Min(16, 12 + k / 20);          // 12 -> 16 rows (one more every 20 levels)
+        d.cols = 4 + (k >= 35 ? 1 : 0) + (k >= 75 ? 1 : 0); // 4 -> 5 (lvl 86) -> 6 (lvl 126) columns
+        d.protect = 3 + (k >= 30 ? 1 : 0) + (k >= 70 ? 1 : 0); // 3 -> 4 (lvl 81) -> 5 (lvl 121) cats
+        d.missing = Mathf.Min(4 + k / 8, d.rows - 3);   // 4 -> 13 missing bricks
+        d.pushOut = 2 + k / 25;                        // 2 -> 5 pushed-out bricks
         return d;
     }
 
@@ -227,10 +212,12 @@ public class TowerBatchGenerator : EditorWindow
         }
 
         // Protected bricks: upper half, preferring the middle of a layer so a clean drop lands on the pedestal.
+        // Only full-width layers, so a cat brick is always full size (never shortened like roof bricks).
         int topLayer = list.Max(s => s.layer);
         int minLayer = Mathf.Max(2, (topLayer + 1) / 2);
+        int fullCols = list.Max(s => s.cols);
         var candidates = Enumerable.Range(0, list.Count)
-            .Where(k => list[k].layer >= minLayer)
+            .Where(k => list[k].layer >= minLayer && list[k].cols == fullCols)
             .OrderBy(k => Mathf.Abs(list[k].index - (list[k].cols - 1) / 2f) + (float)rng.NextDouble() * 1.2f)
             .ToList();
         var usedLayers = new HashSet<int>();
@@ -283,6 +270,7 @@ public class TowerBatchGenerator : EditorWindow
     private static GameObject Build(string name, List<BrickSpec> plan, BrickSize b, GameObject brick, GameObject protectedBrick)
     {
         GameObject root = new GameObject(name);
+        int fullCols = plan.Max(s => s.cols);
         foreach (BrickSpec s in plan)
         {
             GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(s.isProtected ? protectedBrick : brick);
@@ -290,7 +278,7 @@ public class TowerBatchGenerator : EditorWindow
             go.transform.localPosition = s.pos;
             go.transform.localRotation = s.rot;
             Vector3 scale = b.baseScale;
-            float ratio = b.width * s.cols / b.length;
+            float ratio = b.width * (s.isProtected ? fullCols : s.cols) / b.length;
             if (b.sideways) scale.x *= ratio; else scale.z *= ratio;
             go.transform.localScale = scale;
         }
@@ -492,7 +480,7 @@ public class TowerBatchGenerator : EditorWindow
                 if (targets.Count == 0) break;
 
                 // Evaluate the bricks closest under a protected brick first.
-                targets = targets.OrderByDescending(i => sim.bodies[i].position.y).Take(8).ToList();
+                targets = targets.OrderByDescending(i => sim.bodies[i].position.y).Take(6).ToList();
                 int best = -1;
                 float bestScore = float.MaxValue;
                 foreach (int i in targets)
@@ -544,6 +532,10 @@ public class TowerBatchGenerator : EditorWindow
         var results = new List<(int level, int moves, float time, string info)>();
         var report = new System.Text.StringBuilder();
         int unverified = 0;
+        int prevMoves = 0;
+        float prevTime = 0f;
+        LevelData last = lm != null ? lm.levels.Where(l => l.levelNumber < startLevel).OrderBy(l => l.levelNumber).LastOrDefault() : null;
+        if (last != null) { prevMoves = last.maxMoves; prevTime = last.timeLimit; }
 
         try
         {
@@ -562,12 +554,13 @@ public class TowerBatchGenerator : EditorWindow
                 TestResult bestResult = default;
                 Design bestDesign = default;
 
-                for (int attempt = 0; attempt < (physicsTest ? 30 : 1); attempt++)
+                // Retries only re-roll WHERE the gaps, cats and pushed-out bricks go - never the difficulty
+                // (rows, columns, cat count, missing count). Pushed-out bricks are cosmetic and dropped last.
+                for (int attempt = 0; attempt < (physicsTest ? 10 : 1); attempt++)
                 {
                     var rng = new System.Random(level * 7919 + attempt * 104729);
-                    Design d = DesignFor(level, startLevel, count, rng);
-                    if (attempt >= 12) { d.pushOut = 0; d.protect = Mathf.Max(1, d.protect - 1); }
-                    if (attempt >= 20) { d.shape = Shape.Standard; d.missing = Mathf.Min(d.missing, 2); }
+                    Design d = DesignFor(level);
+                    if (attempt >= 7) d.pushOut = 0;
 
                     GameObject tower = Build($"Tower_{level}", Plan(d, size, rng), size, brick, protectedBrick);
                     int bricks = tower.GetComponentsInChildren<Rigidbody>().Length;
@@ -600,8 +593,12 @@ public class TowerBatchGenerator : EditorWindow
                     moves = Mathf.RoundToInt(brickCount * 0.65f);
                     unverified++;
                 }
-                moves = Mathf.Clamp(moves, 6, 45);
-                float time = Mathf.Clamp(Mathf.Round((moves * 2.6f + 10f) / 5f) * 5f, 20f, 100f);
+                // Bigger towers need more moves/time; never allow fewer than the previous level.
+                moves = Mathf.Clamp(Mathf.Max(moves, prevMoves), 25, 80);
+                float time = Mathf.Clamp(Mathf.Round((moves * 2.6f + 10f) / 5f) * 5f, 80f, 200f);
+                time = Mathf.Max(time, prevTime);
+                prevMoves = moves;
+                prevTime = time;
 
                 PrefabUtility.SaveAsPrefabAsset(bestTower, path);
                 DestroyImmediate(bestTower);
@@ -641,12 +638,18 @@ public class TowerBatchGenerator : EditorWindow
         }
         lm.levels = lm.levels.OrderBy(l => l.levelNumber).ToList();
 
-        // Make sure the camera has a config for every level (extend the one that covers the highest level).
+        // Taller/wider towers need the camera further back: add a config for levels past the last one.
         int maxLevel = lm.levels.Max(l => l.levelNumber);
         if (lm.cameraConfigs.Count > 0 && !lm.cameraConfigs.Any(c => maxLevel >= c.startLevel && maxLevel <= c.endLevel))
         {
             LevelCameraConfig last = lm.cameraConfigs.OrderBy(c => c.endLevel).Last();
-            last.endLevel = maxLevel;
+            lm.cameraConfigs.Add(new LevelCameraConfig
+            {
+                startLevel = last.endLevel + 1,
+                endLevel = maxLevel,
+                cameraTarget = last.cameraTarget,
+                orbitalRadius = last.orbitalRadius + 5f
+            });
         }
 
         EditorUtility.SetDirty(lm);
