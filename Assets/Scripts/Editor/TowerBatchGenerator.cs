@@ -24,7 +24,16 @@ public class TowerBatchGenerator : EditorWindow
     private const string ProtectedPath = "Assets/Prefabs/Protected_Brick.prefab";
     private const string LevelsFolder = "Assets/Resources/Levels";
 
+    /// <summary>Added on top of the calculated Max Moves / Time Limit so levels aren't too tight.</summary>
+    private const int ExtraMoves = 5;
+    private const float ExtraSeconds = 10f;
+
     private enum Shape { Standard, SolidHouse, HollowHouse, Pyramid, Stairs }
+
+    private int adjustFrom = 51;
+    private int adjustTo = 150;
+    private int adjustMoves = ExtraMoves;
+    private float adjustSeconds = ExtraSeconds;
 
     private int startLevel = 51;
     private int count = 100;
@@ -79,6 +88,41 @@ public class TowerBatchGenerator : EditorWindow
         {
             Generate();
         }
+
+        EditorGUILayout.Space(12);
+        EditorGUILayout.LabelField("Adjust Existing Levels", EditorStyles.boldLabel);
+        EditorGUILayout.HelpBox("Adds moves and seconds to levels already in the LevelManager (e.g. towers generated before the +5 / +10s bonus). Click once - every click adds again. Ctrl+Z undoes it.", MessageType.None);
+        adjustFrom = EditorGUILayout.IntField("From Level", adjustFrom);
+        adjustTo = EditorGUILayout.IntField("To Level", adjustTo);
+        adjustMoves = EditorGUILayout.IntField("Add Moves", adjustMoves);
+        adjustSeconds = EditorGUILayout.FloatField("Add Seconds", adjustSeconds);
+        if (GUILayout.Button($"Add +{adjustMoves} Moves / +{adjustSeconds}s To Levels {adjustFrom} - {adjustTo}"))
+        {
+            AdjustExisting();
+        }
+    }
+
+    private void AdjustExisting()
+    {
+        LevelManager lm = FindFirstObjectByType<LevelManager>(FindObjectsInactive.Include);
+        if (lm == null)
+        {
+            EditorUtility.DisplayDialog("Adjust Levels", "Open the LastBrick scene first (no LevelManager found).", "OK");
+            return;
+        }
+
+        Undo.RecordObject(lm, "Adjust level moves and time");
+        int changed = 0;
+        foreach (LevelData l in lm.levels)
+        {
+            if (l.levelNumber < adjustFrom || l.levelNumber > adjustTo) continue;
+            l.maxMoves += adjustMoves;
+            l.timeLimit += adjustSeconds;
+            changed++;
+        }
+        EditorUtility.SetDirty(lm);
+        EditorSceneManager.MarkSceneDirty(lm.gameObject.scene);
+        EditorUtility.DisplayDialog("Adjust Levels", $"Updated {changed} levels (+{adjustMoves} moves, +{adjustSeconds}s). Save the scene to keep it.", "OK");
     }
 
     // ================================================================ Plan
@@ -599,6 +643,10 @@ public class TowerBatchGenerator : EditorWindow
                 time = Mathf.Max(time, prevTime);
                 prevMoves = moves;
                 prevTime = time;
+
+                // Extra breathing room on top of the calculation (not fed back into prevMoves, so it doesn't stack).
+                moves += ExtraMoves;
+                time += ExtraSeconds;
 
                 PrefabUtility.SaveAsPrefabAsset(bestTower, path);
                 DestroyImmediate(bestTower);
