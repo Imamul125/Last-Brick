@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -42,7 +43,14 @@ public class EnvironmentManager : MonoBehaviour
     [Tooltip("Priority of the Volume this manager creates. Must be higher than your Global Volume so environment grading wins.")]
     public float volumePriority = 10f;
 
+    [Header("Anti-aliasing")]
+    [Tooltip("Smooths jagged edges and fine floor patterns. FXAA is the cheapest option for mobile.")]
+    public bool applyCameraAntialiasing = true;
+    public AntialiasingMode cameraAntialiasing = AntialiasingMode.FastApproximateAntialiasing;
+
     [Header("Debug")]
+    [Tooltip("Editor / development builds only: show the environment name on screen for a few seconds after it changes.")]
+    public bool showEnvironmentName = true;
     [Tooltip("Editor only: force a specific environment index for testing look and feel. -1 = use level based selection. In Play Mode press [ and ] to step through environments.")]
     public int debugForceEnvironmentIndex = -1;
 
@@ -54,6 +62,8 @@ public class EnvironmentManager : MonoBehaviour
     private GameObject currentInstance;
     private Volume environmentVolume;
     private bool legacyHidden;
+    private string nameLabel;
+    private float nameLabelUntil;
 
     private void Awake()
     {
@@ -70,6 +80,8 @@ public class EnvironmentManager : MonoBehaviour
 
     private void Start()
     {
+        if (applyCameraAntialiasing) ApplyCameraAntialiasing();
+
         // Show the saved environment on the home screen before any level starts.
         if (CurrentEnvironmentIndex < 0 && environments.Count > 0)
         {
@@ -173,7 +185,9 @@ public class EnvironmentManager : MonoBehaviour
 
         RefreshReflectionProbes();
 
-        Debug.Log($"[EnvironmentManager] Loaded environment {index}: {profile.displayName}");
+        nameLabel = $"{index + 1} / {environments.Count}   {profile.name}\n{profile.displayName}";
+        nameLabelUntil = Time.unscaledTime + 4f;
+        Debug.Log($"[EnvironmentManager] Environment {index + 1}/{environments.Count}: {profile.name}  ({profile.displayName})");
     }
 
     private void ApplyRenderSettings(EnvironmentProfile profile)
@@ -241,6 +255,35 @@ public class EnvironmentManager : MonoBehaviour
             }
         }
     }
+
+    private void ApplyCameraAntialiasing()
+    {
+        foreach (Camera cam in Camera.allCameras)
+        {
+            UniversalAdditionalCameraData data = cam.GetUniversalAdditionalCameraData();
+            if (data != null && data.renderPostProcessing && data.antialiasing == AntialiasingMode.None)
+            {
+                data.antialiasing = cameraAntialiasing;
+            }
+        }
+    }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    private GUIStyle labelStyle;
+
+    private void OnGUI()
+    {
+        if (!showEnvironmentName || string.IsNullOrEmpty(nameLabel) || Time.unscaledTime > nameLabelUntil) return;
+        if (labelStyle == null)
+        {
+            labelStyle = new GUIStyle(GUI.skin.box) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
+            labelStyle.normal.textColor = Color.white;
+        }
+        labelStyle.fontSize = Mathf.Max(14, Screen.height / 45);
+        float w = Screen.width * 0.9f, h = labelStyle.fontSize * 3.2f;
+        GUI.Box(new Rect((Screen.width - w) * 0.5f, Screen.height * 0.8f, w, h), nameLabel, labelStyle);
+    }
+#endif
 
 #if UNITY_EDITOR
     [ContextMenu("Preview Next Environment (Play Mode)")]

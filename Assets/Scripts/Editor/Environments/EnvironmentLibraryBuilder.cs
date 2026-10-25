@@ -82,8 +82,8 @@ public static class EnvironmentLibraryBuilder
         {
             type = SurfaceTexture.RakedGravel,
             polarUV = true,
-            albedo = K.SaveProceduralTexture(t + "T_RakedGravel.png", Size, (u, v) => Gray(Mathf.Lerp(0.72f, 0.95f, GravelHeight(u, v)) * Speck(u, v, 0.88f))),
-            normal = K.SaveProceduralNormal(t + "T_RakedGravel_N.png", Size, GravelHeight, 7f)
+            albedo = Soften(K.SaveProceduralTexture(t + "T_RakedGravel.png", Size, (u, v) => Gray(Mathf.Lerp(0.8f, 0.93f, GravelHeight(u, v)) * Speck(u, v, 0.94f)))),
+            normal = Soften(K.SaveProceduralNormal(t + "T_RakedGravel_N.png", Size, GravelHeight, 2.5f))
         });
 
         Progress("Sand ripples", 0.22f);
@@ -91,8 +91,8 @@ public static class EnvironmentLibraryBuilder
         {
             type = SurfaceTexture.SandRipples,
             polarUV = true,
-            albedo = K.SaveProceduralTexture(t + "T_SandRipples.png", Size, (u, v) => Gray(Mathf.Lerp(0.82f, 0.97f, SandHeight(u, v)) * Speck(u, v, 0.94f))),
-            normal = K.SaveProceduralNormal(t + "T_SandRipples_N.png", Size, SandHeight, 5f)
+            albedo = Soften(K.SaveProceduralTexture(t + "T_SandRipples.png", Size, (u, v) => Gray(Mathf.Lerp(0.86f, 0.96f, SandHeight(u, v)) * Speck(u, v, 0.97f)))),
+            normal = Soften(K.SaveProceduralNormal(t + "T_SandRipples_N.png", Size, SandHeight, 2f))
         });
 
         Progress("Organic ground", 0.26f);
@@ -143,6 +143,16 @@ public static class EnvironmentLibraryBuilder
         lib.surfaces = sets.ToArray();
         lib.softDot = K.SaveSoftDotTexture(t + "T_SoftDot.png");
         lib.petal = K.SavePetalTexture(t + "T_Petal.png");
+    }
+
+    /// <summary>Blurs distant mip levels slightly so fine line patterns don't shimmer or look jagged.</summary>
+    private static Texture2D Soften(Texture2D tex)
+    {
+        string path = AssetDatabase.GetAssetPath(tex);
+        TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(path);
+        importer.mipMapBias = 0.5f;
+        importer.SaveAndReimport();
+        return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
     }
 
     private static Color Gray(float g)
@@ -280,17 +290,18 @@ public static class EnvironmentLibraryBuilder
         return Gray(g);
     }
 
+    // Few, wide, soft grooves: thin high-contrast lines alias badly on phone screens.
     private static float GravelHeight(float u, float v)
     {
-        float grooves = 0.5f + 0.5f * Mathf.Sin(v * Mathf.PI * 2f * 8f);
-        return grooves * 0.75f + PM.SeamlessFbm(u, v, 48f, 2, 9.1f) * 0.25f;
+        float grooves = 0.5f + 0.5f * Mathf.Sin(v * Mathf.PI * 2f * 4f);
+        return grooves * 0.8f + PM.SeamlessFbm(u, v, 24f, 2, 9.1f) * 0.2f;
     }
 
     private static float SandHeight(float u, float v)
     {
         float warp = PM.SeamlessFbm(u, v, 3f, 3, 5.5f);
-        float ripple = 0.5f + 0.5f * Mathf.Sin(Mathf.PI * 2f * (v * 10f + warp * 1.5f));
-        return ripple * 0.8f + PM.SeamlessFbm(u, v, 40f, 2, 2.7f) * 0.2f;
+        float ripple = 0.5f + 0.5f * Mathf.Sin(Mathf.PI * 2f * (v * 4f + warp * 1.2f));
+        return ripple * 0.85f + PM.SeamlessFbm(u, v, 20f, 2, 2.7f) * 0.15f;
     }
 
     // ================================================================ Material templates

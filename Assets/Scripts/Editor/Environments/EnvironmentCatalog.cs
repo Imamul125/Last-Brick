@@ -181,7 +181,7 @@ public static class EnvironmentCatalog
         TintSky(r, "#FFB8C8", 0.25f);
         r.plaza = S(SurfaceTexture.StoneTiles, "#A29E98", 0.45f);
         r.inlay = S(SurfaceTexture.None, "#2A2A2C", 0.7f);
-        r.ring = S(SurfaceTexture.RakedGravel, "#ECE8E0", 0.15f, 2.2f);
+        r.ring = S(SurfaceTexture.RakedGravel, "#ECE8E0", 0.15f, 3.5f);
         r.curb = S(SurfaceTexture.Rock, "#8A8783", 0.3f, 2f);
         r.terrain = S(SurfaceTexture.Noise, "#6E8F4E", 0.08f, 8f);
         r.mountainNear = C("#39504F"); r.mountainFar = C("#8A92AA");
@@ -277,8 +277,8 @@ public static class EnvironmentCatalog
         var r = New(m);
         TintSky(r, "#9AF0FF", 0.2f);
         r.plaza = S(SurfaceTexture.Planks, "#C8A57A", 0.35f, 5f);
-        r.inlay = S(SurfaceTexture.None, "#2C6E7A", 0.8f);
-        r.ring = S(SurfaceTexture.Water, pal.Item1, 0.95f, 8f);
+        r.inlay = S(SurfaceTexture.None, pal.Item1, 0.8f);
+        r.ring = S(SurfaceTexture.Noise, "#EFE3C6", 0.2f, 4f); // soft white beach sand
         r.curb = S(SurfaceTexture.Rock, "#E0CFA8", 0.3f, 2f);
         r.terrain = S(SurfaceTexture.Noise, "#E6D2A2", 0.2f, 6f);
         r.hillHeight = 3f;
@@ -307,7 +307,7 @@ public static class EnvironmentCatalog
         TintSky(r, "#FFD9A0", 0.3f);
         r.plaza = S(SurfaceTexture.Flagstones, "#C9A27A", 0.35f);
         r.inlay = S(SurfaceTexture.None, Pick(v, "#2E7A8A", "#6B3A22", "#C9A04A", "#2E4A8A", "#8A2E2E"), 0.7f);
-        r.ring = S(SurfaceTexture.SandRipples, "#E8C690", 0.15f, 2.5f);
+        r.ring = S(SurfaceTexture.SandRipples, "#E8C690", 0.15f, 4f);
         r.curb = S(SurfaceTexture.Rock, "#B08A62", 0.3f, 2f);
         r.terrain = S(SurfaceTexture.Noise, "#D9B47E", 0.12f, 8f);
         r.hillHeight = 6f;
@@ -364,30 +364,38 @@ public static class EnvironmentCatalog
 
     private static EnvironmentRecipe Volcanic(int v, out string name)
     {
-        var pal = Pick(v, ("#FF5A14", "Inferno"), ("#FF2A2A", "Crimson Forge"), ("#3AA0FF", "Sapphire Flame"), ("#7AFF3A", "Toxic Rift"), ("#FF3AA0", "Magenta Core"));
+        // Warm lava hues only - polished obsidian floor, glowing cracks just in the ring, dark rock landscape.
+        var pal = Pick(v, ("#FF5A14", "Inferno"), ("#FF2E1A", "Crimson Forge"), ("#FFA21E", "Molten Gold"),
+            ("#FF7432", "Ember Peaks"), ("#FF3C1E", "Obsidian Night"));
         Color lava = C(pal.Item1);
+        bool night = v == 4;
         var r = New(Dusk);
-        r.skyTop = C("#120606"); r.skyHorizon = Color.Lerp(C("#5A1A0E"), lava * 0.5f, 0.5f); r.skyBottom = C("#1A0704");
-        r.sunDiscColor = lava * 2f; r.sunColor = Color.Lerp(C("#FF7A4A"), lava, 0.5f); r.sunIntensity = 0.9f; r.sunPitch = 15f;
-        r.cloudColor = new Color(0.23f, 0.1f, 0.08f, 0.9f); r.cloudCoverage = 0.5f; r.stars = 0.2f;
-        r.ambientIntensity = 0.75f;
-        r.plaza = S(SurfaceTexture.Flagstones, "#2A2624", 0.45f);
-        r.inlay = new SurfaceLayer(SurfaceTexture.None, lava, 0.8f) { emission = lava * 3f };
-        r.ring = new SurfaceLayer(SurfaceTexture.LavaCracks, C("#2A2220"), 0.35f, 5f) { emission = lava * 3.5f };
-        r.curb = S(SurfaceTexture.Rock, "#3A3430", 0.3f, 2f);
-        r.terrain = new SurfaceLayer(SurfaceTexture.LavaCracks, C("#2E2826"), 0.3f, 14f) { emission = lava * 1.8f };
-        r.mountainNear = C("#1E1614"); r.mountainFar = Color.Lerp(C("#4A2A22"), lava * 0.3f, 0.3f); r.mountainHeight = 1.2f;
-        r.props.Add(P(PropKind.DeadTree, 25, 34f, 120f, 0.9f, 1.6f, "#2A1E18", "#2A1E18", "#2A1E18"));
-        r.props.Add(P(PropKind.Rock, 40, 33f, 170f, 1f, 3f, "#3A322E", "#3A322E", "#3A322E"));
-        r.props.Add(P(PropKind.Crystal, 12, 34f, 70f, 0.8f, 1.5f, "#2A1A1A", "#2A1A1A", "#2A2220").WithGlow(lava * 2f));
+        r.skyTop = night ? C("#07030A") : C("#1C0A0C");
+        r.skyHorizon = Color.Lerp(night ? C("#2A0E0A") : C("#7A2A14"), lava * 0.45f, 0.35f);
+        r.skyBottom = C("#140605");
+        r.sunDiscColor = lava * 1.6f; r.sunGlow = 1.6f; r.sunSize = 0.08f;
+        r.sunColor = Color.Lerp(C("#FFB27A"), lava, 0.35f); r.sunIntensity = night ? 0.6f : 1.1f; r.sunPitch = 14f;
+        r.cloudColor = new Color(0.16f, 0.08f, 0.07f, 0.85f); r.cloudCoverage = 0.45f; r.stars = night ? 0.5f : 0.1f;
+        r.ambientIntensity = 0.85f;
+        r.plaza = S(SurfaceTexture.Flagstones, "#24201F", 0.75f);
+        r.inlay = new SurfaceLayer(SurfaceTexture.None, C("#D4A04A"), 0.85f) { metallic = 0.9f, emission = lava * 0.6f };
+        r.ring = new SurfaceLayer(SurfaceTexture.LavaCracks, C("#2A2321"), 0.45f, 8f) { emission = lava * 2.2f };
+        r.curb = S(SurfaceTexture.Rock, "#3E3632", 0.35f, 2f);
+        r.terrain = S(SurfaceTexture.Rock, "#3A302C", 0.2f, 12f);
+        r.hillHeight = 10f;
+        r.mountainNear = C("#221A18"); r.mountainFar = Color.Lerp(C("#5A3428"), lava * 0.25f, 0.25f); r.mountainHeight = 1.3f;
+        r.props.Add(P(PropKind.DeadTree, 22, 34f, 110f, 0.9f, 1.6f, "#241A16", "#241A16", "#241A16"));
+        r.props.Add(P(PropKind.Rock, 40, 33f, 170f, 1f, 3f, "#3E3430", "#3E3430", "#3E3430"));
+        r.props.Add(P(PropKind.Crystal, 10, 36f, 70f, 0.8f, 1.4f, "#1A1414", "#1A1414", "#2A2321").WithGlow(lava * 1.2f));
         r.structure = StructureKind.Obelisks;
-        r.structurePrimary = C("#1E1A1A"); r.structureSecondary = C("#2A2422");
-        r.structureGlow = lava * 4f;
-        r.accentLightColor = lava; r.accentLightIntensity = 6f;
+        r.structurePrimary = C("#1C1818"); r.structureSecondary = C("#C9963E");
+        r.structureGlow = lava * 3f;
+        r.accentLightColor = lava; r.accentLightIntensity = 5f;
         r.particles = ParticleKind.Embers;
-        r.particleColor = lava * 3f;
-        r.fogDensity = 0.006f;
-        r.bloom = 1.2f; r.contrast = 14f;
+        r.particleColor = lava * 2.5f;
+        r.particleRate = 0.8f;
+        r.fogDensity = 0.0055f;
+        r.bloom = 0.9f; r.contrast = 14f; r.saturation = 6f;
         name = pal.Item2;
         return r;
     }
@@ -456,7 +464,7 @@ public static class EnvironmentCatalog
         TintSky(r, "#D8F0D0", 0.2f);
         r.plaza = S(SurfaceTexture.Planks, "#9C7A54", 0.35f, 5f);
         r.inlay = S(SurfaceTexture.None, "#2E2E2E", 0.6f);
-        r.ring = S(SurfaceTexture.RakedGravel, "#DCD8CC", 0.15f, 2.2f);
+        r.ring = S(SurfaceTexture.RakedGravel, "#DCD8CC", 0.15f, 3.5f);
         r.curb = S(SurfaceTexture.Rock, "#7A7A72", 0.3f, 2f);
         r.terrain = S(SurfaceTexture.Noise, "#5E7E3E", 0.08f, 8f);
         r.mountainNear = C("#3A5244"); r.mountainFar = C("#8AA0A0"); r.mountainHeight = 1.15f;
@@ -574,7 +582,7 @@ public static class EnvironmentCatalog
         TintSky(r, "#FFB080", 0.25f);
         r.plaza = S(SurfaceTexture.Flagstones, "#B07A54", 0.35f);
         r.inlay = S(SurfaceTexture.None, Pick(v, "#2E8A9A", "#1E6E7A", "#C9A04A", "#3A9A8A", "#4A6AC8"), 0.8f);
-        r.ring = S(SurfaceTexture.SandRipples, "#D29A64", 0.15f, 2.5f);
+        r.ring = S(SurfaceTexture.SandRipples, "#D29A64", 0.15f, 4f);
         r.curb = S(SurfaceTexture.Rock, "#9A6440", 0.3f, 2f);
         r.terrain = S(SurfaceTexture.Noise, "#C07E4E", 0.1f, 8f);
         r.hillHeight = 8f;
@@ -635,7 +643,7 @@ public static class EnvironmentCatalog
         r.plaza = S(SurfaceTexture.MarbleTiles, "#F2EEE6", 0.85f, 5f);
         r.inlay = S(SurfaceTexture.None, "#D4AF37", 0.85f);
         r.inlay.metallic = 0.9f;
-        r.ring = S(SurfaceTexture.RakedGravel, "#ECE6DA", 0.15f, 2.2f);
+        r.ring = S(SurfaceTexture.RakedGravel, "#ECE6DA", 0.15f, 3.5f);
         r.curb = S(SurfaceTexture.MarbleTiles, "#E6E0D6", 0.7f, 3f);
         r.terrain = S(SurfaceTexture.Noise, "#5E8E3E", 0.08f, 6f);
         r.hillHeight = 3f;
@@ -726,9 +734,9 @@ public static class EnvironmentCatalog
         r.ambientIntensity = 1f;
         r.plaza = S(SurfaceTexture.Flagstones, "#8AA8A0", 0.4f);
         r.inlay = S(SurfaceTexture.None, "#E0C060", 0.8f);
-        r.ring = S(SurfaceTexture.SandRipples, "#D8D0B0", 0.15f, 2.5f);
+        r.ring = S(SurfaceTexture.SandRipples, "#D8D0B0", 0.15f, 4f);
         r.curb = S(SurfaceTexture.Rock, "#7A8A86", 0.3f, 2f);
-        r.terrain = S(SurfaceTexture.SandRipples, "#C8C0A0", 0.12f, 6f);
+        r.terrain = S(SurfaceTexture.SandRipples, "#C8C0A0", 0.12f, 12f);
         r.hillHeight = 6f;
         r.mountainNear = C("#1E4A5A"); r.mountainFar = C("#2E6A80"); r.mountainHeight = 0.8f;
         Color glow = deep ? C(pal.Item1, 1.5f) : Color.black;

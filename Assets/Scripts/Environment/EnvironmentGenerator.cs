@@ -94,7 +94,8 @@ public static class EnvironmentGenerator
         if (c.materials.TryGetValue(key, out Material cached)) return cached;
         Material m = new Material(template) { name = key };
         m.SetColor("_BaseColor", color);
-        if (tex != null) m.SetTexture("_BaseMap", tex);
+        // Always overwrite the template's texture - otherwise e.g. water inherits the stone tiles of the template.
+        m.SetTexture("_BaseMap", tex != null ? tex : Texture2D.whiteTexture);
         if (normal != null) m.SetTexture("_BumpMap", normal);
         m.SetFloat("_Smoothness", smoothness);
         m.SetFloat("_Metallic", metallic);
