@@ -159,10 +159,11 @@ public class TowerBatchGenerator : EditorWindow
     {
         int k = Mathf.Max(0, level - 51);            // 0 for level 51
         var d = new Design { shape = Shape.Standard };
-        d.rows = Mathf.Min(16, 12 + k / 20);          // 12 -> 16 rows (one more every 20 levels)
-        d.cols = 4 + (k >= 35 ? 1 : 0) + (k >= 75 ? 1 : 0); // 4 -> 5 (lvl 86) -> 6 (lvl 126) columns
+        // Max 5 columns: a 6-column tower is ~5.6 wide and its outer bricks hang past the 3-wide pedestal and fall.
+        d.rows = Mathf.Min(17, 12 + k / 18);          // 12 -> 17 rows (one more every 18 levels)
+        d.cols = 4 + (k >= 35 ? 1 : 0);                // 4 -> 5 columns (from level 86)
         d.protect = 3 + (k >= 30 ? 1 : 0) + (k >= 70 ? 1 : 0); // 3 -> 4 (lvl 81) -> 5 (lvl 121) cats
-        d.missing = Mathf.Min(4 + k / 8, d.rows - 3);   // 4 -> 13 missing bricks
+        d.missing = Mathf.Min(4 + k / 8, d.rows - 3);   // 4 -> 14 missing bricks
         d.pushOut = 2 + k / 25;                        // 2 -> 5 pushed-out bricks
         return d;
     }
@@ -600,11 +601,15 @@ public class TowerBatchGenerator : EditorWindow
 
                 // Retries only re-roll WHERE the gaps, cats and pushed-out bricks go - never the difficulty
                 // (rows, columns, cat count, missing count). Pushed-out bricks are cosmetic and dropped last.
-                for (int attempt = 0; attempt < (physicsTest ? 10 : 1); attempt++)
+                // Last resort (only if no full-difficulty tower could even stand): fewer gaps instead of skipping the level.
+                for (int attempt = 0; attempt < (physicsTest ? 16 : 1); attempt++)
                 {
+                    if (attempt >= 10 && bestTower != null) break;
                     var rng = new System.Random(level * 7919 + attempt * 104729);
                     Design d = DesignFor(level);
                     if (attempt >= 7) d.pushOut = 0;
+                    if (attempt >= 10) d.missing /= 2;
+                    if (attempt >= 14) d.missing = 0;
 
                     GameObject tower = Build($"Tower_{level}", Plan(d, size, rng), size, brick, protectedBrick);
                     int bricks = tower.GetComponentsInChildren<Rigidbody>().Length;
@@ -651,7 +656,8 @@ public class TowerBatchGenerator : EditorWindow
                 PrefabUtility.SaveAsPrefabAsset(bestTower, path);
                 DestroyImmediate(bestTower);
 
-                string info = $"{bestDesign.shape}, {bestDesign.cols} cols, {bestDesign.rows} rows, {bestDesign.protect} protected, {brickCount} bricks";
+                string info = $"{bestDesign.shape}, {bestDesign.cols} cols, {bestDesign.rows} rows, {bestDesign.protect} protected, {bestDesign.missing} missing, {brickCount} bricks";
+                if (bestDesign.missing < DesignFor(level).missing) info += " (gaps reduced so it can stand)";
                 info += bestResult.solved ? $", solved in {bestResult.moves}" : (physicsTest ? ", NOT auto-solved - please play-test" : "");
                 results.Add((level, moves, time, info));
                 report.AppendLine($"Level {level}: {info} -> Max Moves {moves}, Time {time}s");
