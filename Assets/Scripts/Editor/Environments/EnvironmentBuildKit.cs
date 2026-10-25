@@ -8,7 +8,7 @@ using System.IO;
 /// Shared helpers for the environment builders: procedural textures, meshes, materials and asset saving.
 /// Every environment builder uses this so new environments can be added with only a layout script.
 /// </summary>
-public static class EnvironmentBuildKit
+public static partial class EnvironmentBuildKit
 {
     public const string RootFolder = "Assets/Environments";
 
