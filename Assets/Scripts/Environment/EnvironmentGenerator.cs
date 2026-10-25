@@ -37,8 +37,34 @@ public static class EnvironmentGenerator
 
     // ================================================================ Entry points
 
+    /// <summary>Returns a list of missing library entries, or null when the library is complete.</summary>
+    public static string ValidateLibrary(EnvironmentLibrary lib)
+    {
+        if (lib == null) return "EnvironmentLibrary is not assigned";
+        var missing = new List<string>();
+        void Check(Object o, string n) { if (o == null) missing.Add(n); }
+        Check(lib.litPlain, "litPlain"); Check(lib.litTexture, "litTexture"); Check(lib.litTextureNormal, "litTextureNormal");
+        Check(lib.litTextureNormalEmissive, "litTextureNormalEmissive"); Check(lib.litEmissive, "litEmissive");
+        Check(lib.vertexColorLit, "vertexColorLit"); Check(lib.particleAdditive, "particleAdditive");
+        Check(lib.particleAlpha, "particleAlpha"); Check(lib.sky, "sky (LastBrick/GradientSky shader)");
+        Check(lib.softDot, "softDot"); Check(lib.petal, "petal");
+        Check(lib.limb, "limb"); Check(lib.cylinder, "cylinder"); Check(lib.hexCylinder, "hexCylinder"); Check(lib.cone, "cone");
+        Check(lib.hexCone, "hexCone"); Check(lib.pyramid, "pyramid"); Check(lib.squareFrustum, "squareFrustum"); Check(lib.box, "box");
+        Check(lib.tinyBlob, "tinyBlob"); Check(lib.cloudBlob, "cloudBlob"); Check(lib.flatCanopy, "flatCanopy");
+        Check(lib.frond, "frond"); Check(lib.mushroomCap, "mushroomCap"); Check(lib.flutedShaft, "flutedShaft");
+        if (lib.canopyBlobs == null || lib.canopyBlobs.Length == 0) missing.Add("canopyBlobs");
+        if (lib.pineTiers == null || lib.pineTiers.Length == 0) missing.Add("pineTiers");
+        if (lib.rocks == null || lib.rocks.Length == 0) missing.Add("rocks");
+        if (lib.surfaces == null || lib.surfaces.Length == 0) missing.Add("surfaces");
+        return missing.Count == 0 ? null : "EnvironmentLibrary is missing: " + string.Join(", ", missing) +
+            ". Run Tools > Last Brick > Environments > Build All 100 Environments.";
+    }
+
     public static GeneratedEnvironment Build(EnvironmentProfile profile, EnvironmentLibrary lib, float groundY)
     {
+        string problem = ValidateLibrary(lib);
+        if (problem != null) throw new System.InvalidOperationException(problem);
+
         EnvironmentRecipe recipe = profile.recipe;
         GameObject rootGo = new GameObject("ENV_" + profile.name);
         var c = new Context
@@ -51,17 +77,27 @@ public static class EnvironmentGenerator
             env = rootGo.AddComponent<GeneratedEnvironment>()
         };
 
-        Light sun = BuildSun(c);
-        BuildGround(c);
-        BuildMountains(c);
-        BuildStructures(c);
-        BuildProps(c);
-        FlushBatches(c);
-        BuildParticles(c);
-        BuildReflectionProbe(c);
+        try
+        {
+            Light sun = BuildSun(c);
+            BuildGround(c);
+            BuildMountains(c);
+            BuildStructures(c);
+            BuildProps(c);
+            FlushBatches(c);
+            BuildParticles(c);
+            BuildReflectionProbe(c);
 
-        c.env.skybox = BuildSky(c, sun);
-        c.env.volume = BuildVolume(c);
+            c.env.skybox = BuildSky(c, sun);
+            c.env.volume = BuildVolume(c);
+        }
+        catch
+        {
+            // Free everything created so far (GeneratedEnvironment.OnDestroy releases meshes/materials).
+            if (Application.isPlaying) Object.Destroy(rootGo);
+            else Object.DestroyImmediate(rootGo);
+            throw;
+        }
 
         if (!Application.isPlaying)
         {

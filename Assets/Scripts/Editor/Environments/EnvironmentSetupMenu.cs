@@ -126,6 +126,66 @@ public static class EnvironmentSetupMenu
         return guid == null ? null : AssetDatabase.LoadAssetAtPath<EnvironmentLibrary>(AssetDatabase.GUIDToAssetPath(guid));
     }
 
+    /// <summary>
+    /// Checks the scene setup and test-builds every environment in the manager's list, reporting any that fail.
+    /// </summary>
+    [MenuItem("Tools/Last Brick/Environments/Validate All Environments", priority = 30)]
+    public static void ValidateAll()
+    {
+        var report = new System.Text.StringBuilder();
+        EnvironmentManager manager = Object.FindFirstObjectByType<EnvironmentManager>(FindObjectsInactive.Include);
+        if (manager == null)
+        {
+            EditorUtility.DisplayDialog("Validate Environments", "No EnvironmentManager in the open scene. Run 'Build All 100 Environments' with the game scene open.", "OK");
+            return;
+        }
+
+        if (!manager.gameObject.activeInHierarchy || !manager.enabled) report.AppendLine("- EnvironmentManager is disabled.");
+        if (manager.environments.Count == 0) report.AppendLine("- Environment list is empty.");
+        string libProblem = EnvironmentGenerator.ValidateLibrary(manager.library);
+        if (libProblem != null) report.AppendLine("- " + libProblem);
+        if (Shader.Find("LastBrick/GradientSky") == null) report.AppendLine("- Shader LastBrick/GradientSky failed to compile or is missing.");
+        if (manager.debugForceEnvironmentIndex >= 0) report.AppendLine($"- Note: Debug Force Environment Index is {manager.debugForceEnvironmentIndex} (every level uses that environment).");
+        report.AppendLine($"- Ground height used: {manager.groundHeight:0.00} (auto detect: {manager.autoDetectGroundHeight})");
+
+        int failed = 0;
+        if (libProblem == null)
+        {
+            float ground = EnvironmentBuildKit.FindGroundHeight(manager.groundHeight);
+            try
+            {
+                for (int i = 0; i < manager.environments.Count; i++)
+                {
+                    EnvironmentProfile p = manager.environments[i];
+                    if (EditorUtility.DisplayCancelableProgressBar("Validating environments", p != null ? p.name : "(empty)", i / (float)manager.environments.Count)) break;
+                    if (p == null) { report.AppendLine($"- #{i + 1}: empty slot in the list"); failed++; continue; }
+                    if (!p.useRecipe) continue;
+                    try
+                    {
+                        GeneratedEnvironment env = EnvironmentGenerator.Build(p, manager.library, ground);
+                        int renderers = env.GetComponentsInChildren<MeshRenderer>().Length;
+                        if (renderers < 5) { report.AppendLine($"- #{i + 1} {p.name}: only {renderers} renderers were generated"); failed++; }
+                        Object.DestroyImmediate(env.gameObject);
+                    }
+                    catch (System.Exception e)
+                    {
+                        failed++;
+                        report.AppendLine($"- #{i + 1} {p.name}: {e.GetType().Name}: {e.Message}");
+                        Debug.LogException(e);
+                    }
+                }
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+        }
+
+        string result = $"Environments: {manager.environments.Count}, failed: {failed}\n{report}";
+        Debug.Log("[Environments] Validation\n" + result);
+        EditorUtility.DisplayDialog("Validate Environments", result.Length > 1500 ? result.Substring(0, 1500) + "\n... (full report in Console)" : result, "OK");
+    }
+
     /// <summary>Drops the selected environment into the scene so you can look at it without playing.</summary>
     [MenuItem("Tools/Last Brick/Environments/Preview Selected Profile In Scene", priority = 40)]
     public static void PreviewSelected()

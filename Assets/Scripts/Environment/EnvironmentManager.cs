@@ -62,6 +62,7 @@ public class EnvironmentManager : MonoBehaviour
     private GameObject currentInstance;
     private Volume environmentVolume;
     private bool legacyHidden;
+    private Material originalSkybox;
     private string nameLabel;
     private float nameLabelUntil;
 
@@ -76,6 +77,7 @@ public class EnvironmentManager : MonoBehaviour
         environmentVolume.weight = 1f;
 
         if (autoDetectGroundHeight) DetectGroundHeight();
+        originalSkybox = RenderSettings.skybox;
     }
 
     private void Start()
@@ -147,37 +149,56 @@ public class EnvironmentManager : MonoBehaviour
             return;
         }
 
+        // Build the new environment first: if anything fails, the current one stays on screen.
+        GameObject newInstance = null;
+        GeneratedEnvironment generated = null;
+        try
+        {
+            if (profile.useRecipe)
+            {
+                generated = EnvironmentGenerator.Build(profile, library, groundHeight);
+                newInstance = generated.gameObject;
+            }
+            else if (profile.environmentPrefab != null)
+            {
+                newInstance = Instantiate(profile.environmentPrefab, Vector3.zero, Quaternion.identity);
+                newInstance.name = profile.environmentPrefab.name;
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[EnvironmentManager] Failed to build environment {index + 1}: {profile.name}. Keeping the previous one.");
+            Debug.LogException(e);
+            foreach (GeneratedEnvironment partial in FindObjectsByType<GeneratedEnvironment>(FindObjectsSortMode.None))
+            {
+                if (partial.gameObject != currentInstance) Destroy(partial.gameObject);
+            }
+            ShowLabel($"FAILED: {index + 1} {profile.name}\nSee Console for the error");
+            return;
+        }
+
         CurrentEnvironmentIndex = index;
         PlayerPrefs.SetInt(SavedEnvironmentKey, index);
-
         HideLegacyVisuals();
 
         if (currentInstance != null)
         {
             // GeneratedEnvironment.OnDestroy frees the runtime meshes, materials and profiles.
             Destroy(currentInstance);
-            currentInstance = null;
         }
+        currentInstance = newInstance;
 
-        if (profile.useRecipe)
+        if (generated != null)
         {
-            GeneratedEnvironment generated = EnvironmentGenerator.Build(profile, library, groundHeight);
-            currentInstance = generated.gameObject;
-
-            RenderSettings.skybox = generated.skybox;
+            RenderSettings.skybox = generated.skybox != null ? generated.skybox : originalSkybox;
             EnvironmentGenerator.ApplyRenderSettings(profile.recipe);
             SetSun();
             environmentVolume.sharedProfile = generated.volume;
-            environmentVolume.enabled = true;
+            environmentVolume.enabled = generated.volume != null;
         }
         else
         {
-            if (profile.environmentPrefab != null)
-            {
-                currentInstance = Instantiate(profile.environmentPrefab, Vector3.zero, Quaternion.identity);
-                currentInstance.name = profile.environmentPrefab.name;
-            }
-
+            RenderSettings.skybox = originalSkybox;
             ApplyRenderSettings(profile);
             environmentVolume.sharedProfile = profile.postProcessProfile;
             environmentVolume.enabled = profile.postProcessProfile != null;
@@ -185,9 +206,14 @@ public class EnvironmentManager : MonoBehaviour
 
         RefreshReflectionProbes();
 
-        nameLabel = $"{index + 1} / {environments.Count}   {profile.name}\n{profile.displayName}";
-        nameLabelUntil = Time.unscaledTime + 4f;
+        ShowLabel($"{index + 1} / {environments.Count}   {profile.name}\n{profile.displayName}");
         Debug.Log($"[EnvironmentManager] Environment {index + 1}/{environments.Count}: {profile.name}  ({profile.displayName})");
+    }
+
+    private void ShowLabel(string text)
+    {
+        nameLabel = text;
+        nameLabelUntil = Time.unscaledTime + 4f;
     }
 
     private void ApplyRenderSettings(EnvironmentProfile profile)
