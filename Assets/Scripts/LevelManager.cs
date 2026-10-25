@@ -111,6 +111,10 @@ public class LevelManager : MonoBehaviour
         currentLevelIndex = PlayerPrefs.GetInt("SavedLevel", 0);
         // Comment out the next line if you don't want the level to start automatically on load!
         // if (levels.Count > 0) StartLevel(currentLevelIndex);
+if (EnvironmentManager.Instance != null && currentLevelIndex >= 0 && currentLevelIndex < levels.Count)
+{
+    EnvironmentManager.Instance.ApplyForLevel(levels[currentLevelIndex].levelNumber);
+}
     }
 
     // Connect your UI 'Play' Button to this method!
@@ -185,6 +189,10 @@ public class LevelManager : MonoBehaviour
 
         Debug.Log("Level " + currentLevel.levelNumber + " Started!");
         
+        if (EnvironmentManager.Instance != null)
+{
+    EnvironmentManager.Instance.ApplyForLevel(currentLevel.levelNumber);
+}
         // Setup UI for this level (moves and time)
         if (UIManager.Instance != null)
         {
