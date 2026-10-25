@@ -136,7 +136,7 @@ public static class SakuraZenGardenBuilder
                 K.SaveMesh(K.Blob("SM_Rock_B", 1, 0.4f, 2, new Vector3(1.0f, 1.1f, 0.9f)), f),
                 K.SaveMesh(K.Blob("SM_Rock_C", 1, 0.3f, 3, new Vector3(1.4f, 0.6f, 1.3f)), f),
             };
-            var rocks = new K.MeshBatch();
+            var rocks = new MeshBatch();
             float[] rockAngles = { 20f, 95f, 160f, 235f, 300f };
             foreach (float ang in rockAngles)
             {
@@ -288,11 +288,11 @@ public static class SakuraZenGardenBuilder
             K.SaveMesh(K.FlatShade(K.Cylinder("SM_PineTier_2", 1.25f, 0f, 2.6f, 8, 2f, false, true)), f),
         };
 
-        var barkBatch = new K.MeshBatch();
-        var pinkA = new K.MeshBatch();
-        var pinkB = new K.MeshBatch();
-        var greenA = new K.MeshBatch();
-        var greenB = new K.MeshBatch();
+        var barkBatch = new MeshBatch();
+        var pinkA = new MeshBatch();
+        var pinkB = new MeshBatch();
+        var greenA = new MeshBatch();
+        var greenB = new MeshBatch();
 
         float Rand(float a, float b) => a + (float)rng.NextDouble() * (b - a);
 
@@ -325,7 +325,7 @@ public static class SakuraZenGardenBuilder
             Quaternion rot = Quaternion.Euler(0f, Rand(0f, 360f), 0f);
 
             barkBatch.AddLimb(limb, p, p + Vector3.up * 2f * s, 0.3f * s);
-            K.MeshBatch g = rng.NextDouble() < 0.5 ? greenA : greenB;
+            MeshBatch g = rng.NextDouble() < 0.5 ? greenA : greenB;
             float y = 1.3f;
             for (int k = 0; k < cones.Length; k++)
             {
@@ -344,7 +344,7 @@ public static class SakuraZenGardenBuilder
     }
 
     private static void AddCherryTree(Vector3 basePos, float s, System.Random rng, Mesh limb, Mesh[] blobs,
-        K.MeshBatch bark, K.MeshBatch pinkA, K.MeshBatch pinkB)
+        MeshBatch bark, MeshBatch pinkA, MeshBatch pinkB)
     {
         float Rand(float a, float b) => a + (float)rng.NextDouble() * (b - a);
 
@@ -371,9 +371,9 @@ public static class SakuraZenGardenBuilder
         AddBlossom(p2 + Vector3.up * 1.4f * s, Rand(2.0f, 2.5f) * s, rng, blobs, pinkA, pinkB);
     }
 
-    private static void AddBlossom(Vector3 pos, float size, System.Random rng, Mesh[] blobs, K.MeshBatch a, K.MeshBatch b)
+    private static void AddBlossom(Vector3 pos, float size, System.Random rng, Mesh[] blobs, MeshBatch a, MeshBatch b)
     {
-        K.MeshBatch batch = rng.NextDouble() < 0.6 ? a : b;
+        MeshBatch batch = rng.NextDouble() < 0.6 ? a : b;
         Quaternion rot = Quaternion.Euler((float)rng.NextDouble() * 360f, (float)rng.NextDouble() * 360f, (float)rng.NextDouble() * 360f);
         batch.Add(blobs[rng.Next(blobs.Length)], pos, rot, Vector3.one * size);
     }
@@ -390,8 +390,8 @@ public static class SakuraZenGardenBuilder
         Mesh capCenter = K.SaveMesh(K.Box("SM_Torii_Cap", new Vector3(6.6f, 0.3f, 0.86f), 2f), f);
         Mesh capWing = K.SaveMesh(K.Box("SM_Torii_CapWing", new Vector3(2.9f, 0.3f, 0.86f), 2f), f);
 
-        var redBatch = new K.MeshBatch();
-        var blackBatch = new K.MeshBatch();
+        var redBatch = new MeshBatch();
+        var blackBatch = new MeshBatch();
         for (int i = 0; i < 4; i++)
         {
             float ang = 45f + i * 90f;
@@ -425,8 +425,8 @@ public static class SakuraZenGardenBuilder
         Mesh lRoof = K.SaveMesh(K.FlatShade(K.Cylinder("SM_Toro_Roof", 1.05f, 0.12f, 0.6f, 6, 2f, true, true)), f);
         Mesh lFinial = K.SaveMesh(K.Blob("SM_Toro_Finial", 1, 0.05f, 4, Vector3.one * 0.2f), f);
 
-        var stoneBatch = new K.MeshBatch();
-        var glowBatch = new K.MeshBatch();
+        var stoneBatch = new MeshBatch();
+        var glowBatch = new MeshBatch();
         Transform lights = Group("LanternLights", parent);
         for (int i = 0; i < 8; i++)
         {

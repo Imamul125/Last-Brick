@@ -13,6 +13,11 @@ public class EnvironmentProfile : ScriptableObject
     [Header("Info")]
     public string displayName = "New Environment";
 
+    [Header("Recipe (generated at runtime - tiny build size)")]
+    [Tooltip("When on, the environment is generated from the recipe below using the shared EnvironmentLibrary, and the prefab/sky/ambient/fog/post fields are ignored.")]
+    public bool useRecipe = false;
+    public EnvironmentRecipe recipe = new EnvironmentRecipe();
+
     [Header("Visuals")]
     [Tooltip("Floor, props and lights for this environment. Spawned at world origin. Should contain its own Directional Light (sun).")]
     public GameObject environmentPrefab;

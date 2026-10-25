@@ -1,11 +1,15 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 /// <summary>
 /// Swaps the environment (floor, props, lights, skybox, fog, post-processing) based on the level number.
 /// With changeFrequency = 2: levels 1-2 use environment 0, levels 3-4 use environment 1, and so on.
 /// LevelManager calls ApplyForLevel() whenever a level starts.
+/// Recipe environments are generated on demand and fully freed when replaced, so only one is ever in memory.
 /// </summary>
 public class EnvironmentManager : MonoBehaviour
 {
@@ -22,6 +26,14 @@ public class EnvironmentManager : MonoBehaviour
     [Tooltip("When we run out of environments, start again from the first one. If off, the last environment stays.")]
     public bool loopEnvironments = true;
 
+    [Tooltip("Shared textures, meshes and material templates used by recipe environments.")]
+    public EnvironmentLibrary library;
+
+    [Header("Ground")]
+    [Tooltip("Top of the gameplay floor. Detected automatically from the collider tagged 'Ground' when possible.")]
+    public float groundHeight = -2.1f;
+    public bool autoDetectGroundHeight = true;
+
     [Header("Legacy Scene Environment")]
     [Tooltip("Old scene objects whose visuals (renderers, lights, particles) are hidden while a profile is active. Colliders are kept, so the Ground collider keeps working.")]
     public List<GameObject> legacyVisualRoots = new List<GameObject>();
@@ -31,7 +43,7 @@ public class EnvironmentManager : MonoBehaviour
     public float volumePriority = 10f;
 
     [Header("Debug")]
-    [Tooltip("Editor only: force a specific environment index for testing look and feel. -1 = use level based selection.")]
+    [Tooltip("Editor only: force a specific environment index for testing look and feel. -1 = use level based selection. In Play Mode press [ and ] to step through environments.")]
     public int debugForceEnvironmentIndex = -1;
 
     public int CurrentEnvironmentIndex { get; private set; } = -1;
@@ -52,6 +64,8 @@ public class EnvironmentManager : MonoBehaviour
         environmentVolume.isGlobal = true;
         environmentVolume.priority = volumePriority;
         environmentVolume.weight = 1f;
+
+        if (autoDetectGroundHeight) DetectGroundHeight();
     }
 
     private void Start()
@@ -59,8 +73,33 @@ public class EnvironmentManager : MonoBehaviour
         // Show the saved environment on the home screen before any level starts.
         if (CurrentEnvironmentIndex < 0 && environments.Count > 0)
         {
-            ApplyEnvironment(PlayerPrefs.GetInt(SavedEnvironmentKey, 0));
+            ApplyEnvironment(Mathf.Clamp(PlayerPrefs.GetInt(SavedEnvironmentKey, 0), 0, environments.Count - 1));
         }
+    }
+
+#if UNITY_EDITOR && ENABLE_INPUT_SYSTEM
+    private void Update()
+    {
+        Keyboard kb = Keyboard.current;
+        if (kb == null || environments.Count == 0) return;
+        if (kb.rightBracketKey.wasPressedThisFrame) ApplyEnvironment((CurrentEnvironmentIndex + 1) % environments.Count);
+        if (kb.leftBracketKey.wasPressedThisFrame) ApplyEnvironment((CurrentEnvironmentIndex - 1 + environments.Count) % environments.Count);
+    }
+#endif
+
+    private void DetectGroundHeight()
+    {
+        GameObject[] grounds;
+        try { grounds = GameObject.FindGameObjectsWithTag("Ground"); }
+        catch { return; }
+
+        float best = float.NegativeInfinity;
+        foreach (GameObject g in grounds)
+        {
+            Collider col = g.GetComponent<Collider>();
+            if (col != null && col.bounds.size.x > 50f) best = Mathf.Max(best, col.bounds.max.y);
+        }
+        if (!float.IsNegativeInfinity(best)) groundHeight = best;
     }
 
     /// <summary>Returns which environment index a level (1-based level number) should use.</summary>
@@ -90,6 +129,12 @@ public class EnvironmentManager : MonoBehaviour
         if (index == CurrentEnvironmentIndex && currentInstance != null) return;
 
         EnvironmentProfile profile = environments[index];
+        if (profile.useRecipe && library == null)
+        {
+            Debug.LogError("[EnvironmentManager] Recipe environments need the EnvironmentLibrary assigned.");
+            return;
+        }
+
         CurrentEnvironmentIndex = index;
         PlayerPrefs.SetInt(SavedEnvironmentKey, index);
 
@@ -97,20 +142,34 @@ public class EnvironmentManager : MonoBehaviour
 
         if (currentInstance != null)
         {
+            // GeneratedEnvironment.OnDestroy frees the runtime meshes, materials and profiles.
             Destroy(currentInstance);
             currentInstance = null;
         }
 
-        if (profile.environmentPrefab != null)
+        if (profile.useRecipe)
         {
-            currentInstance = Instantiate(profile.environmentPrefab, Vector3.zero, Quaternion.identity);
-            currentInstance.name = profile.environmentPrefab.name;
+            GeneratedEnvironment generated = EnvironmentGenerator.Build(profile, library, groundHeight);
+            currentInstance = generated.gameObject;
+
+            RenderSettings.skybox = generated.skybox;
+            EnvironmentGenerator.ApplyRenderSettings(profile.recipe);
+            SetSun();
+            environmentVolume.sharedProfile = generated.volume;
+            environmentVolume.enabled = true;
         }
+        else
+        {
+            if (profile.environmentPrefab != null)
+            {
+                currentInstance = Instantiate(profile.environmentPrefab, Vector3.zero, Quaternion.identity);
+                currentInstance.name = profile.environmentPrefab.name;
+            }
 
-        ApplyRenderSettings(profile);
-
-        environmentVolume.sharedProfile = profile.postProcessProfile;
-        environmentVolume.enabled = profile.postProcessProfile != null;
+            ApplyRenderSettings(profile);
+            environmentVolume.sharedProfile = profile.postProcessProfile;
+            environmentVolume.enabled = profile.postProcessProfile != null;
+        }
 
         RefreshReflectionProbes();
 
@@ -135,17 +194,19 @@ public class EnvironmentManager : MonoBehaviour
         RenderSettings.fogStartDistance = profile.fogStart;
         RenderSettings.fogEndDistance = profile.fogEnd;
 
+        SetSun();
+        if (profile.ambientMode == AmbientMode.Skybox) DynamicGI.UpdateEnvironment();
+    }
+
+    private void SetSun()
+    {
         // The procedural skybox takes its sun direction from RenderSettings.sun.
         RenderSettings.sun = null;
-        if (currentInstance != null)
+        if (currentInstance == null) return;
+        foreach (Light l in currentInstance.GetComponentsInChildren<Light>())
         {
-            foreach (Light l in currentInstance.GetComponentsInChildren<Light>())
-            {
-                if (l.type == LightType.Directional) { RenderSettings.sun = l; break; }
-            }
+            if (l.type == LightType.Directional) { RenderSettings.sun = l; break; }
         }
-
-        if (profile.ambientMode == AmbientMode.Skybox) DynamicGI.UpdateEnvironment();
     }
 
     private void RefreshReflectionProbes()

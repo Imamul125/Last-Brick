@@ -78,40 +78,10 @@ public static partial class EnvironmentBuildKit
         return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
     }
 
-    public static float Fbm(float x, float y, int octaves)
-    {
-        float sum = 0f, amp = 0.5f, norm = 0f;
-        for (int i = 0; i < octaves; i++)
-        {
-            sum += Mathf.PerlinNoise(x, y) * amp;
-            norm += amp;
-            x = x * 2.03f + 17.17f;
-            y = y * 2.03f + 31.31f;
-            amp *= 0.5f;
-        }
-        return sum / norm;
-    }
+    public static float Fbm(float x, float y, int octaves) => ProceduralMesh.Fbm(x, y, octaves);
 
-    /// <summary>Fbm that wraps perfectly on the 0..1 square (for tiling textures).</summary>
-    public static float SeamlessFbm(float u, float v, float period, int octaves, float seed)
-    {
-        float sum = 0f, amp = 0.5f, norm = 0f;
-        for (int i = 0; i < octaves; i++)
-        {
-            float px = u * period + seed, py = v * period + seed * 1.7f;
-            float a = Mathf.PerlinNoise(px, py);
-            float b = Mathf.PerlinNoise(px - period, py);
-            float c = Mathf.PerlinNoise(px, py - period);
-            float d = Mathf.PerlinNoise(px - period, py - period);
-            sum += Mathf.Lerp(Mathf.Lerp(a, b, u), Mathf.Lerp(c, d, u), v) * amp;
-            norm += amp;
-            period *= 2f;
-            seed += 13.7f;
-            amp *= 0.5f;
-        }
-        // Bilinear blending flattens contrast, stretch it back out.
-        return Mathf.Clamp01(((sum / norm) - 0.5f) * 1.6f + 0.5f);
-    }
+    public static float SeamlessFbm(float u, float v, float period, int octaves, float seed) =>
+        ProceduralMesh.SeamlessFbm(u, v, period, octaves, seed);
 
     [System.Serializable]
     public struct MarbleStyle
@@ -243,225 +213,20 @@ public static partial class EnvironmentBuildKit
 
     // ---------------------------------------------------------------- Meshes
 
-    /// <summary>Cylinder / cone frustum with smooth sides. UVs are in world units / uvScale so textures tile evenly.</summary>
-    public static Mesh Cylinder(string name, float rBottom, float rTop, float height, int segments, float uvScale, bool capTop = true, bool capBottom = false)
-    {
-        var verts = new List<Vector3>();
-        var normals = new List<Vector3>();
-        var uvs = new List<Vector2>();
-        var tris = new List<int>();
+    public static Mesh Cylinder(string name, float rBottom, float rTop, float height, int segments, float uvScale, bool capTop = true, bool capBottom = false) =>
+        ProceduralMesh.Cylinder(name, rBottom, rTop, height, segments, uvScale, capTop, capBottom);
 
-        float slope = (rBottom - rTop) / height;
-        float circumference = Mathf.PI * (rBottom + rTop);
-        for (int i = 0; i <= segments; i++)
-        {
-            float a = i / (float)segments * Mathf.PI * 2f;
-            float cos = Mathf.Cos(a), sin = Mathf.Sin(a);
-            Vector3 n = new Vector3(cos, slope, sin).normalized;
-            float u = i / (float)segments * circumference / uvScale;
-            verts.Add(new Vector3(cos * rBottom, 0f, sin * rBottom)); normals.Add(n); uvs.Add(new Vector2(u, 0f));
-            verts.Add(new Vector3(cos * rTop, height, sin * rTop)); normals.Add(n); uvs.Add(new Vector2(u, height / uvScale));
-        }
-        for (int i = 0; i < segments; i++)
-        {
-            int b0 = i * 2, t0 = b0 + 1, b1 = b0 + 2, t1 = b0 + 3;
-            tris.Add(b0); tris.Add(t0); tris.Add(b1);
-            tris.Add(b1); tris.Add(t0); tris.Add(t1);
-        }
+    public static Mesh Ring(string name, float rInner, float rOuter, float height, int segments, float uvScale, bool bottom = false) =>
+        ProceduralMesh.Ring(name, rInner, rOuter, height, segments, uvScale, bottom);
 
-        if (capTop) AddCap(verts, normals, uvs, tris, rTop, height, segments, uvScale, true);
-        if (capBottom) AddCap(verts, normals, uvs, tris, rBottom, 0f, segments, uvScale, false);
+    public static Mesh FlutedShaft(string name, float rBottom, float rTop, float height, int flutes, float fluteDepth, float uvScale) =>
+        ProceduralMesh.FlutedShaft(name, rBottom, rTop, height, flutes, fluteDepth, uvScale);
 
-        return BuildMesh(name, verts, normals, uvs, tris);
-    }
-
-    /// <summary>Flat ring (annulus) with height: top face plus inner and outer walls (and optional underside).</summary>
-    public static Mesh Ring(string name, float rInner, float rOuter, float height, int segments, float uvScale, bool bottom = false)
-    {
-        var verts = new List<Vector3>();
-        var normals = new List<Vector3>();
-        var uvs = new List<Vector2>();
-        var tris = new List<int>();
-
-        // Top
-        int start = verts.Count;
-        for (int i = 0; i <= segments; i++)
-        {
-            float a = i / (float)segments * Mathf.PI * 2f;
-            float cos = Mathf.Cos(a), sin = Mathf.Sin(a);
-            Vector3 pi = new Vector3(cos * rInner, height, sin * rInner);
-            Vector3 po = new Vector3(cos * rOuter, height, sin * rOuter);
-            verts.Add(pi); normals.Add(Vector3.up); uvs.Add(new Vector2(pi.x, pi.z) / uvScale);
-            verts.Add(po); normals.Add(Vector3.up); uvs.Add(new Vector2(po.x, po.z) / uvScale);
-        }
-        for (int i = 0; i < segments; i++)
-        {
-            int in0 = start + i * 2, out0 = in0 + 1, in1 = in0 + 2, out1 = in0 + 3;
-            tris.Add(in0); tris.Add(in1); tris.Add(out0);
-            tris.Add(in1); tris.Add(out1); tris.Add(out0);
-        }
-
-        if (bottom)
-        {
-            start = verts.Count;
-            for (int i = 0; i <= segments; i++)
-            {
-                float a = i / (float)segments * Mathf.PI * 2f;
-                float cos = Mathf.Cos(a), sin = Mathf.Sin(a);
-                Vector3 pi = new Vector3(cos * rInner, 0f, sin * rInner);
-                Vector3 po = new Vector3(cos * rOuter, 0f, sin * rOuter);
-                verts.Add(pi); normals.Add(Vector3.down); uvs.Add(new Vector2(pi.x, pi.z) / uvScale);
-                verts.Add(po); normals.Add(Vector3.down); uvs.Add(new Vector2(po.x, po.z) / uvScale);
-            }
-            for (int i = 0; i < segments; i++)
-            {
-                int in0 = start + i * 2, out0 = in0 + 1, in1 = in0 + 2, out1 = in0 + 3;
-                tris.Add(in0); tris.Add(out0); tris.Add(in1);
-                tris.Add(in1); tris.Add(out0); tris.Add(out1);
-            }
-        }
-
-        AddWall(verts, normals, uvs, tris, rOuter, height, segments, uvScale, true);
-        AddWall(verts, normals, uvs, tris, rInner, height, segments, uvScale, false);
-
-        return BuildMesh(name, verts, normals, uvs, tris);
-    }
-
-    /// <summary>Classical fluted column shaft with a gentle taper.</summary>
-    public static Mesh FlutedShaft(string name, float rBottom, float rTop, float height, int flutes, float fluteDepth, float uvScale)
-    {
-        const int perFlute = 6;
-        int segments = flutes * perFlute;
-        var verts = new List<Vector3>();
-        var uvs = new List<Vector2>();
-        var tris = new List<int>();
-
-        for (int i = 0; i <= segments; i++)
-        {
-            float a = i / (float)segments * Mathf.PI * 2f;
-            float frac = (i % perFlute) / (float)perFlute;
-            float k = 1f - fluteDepth * Mathf.Sin(frac * Mathf.PI);
-            float cos = Mathf.Cos(a), sin = Mathf.Sin(a);
-            float u = i / (float)segments * Mathf.PI * (rBottom + rTop) / uvScale;
-            verts.Add(new Vector3(cos * rBottom * k, 0f, sin * rBottom * k)); uvs.Add(new Vector2(u, 0f));
-            verts.Add(new Vector3(cos * rTop * k, height, sin * rTop * k)); uvs.Add(new Vector2(u, height / uvScale));
-        }
-        for (int i = 0; i < segments; i++)
-        {
-            int b0 = i * 2, t0 = b0 + 1, b1 = b0 + 2, t1 = b0 + 3;
-            tris.Add(b0); tris.Add(t0); tris.Add(b1);
-            tris.Add(b1); tris.Add(t0); tris.Add(t1);
-        }
-
-        Mesh mesh = new Mesh { name = name };
-        mesh.SetVertices(verts);
-        mesh.SetUVs(0, uvs);
-        mesh.SetTriangles(tris, 0);
-        mesh.RecalculateNormals();
-        mesh.RecalculateTangents();
-        mesh.RecalculateBounds();
-        return mesh;
-    }
-
-    public static Mesh Box(string name, Vector3 size, float uvScale)
-    {
-        var verts = new List<Vector3>();
-        var normals = new List<Vector3>();
-        var uvs = new List<Vector2>();
-        var tris = new List<int>();
-        Vector3 h = size * 0.5f;
-
-        void Face(Vector3 n, Vector3 right, Vector3 up, float w, float hgt)
-        {
-            int s = verts.Count;
-            Vector3 c = Vector3.Scale(n, h);
-            verts.Add(c - right * w * 0.5f - up * hgt * 0.5f);
-            verts.Add(c - right * w * 0.5f + up * hgt * 0.5f);
-            verts.Add(c + right * w * 0.5f + up * hgt * 0.5f);
-            verts.Add(c + right * w * 0.5f - up * hgt * 0.5f);
-            for (int i = 0; i < 4; i++) normals.Add(n);
-            uvs.Add(new Vector2(0, 0)); uvs.Add(new Vector2(0, hgt / uvScale));
-            uvs.Add(new Vector2(w / uvScale, hgt / uvScale)); uvs.Add(new Vector2(w / uvScale, 0));
-            tris.Add(s); tris.Add(s + 1); tris.Add(s + 2);
-            tris.Add(s); tris.Add(s + 2); tris.Add(s + 3);
-        }
-
-        Face(Vector3.forward, Vector3.left, Vector3.up, size.x, size.y);
-        Face(Vector3.back, Vector3.right, Vector3.up, size.x, size.y);
-        Face(Vector3.right, Vector3.forward, Vector3.up, size.z, size.y);
-        Face(Vector3.left, Vector3.back, Vector3.up, size.z, size.y);
-        Face(Vector3.up, Vector3.right, Vector3.forward, size.x, size.z);
-        Face(Vector3.down, Vector3.right, Vector3.back, size.x, size.z);
-
-        return BuildMesh(name, verts, normals, uvs, tris);
-    }
+    public static Mesh Box(string name, Vector3 size, float uvScale) => ProceduralMesh.Box(name, size, uvScale);
 
     public static Mesh SaveMesh(Mesh mesh, string folder)
     {
         return SaveAsset(mesh, folder + "/" + mesh.name + ".asset");
-    }
-
-    private static void AddCap(List<Vector3> verts, List<Vector3> normals, List<Vector2> uvs, List<int> tris,
-        float radius, float y, int segments, float uvScale, bool top)
-    {
-        int center = verts.Count;
-        Vector3 n = top ? Vector3.up : Vector3.down;
-        verts.Add(new Vector3(0f, y, 0f)); normals.Add(n); uvs.Add(Vector2.zero);
-        for (int i = 0; i < segments; i++)
-        {
-            float a = i / (float)segments * Mathf.PI * 2f;
-            Vector3 p = new Vector3(Mathf.Cos(a) * radius, y, Mathf.Sin(a) * radius);
-            verts.Add(p); normals.Add(n); uvs.Add(new Vector2(p.x, p.z) / uvScale);
-        }
-        for (int i = 0; i < segments; i++)
-        {
-            int p0 = center + 1 + i, p1 = center + 1 + (i + 1) % segments;
-            if (top) { tris.Add(center); tris.Add(p1); tris.Add(p0); }
-            else { tris.Add(center); tris.Add(p0); tris.Add(p1); }
-        }
-    }
-
-    private static void AddWall(List<Vector3> verts, List<Vector3> normals, List<Vector2> uvs, List<int> tris,
-        float radius, float height, int segments, float uvScale, bool outward)
-    {
-        int start = verts.Count;
-        float circumference = Mathf.PI * 2f * radius;
-        for (int i = 0; i <= segments; i++)
-        {
-            float a = i / (float)segments * Mathf.PI * 2f;
-            Vector3 dir = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
-            Vector3 n = outward ? dir : -dir;
-            float u = i / (float)segments * circumference / uvScale;
-            verts.Add(dir * radius); normals.Add(n); uvs.Add(new Vector2(u, 0f));
-            verts.Add(dir * radius + Vector3.up * height); normals.Add(n); uvs.Add(new Vector2(u, height / uvScale));
-        }
-        for (int i = 0; i < segments; i++)
-        {
-            int b0 = start + i * 2, t0 = b0 + 1, b1 = b0 + 2, t1 = b0 + 3;
-            if (outward)
-            {
-                tris.Add(b0); tris.Add(t0); tris.Add(b1);
-                tris.Add(b1); tris.Add(t0); tris.Add(t1);
-            }
-            else
-            {
-                tris.Add(b0); tris.Add(b1); tris.Add(t0);
-                tris.Add(b1); tris.Add(t1); tris.Add(t0);
-            }
-        }
-    }
-
-    private static Mesh BuildMesh(string name, List<Vector3> verts, List<Vector3> normals, List<Vector2> uvs, List<int> tris)
-    {
-        Mesh mesh = new Mesh { name = name };
-        if (verts.Count > 65000) mesh.indexFormat = IndexFormat.UInt32;
-        mesh.SetVertices(verts);
-        mesh.SetNormals(normals);
-        mesh.SetUVs(0, uvs);
-        mesh.SetTriangles(tris, 0);
-        mesh.RecalculateTangents();
-        mesh.RecalculateBounds();
-        return mesh;
     }
 
     // ---------------------------------------------------------------- Scene objects
