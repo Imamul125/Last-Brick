@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8efac7828240f999bce460346bcd4b, type: 3}
+  m_Name: 047_VolcanicForge_MoltenGold
+  m_EditorClassIdentifier: Assembly-CSharp::EnvironmentProfile
+  displayName: New Environment
+  useRecipe: 0
+  recipe:
+    seed: 1
+    skyTop: {r: 0.25, g: 0.5, b: 0.95, a: 1}
+    skyHorizon: {r: 0.8, g: 0.9, b: 1, a: 1}
+    skyBottom: {r: 0.4, g: 0.45, b: 0.5, a: 1}
+    horizonSharpness: 2.5
+    sunDiscColor: {r: 1, g: 0.9, b: 0.7, a: 1}
+    sunSize: 0.05
+    sunGlow: 1
+    stars: 0
+    cloudColor: {r: 1, g: 1, b: 1, a: 0.8}
+    cloudCoverage: 0.3
+    fogDensity: 0.0035
+    ambientIntensity: 1
+    sunPitch: 35
+    sunYaw: -40
+    sunColor: {r: 1, g: 0.95, b: 0.85, a: 1}
+    sunIntensity: 1.5
+    shadowStrength: 0.8
+    plaza:
+      texture: 1
+      color: {r: 0.8, g: 0.78, b: 0.74, a: 1}
+      smoothness: 0.4
+      metallic: 0
+      textureScale: 6
+      emission: {r: 0, g: 0, b: 0, a: 1}
+    inlay:
+      texture: 0
+      color: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+      smoothness: 0.6
+      metallic: 0
+      textureScale: 6
+      emission: {r: 0, g: 0, b: 0, a: 1}
+    ring:
+      texture: 5
+      color: {r: 0.9, g: 0.88, b: 0.85, a: 1}
+      smoothness: 0.15
+      metallic: 0
+      textureScale: 2.2
+      emission: {r: 0, g: 0, b: 0, a: 1}
+    curb:
+      texture: 8
+      color: {r: 0.6, g: 0.58, b: 0.55, a: 1}
+      smoothness: 0.3
+      metallic: 0
+      textureScale: 2
+      emission: {r: 0, g: 0, b: 0, a: 1}
+    terrain:
+      texture: 7
+      color: {r: 0.35, g: 0.5, b: 0.25, a: 1}
+      smoothness: 0.08
+      metallic: 0
+      textureScale: 8
+      emission: {r: 0, g: 0, b: 0, a: 1}
+    hillHeight: 9
+    mountains: 1
+    mountainNear: {r: 0.25, g: 0.32, b: 0.32, a: 1}
+    mountainFar: {r: 0.55, g: 0.6, b: 0.7, a: 1}
+    snowCaps: 0
+    snowColor: {r: 0.95, g: 0.97, b: 1, a: 1}
+    mountainHeight: 1
+    props: []
+    structure: 0
+    structureCount: 8
+    structureRadius: 33
+    structurePrimary: {r: 0.8, g: 0.78, b: 0.74, a: 1}
+    structureSecondary: {r: 0.85, g: 0.65, b: 0.3, a: 1}
+    structureGlow: {r: 0, g: 0, b: 0, a: 1}
+    accentLightColor: {r: 1, g: 0.6, b: 0.3, a: 1}
+    accentLightIntensity: 0
+    particles: 0
+    particleColor: {r: 1, g: 1, b: 1, a: 1}
+    particleRate: 1
+    bloom: 0.7
+    postExposure: 0.2
+    contrast: 10
+    saturation: 8
+    temperature: 0
+    tint: 0
+    vignette: 0.22
+    vignetteColor: {r: 0.1, g: 0.05, b: 0.05, a: 1}
+  environmentPrefab: {fileID: 0}
+  skybox: {fileID: 0}
+  ambientMode: 1
+  ambientSkyColor: {r: 0.55, g: 0.6, b: 0.75, a: 1}
+  ambientEquatorColor: {r: 0.55, g: 0.45, b: 0.38, a: 1}
+  ambientGroundColor: {r: 0.2, g: 0.16, b: 0.12, a: 1}
+  reflectionIntensity: 1
+  fog: 1
+  fogMode: 3
+  fogColor: {r: 0.86, g: 0.72, b: 0.58, a: 1}
+  fogDensity: 0.01
+  fogStart: 40
+  fogEnd: 160
+  postProcessProfile: {fileID: 0}

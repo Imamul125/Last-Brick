@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c6f647e9589413aa778011df88d2911, type: 3}
+  m_Name: EnvironmentLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::EnvironmentLibrary
+  litPlain: {fileID: 2100000, guid: d8c191a7bc2e27249829448e207690d8, type: 2}
+  litTexture: {fileID: 2100000, guid: 4bc0a1c2e5296fd438653f52ff32e345, type: 2}
+  litTextureNormal: {fileID: 2100000, guid: 628116287a3717c41bfeee644ddf4918, type: 2}
+  litTextureNormalEmissive: {fileID: 2100000, guid: 8f93d39ff50ebab4384f03dedcb0b1df, type: 2}
+  litEmissive: {fileID: 2100000, guid: 4f67c1ef511ea3540816f4c2083af140, type: 2}
+  vertexColorLit: {fileID: 2100000, guid: 285253b2244e1e643931ea89056e55f3, type: 2}
+  particleAdditive: {fileID: 2100000, guid: 83ff0d1ff9f6af84f9f6cbf8a205da57, type: 2}
+  particleAlpha: {fileID: 2100000, guid: ac7d11455191dab4b8e94faa65f431ab, type: 2}
+  sky: {fileID: 2100000, guid: f74fa4b03ad61b048bbab743f5dc3a87, type: 2}
+  postProcessTemplate: {fileID: 11400000, guid: 75e46d5f08f559843969b4b5520f57ff, type: 2}
+  surfaces:
+  - type: 1
+    albedo: {fileID: 2800000, guid: 9f439588e8d55014699f1a7bab85a89d, type: 3}
+    normal: {fileID: 2800000, guid: d5a4fd235fadef344b7f705b480566cd, type: 3}
+    emission: {fileID: 0}
+    polarUV: 0
+  - type: 2
+    albedo: {fileID: 2800000, guid: ee0e6d07d79c5ab49ac4770f6fc3d265, type: 3}
+    normal: {fileID: 2800000, guid: cd1a2417a7895f049993a22fa7cf3c09, type: 3}
+    emission: {fileID: 0}
+    polarUV: 0
+  - type: 3
+    albedo: {fileID: 2800000, guid: f38af2acd1bbf5e4ca1bf6b4f6773113, type: 3}
+    normal: {fileID: 2800000, guid: 28ee9e44fd633f844844133a672d67e0, type: 3}
+    emission: {fileID: 0}
+    polarUV: 0
+  - type: 4
+    albedo: {fileID: 2800000, guid: 220a34bb670926841a4ae4627914bfe8, type: 3}
+    normal: {fileID: 2800000, guid: 842380d69d806674aa0a1b19eb8818a5, type: 3}
+    emission: {fileID: 0}
+    polarUV: 0
+  - type: 5
+    albedo: {fileID: 2800000, guid: d5075ab5d830f8f41965894f6a4b3f8f, type: 3}
+    normal: {fileID: 2800000, guid: 5db746dac1bc87641beb73633a318e0c, type: 3}
+    emission: {fileID: 0}
+    polarUV: 1
+  - type: 6
+    albedo: {fileID: 2800000, guid: 64757f201f51c8a4caa7ff6a778c5acb, type: 3}
+    normal: {fileID: 2800000, guid: ba400b5aaebb27a45a3bc3eb95a8a7d6, type: 3}
+    emission: {fileID: 0}
+    polarUV: 1
+  - type: 7
+    albedo: {fileID: 2800000, guid: 9ca9c4792b9eb82418d777f59077dcef, type: 3}
+    normal: {fileID: 0}
+    emission: {fileID: 0}
+    polarUV: 0
+  - type: 8
+    albedo: {fileID: 2800000, guid: b231e78bfe682734c954019c3e47494d, type: 3}
+    normal: {fileID: 2800000, guid: 1051ae0052302a645b91383f31d8aeca, type: 3}
+    emission: {fileID: 0}
+    polarUV: 0
+  - type: 9
+    albedo: {fileID: 2800000, guid: 096f43c5734cbce42a3c48b93448f5c1, type: 3}
+    normal: {fileID: 2800000, guid: 6a4227ac89d98bc43940a5479dfe5c26, type: 3}
+    emission: {fileID: 2800000, guid: 465001f7a6cd4af44be8dbe003df7cd9, type: 3}
+    polarUV: 0
+  - type: 10
+    albedo: {fileID: 0}
+    normal: {fileID: 2800000, guid: 810d1d5e8a34a0f439bc4972906ca5d6, type: 3}
+    emission: {fileID: 0}
+    polarUV: 0
+  - type: 11
+    albedo: {fileID: 2800000, guid: 8fe24f081bf4f2f4a8827bff70caa26c, type: 3}
+    normal: {fileID: 2800000, guid: 469caa395dc443e4d84a779ee331130a, type: 3}
+    emission: {fileID: 0}
+    polarUV: 0
+  softDot: {fileID: 2800000, guid: 88940d9d317ebe446ac2965781ad38e0, type: 3}
+  petal: {fileID: 2800000, guid: 90d3bd27e01084a43b3a53f14fc03eec, type: 3}
+  limb: {fileID: 4300000, guid: eec5d8843cd566543a61e25c604afff8, type: 2}
+  cylinder: {fileID: 4300000, guid: 7d1dc5662cad1994b9e3f1a00b35b929, type: 2}
+  hexCylinder: {fileID: 4300000, guid: 4eea6a1d2be4a564486106cdd13b64d1, type: 2}
+  cone: {fileID: 4300000, guid: 2794d7ab1dbe3d34d8d3a05f7bce5836, type: 2}
+  hexCone: {fileID: 4300000, guid: a03dc6f76606a6543bd925272d7b9839, type: 2}
+  pyramid: {fileID: 4300000, guid: 604278252f34f8e49b763be3625882b8, type: 2}
+  squareFrustum: {fileID: 4300000, guid: 5101e2e2ede9b1b428d54069c93fdaa7, type: 2}
+  box: {fileID: 4300000, guid: 2815c8854a4050b4ca91f269654a87b3, type: 2}
+  tinyBlob: {fileID: 4300000, guid: 8a58a4657c1433d4bb89cc0c46901160, type: 2}
+  cloudBlob: {fileID: 4300000, guid: 83f5b2d8181fcc344870835532ee86b6, type: 2}
+  flatCanopy: {fileID: 4300000, guid: 7f50187b3b0b0054d965f92b84360d19, type: 2}
+  frond: {fileID: 4300000, guid: c2a6db4bf4d0c414da29bee1d9b233cb, type: 2}
+  mushroomCap: {fileID: 4300000, guid: cf955a6764aeac142b3dced62fa66d0b, type: 2}
+  flutedShaft: {fileID: 4300000, guid: a508073d0ad1a6b438d592e37008fd17, type: 2}
+  canopyBlobs:
+  - {fileID: 4300000, guid: 9fb51525c79d6054abc3c7114559eb79, type: 2}
+  - {fileID: 4300000, guid: 36df3592865770845a7de49314a7ee1c, type: 2}
+  - {fileID: 4300000, guid: 9d13d42c079d767489b5113697741117, type: 2}
+  pineTiers:
+  - {fileID: 4300000, guid: 6acbf374683af564986288f192b03ae4, type: 2}
+  - {fileID: 4300000, guid: b093da62db20c1d4285fc021268269f5, type: 2}
+  - {fileID: 4300000, guid: 97369eddd0fbb63489502ba4e6101fcf, type: 2}
+  rocks:
+  - {fileID: 4300000, guid: 56642f11fdcd5dc40b0638a29d3364ad, type: 2}
+  - {fileID: 4300000, guid: 797052bf221cdb84a901b44416e392e7, type: 2}
+  - {fileID: 4300000, guid: 31c4b5c39889d8a4cb94e0a6f7877ad1, type: 2}

@@ -1,0 +1,155 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8efac7828240f999bce460346bcd4b, type: 3}
+  m_Name: 028_EnchantedForest_Bluebell
+  m_EditorClassIdentifier: Assembly-CSharp::EnvironmentProfile
+  displayName: Enchanted Forest - Bluebell
+  useRecipe: 1
+  recipe:
+    seed: 214813
+    skyTop: {r: 0.02241638, g: 0.045109574, b: 0.120588236, a: 0.8926471}
+    skyHorizon: {r: 0.103371784, g: 0.17271051, b: 0.32156864, a: 0.8303922}
+    skyBottom: {r: 0.039215688, g: 0.050980393, b: 0.08627451, a: 1}
+    horizonSharpness: 2.5
+    sunDiscColor: {r: 1.2176471, g: 1.3176471, b: 1.5, a: 1.5}
+    sunSize: 0.035
+    sunGlow: 0.7
+    stars: 1.2
+    cloudColor: {r: 0.22352941, g: 0.27058825, b: 0.43137255, a: 0.7}
+    cloudCoverage: 0.2
+    fogDensity: 0.006
+    ambientIntensity: 0.7
+    sunPitch: 38
+    sunYaw: 9
+    sunColor: {r: 0.6156863, g: 0.7137255, b: 1, a: 1}
+    sunIntensity: 0.5
+    shadowStrength: 0.55
+    plaza:
+      texture: 3
+      color: {r: 0.3529412, g: 0.41568628, b: 0.41568628, a: 1}
+      smoothness: 0.4
+      metallic: 0
+      textureScale: 6
+      emission: {r: 0, g: 0, b: 0, a: 1}
+    inlay:
+      texture: 0
+      color: {r: 0.29803923, g: 0.6117647, b: 1, a: 1}
+      smoothness: 0.8
+      metallic: 0
+      textureScale: 6
+      emission: {r: 0.59607846, g: 1.2235295, b: 2, a: 2}
+    ring:
+      texture: 7
+      color: {r: 0.18039216, g: 0.2901961, b: 0.20392157, a: 1}
+      smoothness: 0.15
+      metallic: 0
+      textureScale: 3
+      emission: {r: 0, g: 0, b: 0, a: 1}
+    curb:
+      texture: 8
+      color: {r: 0.2901961, g: 0.33333334, b: 0.3137255, a: 1}
+      smoothness: 0.3
+      metallic: 0
+      textureScale: 2
+      emission: {r: 0, g: 0, b: 0, a: 1}
+    terrain:
+      texture: 7
+      color: {r: 0.18039216, g: 0.2901961, b: 0.1882353, a: 1}
+      smoothness: 0.1
+      metallic: 0
+      textureScale: 8
+      emission: {r: 0, g: 0, b: 0, a: 1}
+    hillHeight: 10
+    mountains: 1
+    mountainNear: {r: 0.09411765, g: 0.14117648, b: 0.17254902, a: 1}
+    mountainFar: {r: 0.22745098, g: 0.2901961, b: 0.4, a: 1}
+    snowCaps: 0
+    snowColor: {r: 0.95, g: 0.97, b: 1, a: 1}
+    mountainHeight: 1
+    props:
+    - kind: 11
+      count: 25
+      minRadius: 31
+      maxRadius: 55
+      minScale: 0.8
+      maxScale: 1.6
+      colorA: {r: 0.29803923, g: 0.6117647, b: 1, a: 1}
+      colorB: {r: 0.8784314, g: 0.8784314, b: 0.9411765, a: 1}
+      secondary: {r: 0.84705883, g: 0.8156863, b: 0.7529412, a: 1}
+      glow: {r: 0.74509805, g: 1.5294118, b: 2.5, a: 2.5}
+      heightOffset: 0
+    - kind: 0
+      count: 45
+      minRadius: 36
+      maxRadius: 70
+      minScale: 1
+      maxScale: 1.5
+      colorA: {r: 0.11764706, g: 0.2901961, b: 0.26666668, a: 1}
+      colorB: {r: 0.16470589, g: 0.3529412, b: 0.30588236, a: 1}
+      secondary: {r: 0.16470589, g: 0.16470589, b: 0.16470589, a: 1}
+      glow: {r: 0, g: 0, b: 0, a: 1}
+      heightOffset: 0
+    - kind: 1
+      count: 160
+      minRadius: 70
+      maxRadius: 160
+      minScale: 1.2
+      maxScale: 2.6
+      colorA: {r: 0.07058824, g: 0.14901961, b: 0.11764706, a: 1}
+      colorB: {r: 0.101960786, g: 0.19607843, b: 0.14901961, a: 1}
+      secondary: {r: 0.16470589, g: 0.16470589, b: 0.16470589, a: 1}
+      glow: {r: 0, g: 0, b: 0, a: 1}
+      heightOffset: 0
+    - kind: 17
+      count: 20
+      minRadius: 31
+      maxRadius: 45
+      minScale: 0.8
+      maxScale: 1.2
+      colorA: {r: 0.29803923, g: 0.6117647, b: 1, a: 1}
+      colorB: {r: 1, g: 1, b: 1, a: 1}
+      secondary: {r: 0.18039216, g: 0.2901961, b: 0.20392157, a: 1}
+      glow: {r: 0, g: 0, b: 0, a: 1}
+      heightOffset: 0
+    structure: 3
+    structureCount: 8
+    structureRadius: 33
+    structurePrimary: {r: 0.41568628, g: 0.45490196, b: 0.4392157, a: 1}
+    structureSecondary: {r: 0.85, g: 0.65, b: 0.3, a: 1}
+    structureGlow: {r: 1.0431373, g: 2.1411765, b: 3.5, a: 3.5}
+    accentLightColor: {r: 0.29803923, g: 0.6117647, b: 1, a: 1}
+    accentLightIntensity: 5
+    particles: 4
+    particleColor: {r: 0.8941177, g: 1.8352942, b: 3, a: 3}
+    particleRate: 1
+    bloom: 1.2
+    postExposure: 0.2
+    contrast: 10
+    saturation: 14
+    temperature: -6
+    tint: 0
+    vignette: 0.22
+    vignetteColor: {r: 0.007843138, g: 0.015686275, b: 0.039215688, a: 1}
+  environmentPrefab: {fileID: 0}
+  skybox: {fileID: 0}
+  ambientMode: 1
+  ambientSkyColor: {r: 0.55, g: 0.6, b: 0.75, a: 1}
+  ambientEquatorColor: {r: 0.55, g: 0.45, b: 0.38, a: 1}
+  ambientGroundColor: {r: 0.2, g: 0.16, b: 0.12, a: 1}
+  reflectionIntensity: 1
+  fog: 1
+  fogMode: 3
+  fogColor: {r: 0.86, g: 0.72, b: 0.58, a: 1}
+  fogDensity: 0.01
+  fogStart: 40
+  fogEnd: 160
+  postProcessProfile: {fileID: 0}
